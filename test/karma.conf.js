@@ -4,9 +4,9 @@
 module.exports = function (config) {
     config.set({
         basePath: '../',
-        frameworks: ['mocha', 'expect', 'sinon', 'requirejs'],
+        frameworks: ['mocha', 'expect', 'sinon'],
         files: ['test/js/**/*.js', 'src/js/**/*.js'],
-        autoWatch: true,
+        autoWatch: false,
         browsers: ['Chrome']
     });
 };

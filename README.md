@@ -7,6 +7,8 @@ NPM Modules:
 chai
 grunt
 grunt-contrib-watch
+grunt-contrib-jshint
+grunt-contrib-concat
 karma
 karma-chrome-launcher
 karma-expect
