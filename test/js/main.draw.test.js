@@ -51,7 +51,7 @@ describe('main.draw', function () {
             point3
         ]);
         var entity = new SpaceRocks.Entity(5, 5, shape);
-        
+
         SpaceRocks.draw();
         var drawFunction = callEntitySpy.getCall(0).args[0];
         drawFunction(entity);
