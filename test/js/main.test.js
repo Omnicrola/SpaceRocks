@@ -5,13 +5,22 @@
 describe('Main', function () {
     describe('start function', function () {
         var canvasElement;
+        var tempKibo;
+        var tempInput;
         beforeEach(function (done) {
+            tempKibo = window.Kibo;
+            tempInput = SpaceRocks.InputManager.init;
+            SpaceRocks.InputManager.init = sinon.spy();
+            window.Kibo = sinon.spy();
+
             canvasElement = document.createElement('canvas');
             canvasElement.id = 'testCanvas';
             document.body.appendChild(canvasElement);
             done();
         });
         afterEach(function () {
+            window.Kibo = tempKibo;
+            SpaceRocks.InputManager.init = tempInput;
             document.body.removeChild(canvasElement);
         });
 
@@ -53,6 +62,12 @@ describe('Main', function () {
             expect(functionCall.args[0]).to.be(SpaceRocks.run);
             expect(functionCall.args[1]).to.be(1000 / 24);
 
+        });
+
+        it('will initialize InputManager with Kibo', function(){
+            var initSpy = SpaceRocks.InputManager.init = sinon.spy();
+            SpaceRocks.start(canvasElement.id);
+            expect(initSpy.calledOnce).to.be(true);
         });
     });
 

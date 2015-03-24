@@ -50,18 +50,20 @@ describe('main.draw', function () {
             point2,
             point3
         ]);
-        var entity = new SpaceRocks.Entity(5, 5, shape);
+        var offX = 5;
+        var offY = 5;
+        var entity = new SpaceRocks.Entity(offX, offY, shape);
 
         SpaceRocks.draw();
         var drawFunction = callEntitySpy.getCall(0).args[0];
         drawFunction(entity);
-        checkLineDrawn(point1, point2);
-        checkLineDrawn(point2, point3);
-        checkLineDrawn(point3, point1);
+        checkLineDrawn(offX, offY, point1, point2);
+        checkLineDrawn(offX, offY, point2, point3);
+        checkLineDrawn(offX, offY, point3, point1);
 
 
     });
-    function checkLineDrawn(p1, p2) {
-        expect(lineSpy.calledWith(p1.x, p1.y, p2.x, p2.y)).to.be(true);
+    function checkLineDrawn(offX, offY, p1, p2) {
+        expect(lineSpy.calledWith(p1.x + offX, p1.y + offY, p2.x + offX, p2.y + offY)).to.be(true);
     }
 });

@@ -15,6 +15,7 @@ var SpaceRocks = (function (globals, spaceRocks) {
         spaceRocks.EntityManager.player(player);
         var canvasContext = document.getElementById(elementId).getContext('2d');
         spaceRocks.Renderer.setCanvas(canvasContext);
+        spaceRocks.InputManager.init(new Kibo());
     };
     return spaceRocks;
 })(window, SpaceRocks || {});
