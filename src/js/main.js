@@ -11,7 +11,8 @@ var SpaceRocks = (function (globals, spaceRocks) {
     spaceRocks.start = function (elementId) {
         globals.setInterval(spaceRocks.run, 1000 / 24);
         var player = new SpaceRocks.Player();
-        player.position = {x:100,y:100};
+        player.position = {x: 100, y: 100};
+        player.velocity = {x: 0.05, y: 0.0};
         spaceRocks.EntityManager.player(player);
         var canvasContext = document.getElementById(elementId).getContext('2d');
         spaceRocks.Renderer.setCanvas(canvasContext);

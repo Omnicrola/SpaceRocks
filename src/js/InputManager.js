@@ -23,7 +23,7 @@ var SpaceRocks = (function (spaceRocks) {
         bindKey(kibo, 'down');
         bindKey(kibo, 'left');
         bindKey(kibo, 'right');
-    }
+    };
     spaceRocks.InputManager = {
         init: initFunc,
         isAccellerating: function () {
