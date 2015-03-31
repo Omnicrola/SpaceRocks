@@ -4,6 +4,15 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        watch:{
+            script: {
+                files: ['src/js/**/*.js'],
+                tasks: ['concat'],
+                options: {
+                    spawn: false
+                }
+            }
+        },
         concat: {
             dist: {
                 src: ['src/**/*.js'],
@@ -12,7 +21,8 @@ module.exports = function (grunt) {
         },
         jshint: {
             files: {
-                src: ['src/**/*.js']
+                src: ['src/js/**/*.js'],
+                src: ['test/js/**/*.js']
             },
             options: {
                 curly: true,
@@ -28,6 +38,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
 
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('build', ['jshint', 'concat']);
 };

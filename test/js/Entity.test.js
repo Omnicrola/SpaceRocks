@@ -53,7 +53,7 @@ describe("Entity", function () {
     });
 
     it("should hold a shape", function () {
-        var shape = [3, 4, 43, 4]
+        var shape = [3, 4, 43, 4];
         var entity = new SpaceRocks.Entity(0, 0, shape);
         expect(entity.shape).to.be(shape);
     });

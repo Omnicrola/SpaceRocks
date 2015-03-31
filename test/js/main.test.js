@@ -43,7 +43,7 @@ describe('Main', function () {
                 this.blarg = value1;
                 this.foo = value2;
                 this.bar = value3;
-            }
+            };
             var playerSpy = SpaceRocks.EntityManager.player = sinon.spy();
             SpaceRocks.start('testCanvas');
             expect(playerSpy.calledOnce).to.be(true);
@@ -64,7 +64,7 @@ describe('Main', function () {
 
         });
 
-        it('will initialize InputManager with Kibo', function(){
+        it('will initialize InputManager with Kibo', function () {
             var initSpy = SpaceRocks.InputManager.init = sinon.spy();
             SpaceRocks.start(canvasElement.id);
             expect(initSpy.calledOnce).to.be(true);
@@ -75,11 +75,23 @@ describe('Main', function () {
         var updateSpy;
         var drawSpy;
         var deltaStub;
+        var tempUpdate;
+        var tempDraw;
+        var tempDelta;
         beforeEach(function (done) {
+            tempUpdate = SpaceRocks.update;
+            tempDraw = SpaceRocks.draw;
+            tempDelta = SpaceRocks.delta;
             SpaceRocks.update = updateSpy = sinon.spy();
             SpaceRocks.draw = drawSpy = sinon.spy();
             SpaceRocks.delta = deltaStub = sinon.stub();
             done();
+        });
+
+        afterEach(function () {
+            SpaceRocks.update = tempUpdate;
+            SpaceRocks.draw = tempDraw;
+            SpaceRocks.delta = tempDelta;
         });
 
         it('will call update() and draw() in the correct order', function () {

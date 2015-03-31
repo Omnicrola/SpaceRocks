@@ -80,7 +80,6 @@ var SpaceRocks = (function (spaceRocks) {
         });
         kibo.down(stateName, function () {
             state[stateName] = true;
-            console.log('up!');
         });
     }
 
@@ -89,7 +88,6 @@ var SpaceRocks = (function (spaceRocks) {
         bindKey(kibo, 'down');
         bindKey(kibo, 'left');
         bindKey(kibo, 'right');
-        console.log('bind');
     };
     spaceRocks.InputManager = {
         init: initFunc,
@@ -109,29 +107,6 @@ var SpaceRocks = (function (spaceRocks) {
     return spaceRocks;
 })
 (SpaceRocks || {});
-/**
- * Created by Eric on 3/22/2015.
- */
-var SpaceRocks = (function (spaceRocks) {
-    function createShape() {
-        var Point = spaceRocks.Point;
-        var Polygon = spaceRocks.Polygon;
-        return new Polygon([
-            new Point(0, 5),
-            new Point(5, -5),
-            new Point(0, 0),
-            new Point(-5, -5)
-        ]);
-    }
-
-    var protoClass = function () {
-        spaceRocks.Entity.call(this);
-        this.shape = createShape();
-    };
-
-    spaceRocks.Player = protoClass;
-    return spaceRocks;
-})(SpaceRocks || {});
 /**
  * Created by Eric on 3/21/2015.
  */
@@ -257,9 +232,18 @@ var SpaceRocks = (function (globals, spaceRocks) {
         spaceRocks.update(delta);
         spaceRocks.draw();
     };
+    function playerShape(){
+        return new spaceRocks.Polygon([
+            new spaceRocks.Point(-5,-5),
+            new spaceRocks.Point(0,5),
+            new spaceRocks.Point(5,-5),
+            new spaceRocks.Point(0,0)
+        ]);
+    }
+
     spaceRocks.start = function (elementId) {
         globals.setInterval(spaceRocks.run, 1000 / 24);
-        var player = new SpaceRocks.Player();
+        var player = new SpaceRocks.Entity(0,0,playerShape());
         player.position = {x: 100, y: 100};
         player.velocity = {x: 0.05, y: 0.0};
         spaceRocks.EntityManager.player(player);
@@ -275,8 +259,17 @@ var SpaceRocks = (function (globals, spaceRocks) {
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    spaceRocks.update = function () {
+
+    function getPlayer() {
+        return spaceRocks.EntityManager.player();
+    }
+
+    spaceRocks.update = function (frameDelta) {
+        if (spaceRocks.InputManager.isAccellerating()) {
+            getPlayer().velocity.y = 1;
+        }
     };
+
     return spaceRocks;
 })(SpaceRocks || {});
 var Kibo = function(element) {
