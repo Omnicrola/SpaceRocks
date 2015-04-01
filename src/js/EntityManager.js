@@ -13,6 +13,8 @@ var SpaceRocks = (function (spaceRocks) {
     };
     var invokeOnEntities = function (customFunction) {
         if (player) {
+            console.log('vX:'+player.velocity.y);
+            console.log('pX:'+player.position.y);
             customFunction(player);
         }
         entities.forEach(function (entity) {

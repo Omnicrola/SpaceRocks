@@ -5,6 +5,7 @@ describe('main update', function () {
     var tempInput;
     var mockInput;
     var playerSpy;
+    var ACCEL_RATE = 0.1;
     beforeEach(function (done) {
 
         tempInput = SpaceRocks.InputManager;
@@ -17,11 +18,16 @@ describe('main update', function () {
 
 
         playerSpy = SpaceRocks.EntityManager.player = sinon.stub();
+        playerSpy = SpaceRocks.EntityManager.player = sinon.stub();
         done();
     });
 
     afterEach(function () {
         SpaceRocks.InputManager = tempInput;
+    });
+
+    it('should update entities position based on velocity', function () {
+
     });
 
     it('should not change velocity when no keys are pressed', function () {
@@ -41,15 +47,27 @@ describe('main update', function () {
         expect(player.velocity.y).to.equal(expectedY);
     });
 
-    it('should set velocity to 1.0 when up key is pressed', function () {
+    it('should add velocity when up key is pressed', function () {
         var player = {
-            velocity: {x: 0, y: 0}
+            velocity: {x: 0.0, y: 0.0}
         };
         playerSpy.returns(player);
         mockInput.isAccellerating.returns(true);
 
         SpaceRocks.update(1.0);
         expect(player.velocity.x).to.equal(0);
-        expect(player.velocity.y).to.equal(1);
+        expect(player.velocity.y).to.equal(ACCEL_RATE);
+    });
+
+    it('should decrease velocity when down key is pressed', function () {
+        var player = {
+            velocity: {x: 0.0, y: 0.0}
+        };
+        playerSpy.returns(player);
+        mockInput.isDecellerating.returns(true);
+
+        SpaceRocks.update(1.0);
+        expect(player.velocity.x).to.equal(0);
+        expect(player.velocity.y).to.equal(-ACCEL_RATE);
     });
 });

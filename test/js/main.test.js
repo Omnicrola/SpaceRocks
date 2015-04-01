@@ -35,11 +35,11 @@ describe('Main', function () {
         });
 
         it('will spawn player on EntityManager', function () {
-            var tempPlayer = SpaceRocks.Player;
+            var tempEntity = SpaceRocks.Entity;
             var value1 = Math.random();
             var value2 = Math.random();
             var value3 = Math.random();
-            SpaceRocks.Player = function () {
+            SpaceRocks.Entity = function () {
                 this.blarg = value1;
                 this.foo = value2;
                 this.bar = value3;
@@ -51,6 +51,7 @@ describe('Main', function () {
             expect(actualPlayer.blarg).to.be(value1);
             expect(actualPlayer.foo).to.be(value2);
             expect(actualPlayer.bar).to.be(value3);
+            SpaceRocks.Entity = tempEntity;
         });
 
         it('will call setInterval with run()', function () {

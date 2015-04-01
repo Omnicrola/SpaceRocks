@@ -22,16 +22,16 @@ describe('spacerocks entityManager', function () {
     });
 
     it('should set a player', function(){
-       var expectedPlayer = new SpaceRocks.Player();
+       var expectedPlayer = new SpaceRocks.Entity(1,2,[]);
         SpaceRocks.EntityManager.player(expectedPlayer);
         expect(SpaceRocks.EntityManager.player()).to.be(expectedPlayer);
     });
     it('should run function on the player', function(){
         var spy = sinon.spy();
-        var expectedPlayer = new SpaceRocks.Player();
-        SpaceRocks.EntityManager.player(expectedPlayer);
+        var expectedEntity = new SpaceRocks.Entity();
+        SpaceRocks.EntityManager.player(expectedEntity);
         SpaceRocks.EntityManager.callEntities(spy);
         expect(spy.called).to.be(true);
-        expect(spy.getCall(0).args[0]).to.be(expectedPlayer);
+        expect(spy.getCall(0).args[0]).to.be(expectedEntity);
     });
 });
