@@ -5,13 +5,13 @@ describe("Entity", function () {
     it("should initialize it's position", function () {
         var x = 100;
         var y = 200;
-        var entity = new SpaceRocks.Entity(x, y);
+        var entity = SpaceRocks.Entity.create(x, y);
         expect(entity.position.x).to.be(x);
         expect(entity.position.y).to.be(y);
 
     });
     it("should initialize it's velocity", function () {
-        var entity = new SpaceRocks.Entity(5, 2);
+        var entity = SpaceRocks.Entity.create(5, 2);
         expect(entity.velocity.x).to.be(0);
         expect(entity.velocity.y).to.be(0);
 
@@ -20,7 +20,7 @@ describe("Entity", function () {
     it("should remember it's position", function () {
         var x = 433;
         var y = 283;
-        var entity = new SpaceRocks.Entity();
+        var entity = SpaceRocks.Entity.create();
         entity.position.x = x;
         entity.position.y = y;
 
@@ -30,7 +30,7 @@ describe("Entity", function () {
     });
 
     it('will move based on velocity and delta (case1)', function () {
-        var entity = new SpaceRocks.Entity();
+        var entity = SpaceRocks.Entity.create();
         expect(entity.position.x).to.be(0);
         expect(entity.position.y).to.be(0);
         entity.velocity.x = 50;
@@ -41,7 +41,7 @@ describe("Entity", function () {
         expect(entity.position.y).to.be(30);
     });
     it('will move based on velocity and delta (case2)', function () {
-        var entity = new SpaceRocks.Entity();
+        var entity = SpaceRocks.Entity.create();
         expect(entity.position.x).to.be(0);
         expect(entity.position.y).to.be(0);
         entity.velocity.x = -200;
@@ -54,7 +54,7 @@ describe("Entity", function () {
 
     it("should hold a shape", function () {
         var shape = [3, 4, 43, 4];
-        var entity = new SpaceRocks.Entity(0, 0, shape);
+        var entity = SpaceRocks.Entity.create(0, 0, shape);
         expect(entity.shape).to.be(shape);
     });
 });

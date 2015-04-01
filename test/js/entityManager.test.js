@@ -26,6 +26,7 @@ describe('spacerocks entityManager', function () {
         SpaceRocks.EntityManager.player(expectedPlayer);
         expect(SpaceRocks.EntityManager.player()).to.be(expectedPlayer);
     });
+
     it('should run function on the player', function(){
         var spy = sinon.spy();
         var expectedEntity = new SpaceRocks.Entity();

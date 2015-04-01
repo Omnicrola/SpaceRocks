@@ -32,23 +32,19 @@ describe('Main', function () {
         });
 
         it('will spawn player on EntityManager', function () {
-            var tempEntity = SpaceRocks.Entity;
-            var value1 = Math.random();
-            var value2 = Math.random();
-            var value3 = Math.random();
-            SpaceRocks.Entity = function () {
-                this.blarg = value1;
-                this.foo = value2;
-                this.bar = value3;
-            };
-            var playerSpy = SpaceRocks.EntityManager.player = sinon.spy();
+            var entityCreateStub = OMD.test.globalStub(SpaceRocks.Entity, 'create');
+            var playerShapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'player');
+            var setPlayerSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'player');
+
+            var expectedShape = OMD.test.randomObject();
+            var expectedEntity = OMD.test.randomObject();
+            playerShapeStub.returns(expectedShape);
+            entityCreateStub.withArgs(0,0,expectedShape).returns(expectedEntity);
+
             SpaceRocks.start('testCanvas');
-            expect(playerSpy.calledOnce).to.be(true);
-            var actualPlayer = playerSpy.getCall(0).args[0];
-            expect(actualPlayer.blarg).to.be(value1);
-            expect(actualPlayer.foo).to.be(value2);
-            expect(actualPlayer.bar).to.be(value3);
-            SpaceRocks.Entity = tempEntity;
+
+            expect(setPlayerSpy.calledOnce).to.be.ok();
+            expect(setPlayerSpy.getCall(0).args[0]).to.be(expectedEntity);
         });
 
         it('will call setInterval with run()', function () {

@@ -23,6 +23,9 @@ var SpaceRocks = (function (spaceRocks) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
     };
+    protoClass.create = function (x, y, shape) {
+        return new protoClass(x, y, shape)
+    };
     spaceRocks.Entity = protoClass;
     return spaceRocks;
 

@@ -36,6 +36,9 @@ var OMD = (function () {
                     singleShim.restore();
                 })
                 shims = [];
+            },
+            randomObject: function () {
+                return {'BKinUK': Math.random()}
             }
         }
     };

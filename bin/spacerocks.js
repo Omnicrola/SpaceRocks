@@ -23,6 +23,9 @@ var SpaceRocks = (function (spaceRocks) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
     };
+    protoClass.create = function (x, y, shape) {
+        return new protoClass(x, y, shape)
+    };
     spaceRocks.Entity = protoClass;
     return spaceRocks;
 
@@ -166,6 +169,31 @@ var SpaceRocks = (function (spaceRocks) {
     return spaceRocks;
 })(SpaceRocks || {});
 /**
+ * Created by Eric on 3/31/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    spaceRocks.Shapes = {
+        player: function () {
+            return [
+                new spaceRocks.Point(-5, -5),
+                new spaceRocks.Point(0, 5),
+                new spaceRocks.Point(5, -5),
+                new spaceRocks.Point(0, 0)
+            ];
+        },
+        asteroid: function () {
+            return [
+                new spaceRocks.Point(-10, -8),
+                new spaceRocks.Point(-3, 4),
+                new spaceRocks.Point(-6, 9),
+                new spaceRocks.Point(2, 8),
+                new spaceRocks.Point(-6, -8)
+            ];
+        }
+    };
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
  * Created by Eric on 3/21/2015.
  */
 var TimeWrapper = (function () {
@@ -234,21 +262,16 @@ var SpaceRocks = (function (globals, spaceRocks) {
         spaceRocks.update(delta);
         spaceRocks.draw();
     };
-    function playerShape(){
-        return new spaceRocks.Polygon([
-            new spaceRocks.Point(-5,-5),
-            new spaceRocks.Point(0,5),
-            new spaceRocks.Point(5,-5),
-            new spaceRocks.Point(0,0)
-        ]);
+
+    function spawnPlayer() {
+        var playerShape = spaceRocks.Shapes.player();
+        var newPlayer = spaceRocks.Entity.create(0, 0, playerShape);
+        spaceRocks.EntityManager.player(newPlayer);
     }
 
     spaceRocks.start = function (elementId) {
         globals.setInterval(spaceRocks.run, 1000 / 24);
-        var player = new SpaceRocks.Entity(0,0,playerShape());
-        player.position = {x: 100, y: 100};
-        player.velocity = {x: 0.05, y: 0.0};
-        spaceRocks.EntityManager.player(player);
+        spawnPlayer();
         var canvasContext = document.getElementById(elementId).getContext('2d');
         spaceRocks.Renderer.setCanvas(canvasContext);
         spaceRocks.InputManager.init(new Kibo());
