@@ -4,16 +4,21 @@
 describe('main.draw', function () {
     var lineSpy;
     var rectangleSpy;
-    var widthSpy;
-    var heightSpy;
+    var widthStub;
+    var heightStub;
     var callEntitySpy;
+
     beforeEach(function (done) {
-        SpaceRocks.Renderer.drawLine = lineSpy = sinon.spy();
-        SpaceRocks.Renderer.fillRectangle = rectangleSpy = sinon.spy();
-        SpaceRocks.Renderer.width = widthSpy = sinon.stub();
-        SpaceRocks.Renderer.height = heightSpy = sinon.stub();
-        SpaceRocks.EntityManager.callEntities = callEntitySpy = sinon.spy();
+        lineSpy = OMD.test.globalSpy(SpaceRocks.Renderer, 'drawLine');
+        rectangleSpy = OMD.test.globalSpy(SpaceRocks.Renderer, 'fillRectangle');
+        widthStub = OMD.test.globalStub(SpaceRocks.Renderer, 'width');
+        heightStub = OMD.test.globalStub(SpaceRocks.Renderer, 'height');
+        callEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');
         done();
+    });
+
+    afterEach(function () {
+        OMD.test.restoreAll();
     });
 
 
@@ -21,8 +26,8 @@ describe('main.draw', function () {
 
         var expectedWidth = Math.random();
         var expectedHeight = Math.random();
-        widthSpy.onFirstCall().returns(expectedWidth);
-        heightSpy.onFirstCall().returns(expectedHeight);
+        widthStub.onFirstCall().returns(expectedWidth);
+        heightStub.onFirstCall().returns(expectedHeight);
 
         SpaceRocks.draw();
         expect(rectangleSpy.calledOnce).to.be(true);

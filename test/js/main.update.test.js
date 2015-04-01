@@ -2,28 +2,25 @@
  * Created by Eric on 3/24/2015.
  */
 describe('main update', function () {
-    var tempInput;
     var mockInput;
     var playerSpy;
-    var ACCEL_RATE = 0.1;
+    var entityCallSpy;
+    var ACCEL_RATE = 0.25;
     beforeEach(function (done) {
-
-        tempInput = SpaceRocks.InputManager;
+        OMD.test.globalSpy(SpaceRocks, 'InputManager');
+        entityCallSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');
         mockInput = SpaceRocks.InputManager = {
             isAccellerating: sinon.stub(),
             isDecellerating: sinon.stub(),
             rotateCounterClockwise: sinon.stub(),
             rotateClockwise: sinon.stub()
         };
-
-
-        playerSpy = SpaceRocks.EntityManager.player = sinon.stub();
-        playerSpy = SpaceRocks.EntityManager.player = sinon.stub();
+        playerSpy = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
         done();
     });
 
     afterEach(function () {
-        SpaceRocks.InputManager = tempInput;
+        OMD.test.restoreAll();
     });
 
     it('should update entities position based on velocity', function () {

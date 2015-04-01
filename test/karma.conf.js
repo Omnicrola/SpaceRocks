@@ -8,7 +8,8 @@ module.exports = function (config) {
         files: [
             'test/js/**/*.js',
             'src/js/**/*.js',
-            'src/lib/kibo.js'
+            'src/lib/kibo.js',
+            'test/TestUtil.js',
         ],
         autoWatch: false,
         browsers: ['Chrome']
