@@ -11,6 +11,7 @@ module.exports = function (config) {
             'src/lib/kibo.js',
             'test/TestUtil.js',
         ],
+        autoWatchBatchDelay:500,
         autoWatch: false,
         browsers: ['Chrome']
     });

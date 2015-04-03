@@ -5,7 +5,7 @@ describe('SpaceRocks.Shape', function () {
     describe('Player', function () {
         it('should have the correct points', function () {
             var shape = SpaceRocks.Shapes.player();
-            var points = shape.points;
+            var points = shape.pointArray;
             expect(points.length).to.equal(4);
             checkPoint(points[0], -5, -5);
             checkPoint(points[1], 0, 5);
@@ -17,7 +17,7 @@ describe('SpaceRocks.Shape', function () {
     describe('Asteroid', function () {
         it('should have the correct points', function () {
             var shape = SpaceRocks.Shapes.asteroid();
-            var points = shape.points;
+            var points = shape.pointArray;
             expect(points.length).to.equal(5);
             checkPoint(points[0], -10, -8);
             checkPoint(points[1], -3, 4);

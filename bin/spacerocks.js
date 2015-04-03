@@ -45,8 +45,6 @@ var SpaceRocks = (function (spaceRocks) {
     };
     var invokeOnEntities = function (customFunction) {
         if (player) {
-            console.log('vX:'+player.velocity.y);
-            console.log('pX:'+player.position.y);
             customFunction(player);
         }
         entities.forEach(function (entity) {
@@ -116,26 +114,51 @@ var SpaceRocks = (function (spaceRocks) {
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    spaceRocks.Point = function (x, y) {
+
+    var _point = function (x, y) {
         this.x = x;
         this.y = y;
     };
+
+    _point.prototype.distance = function (otherPoint) {
+        var a = this.x - otherPoint.x;
+        var b = this.y - otherPoint.y;
+        var c2 = a*a + b*b;
+        return Math.sqrt(c2);
+    };
+
+    _point.prototype.rotate = function(degrees){
+        var theta = degrees * Math.PI / 180.0;
+        var x = Math.cos(theta) * this.x - Math.sin(theta) * this.y;
+        var y = Math.sin(theta) * this.x + Math.cos(theta) * this.y;
+        return new spaceRocks.Point(x, y);
+    };
+
+    spaceRocks.Point = _point;
     return spaceRocks;
 })(SpaceRocks || {});
 
 /**
  * Created by Eric on 3/21/2015.
  */
-var SpaceRocks=(function(spaceRocks){
-    var protoClass = function(points){
-        this.points = points;
+var SpaceRocks = (function (spaceRocks) {
+    var protoClass = function (points) {
+        this.pointArray = points;
+        this.angle = 0;
     };
-    protoClass.prototype.getPoints = function(){
-        return this.points;
+
+    protoClass.prototype.getPoints = function () {
+        var rotatedPoints = [];
+        var theta = this.angle;
+        this.pointArray.forEach(function (singlePoint) {
+            rotatedPoints.push(singlePoint.rotate(theta));
+        });
+        return rotatedPoints;
     };
+
     spaceRocks.Polygon = protoClass;
     return spaceRocks;
-})(SpaceRocks||{});
+})(SpaceRocks || {});
 /**
  * Created by Eric on 3/21/2015.
  */
@@ -240,7 +263,7 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.Renderer.drawLine(p1.x, p1.y, p2.x, p2.y);
     };
     var drawEntityShape = function (entity) {
-        var points = entity.shape.points;
+        var points = entity.shape.pointArray;
         for (var i = 0; i < points.length - 1; i++) {
             drawLine(entity.position, points[i], points[i + 1]);
         }
