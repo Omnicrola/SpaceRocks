@@ -7,26 +7,27 @@ var SpaceRocks = (function (spaceRocks) {
         context.position.y = y || 0;
     }
 
-    var protoClass = function (x, y, shape) {
-        this.position = {
-            x: 0,
-            y: 0
-        };
-        this.velocity = {
-            x: 0,
-            y: 0
-        };
+    var _entity = function (x, y, shape) {
+        this.position = new spaceRocks.Point(x, y);
+        this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         setPosition(this, x, y);
     };
-    protoClass.prototype.update = function (delta) {
+    _entity.prototype.rotation = function (newAngle) {
+        if (newAngle) {
+            this.shape.angle = newAngle;
+        }
+        return this.shape.angle;
+    }
+    _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
     };
-    protoClass.build = function (x, y, shape) {
-        return new protoClass(x, y, shape)
+
+    _entity.build = function (x, y, shape) {
+        return new _entity(x, y, shape)
     };
-    spaceRocks.Entity = protoClass;
+    spaceRocks.Entity = _entity;
     return spaceRocks;
 
 })(SpaceRocks || {});
@@ -142,12 +143,12 @@ var SpaceRocks = (function (spaceRocks) {
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    var protoClass = function (points) {
+    var _polygon = function (points) {
         this.pointArray = points;
         this.angle = 0;
     };
 
-    protoClass.prototype.getPoints = function () {
+    _polygon.prototype.getPoints = function () {
         var rotatedPoints = [];
         var theta = this.angle;
         this.pointArray.forEach(function (singlePoint) {
@@ -156,7 +157,8 @@ var SpaceRocks = (function (spaceRocks) {
         return rotatedPoints;
     };
 
-    spaceRocks.Polygon = protoClass;
+
+    spaceRocks.Polygon = _polygon;
     return spaceRocks;
 })(SpaceRocks || {});
 /**
@@ -308,6 +310,7 @@ var SpaceRocks = (function (globals, spaceRocks) {
  */
 var SpaceRocks = (function (spaceRocks) {
     var ACCEL_RATE = 0.25;
+    var TURN_RATE = 1.0;
 
     function getPlayer() {
         return spaceRocks.EntityManager.player();
@@ -315,17 +318,33 @@ var SpaceRocks = (function (spaceRocks) {
 
     function updateEntities(frameDelta) {
         spaceRocks.EntityManager.callEntities(function (entity) {
-            entity.position.x += entity.velocity.x;
-            entity.position.y += entity.velocity.y;
+            entity.update(frameDelta);
         });
     }
 
+    function calculatePlayerThrust() {
+        var vector = new SpaceRocks.Point(0, ACCEL_RATE);
+        var thrustVector = vector.rotate(getPlayer().rotation());
+        return thrustVector;
+    }
+
     function updatePlayer(frameDelta) {
+        var player = getPlayer();
         if (spaceRocks.InputManager.isAccellerating()) {
-            getPlayer().velocity.y += ACCEL_RATE;
+            var thrust = calculatePlayerThrust();
+            player.velocity.x += thrust.x;
+            player.velocity.y += thrust.y;
         }
         if (spaceRocks.InputManager.isDecellerating()) {
-            getPlayer().velocity.y -= ACCEL_RATE;
+            var thrust = calculatePlayerThrust();
+            player.velocity.x -= thrust.x;
+            player.velocity.y -= thrust.y;
+        }
+        if (spaceRocks.InputManager.rotateCounterClockwise()) {
+            player.rotation(TURN_RATE * frameDelta * -1 + player.rotation());
+        }
+        if (spaceRocks.InputManager.rotateClockwise()) {
+            player.rotation(TURN_RATE * frameDelta + player.rotation());
         }
     }
 

@@ -2,6 +2,7 @@
  * Created by Eric on 3/21/2015.
  */
 describe("Entity", function () {
+
     it("should initialize it's position", function () {
         var x = 100;
         var y = 200;
@@ -10,11 +11,27 @@ describe("Entity", function () {
         expect(entity.position.y).to.be(y);
 
     });
+
     it("should initialize it's velocity", function () {
         var entity = SpaceRocks.Entity.build(5, 2);
         expect(entity.velocity.x).to.be(0);
         expect(entity.velocity.y).to.be(0);
+    });
 
+    it('should initialize its rotation', function () {
+        var shape = new SpaceRocks.Polygon([]);
+        var entity = SpaceRocks.Entity.build(5, 2, shape);
+        expect(entity.rotation()).to.be(0);
+    });
+
+    it('should rotate its shape', function () {
+        var expectedAngle = 28.3;
+        var shape = new SpaceRocks.Polygon([]);
+        var entity = SpaceRocks.Entity.build(5, 2, shape);
+
+        expect(shape.angle).to.equal(0);
+        entity.rotation(expectedAngle);
+        expect(shape.angle).to.equal(expectedAngle);
     });
 
     it("should remember it's position", function () {
@@ -40,6 +57,7 @@ describe("Entity", function () {
         expect(entity.position.x).to.be(25);
         expect(entity.position.y).to.be(30);
     });
+
     it('will move based on velocity and delta (case2)', function () {
         var entity = SpaceRocks.Entity.build();
         expect(entity.position.x).to.be(0);

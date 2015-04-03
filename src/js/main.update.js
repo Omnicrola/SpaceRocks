@@ -3,6 +3,7 @@
  */
 var SpaceRocks = (function (spaceRocks) {
     var ACCEL_RATE = 0.25;
+    var TURN_RATE = 1.0;
 
     function getPlayer() {
         return spaceRocks.EntityManager.player();
@@ -10,17 +11,33 @@ var SpaceRocks = (function (spaceRocks) {
 
     function updateEntities(frameDelta) {
         spaceRocks.EntityManager.callEntities(function (entity) {
-            entity.position.x += entity.velocity.x;
-            entity.position.y += entity.velocity.y;
+            entity.update(frameDelta);
         });
     }
 
+    function calculatePlayerThrust() {
+        var vector = new SpaceRocks.Point(0, ACCEL_RATE);
+        var thrustVector = vector.rotate(getPlayer().rotation());
+        return thrustVector;
+    }
+
     function updatePlayer(frameDelta) {
+        var player = getPlayer();
         if (spaceRocks.InputManager.isAccellerating()) {
-            getPlayer().velocity.y += ACCEL_RATE;
+            var thrust = calculatePlayerThrust();
+            player.velocity.x += thrust.x;
+            player.velocity.y += thrust.y;
         }
         if (spaceRocks.InputManager.isDecellerating()) {
-            getPlayer().velocity.y -= ACCEL_RATE;
+            var thrust = calculatePlayerThrust();
+            player.velocity.x -= thrust.x;
+            player.velocity.y -= thrust.y;
+        }
+        if (spaceRocks.InputManager.rotateCounterClockwise()) {
+            player.rotation(TURN_RATE * frameDelta * -1 + player.rotation());
+        }
+        if (spaceRocks.InputManager.rotateClockwise()) {
+            player.rotation(TURN_RATE * frameDelta + player.rotation());
         }
     }
 

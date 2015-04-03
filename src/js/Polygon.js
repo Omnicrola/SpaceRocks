@@ -2,12 +2,12 @@
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    var protoClass = function (points) {
+    var _polygon = function (points) {
         this.pointArray = points;
         this.angle = 0;
     };
 
-    protoClass.prototype.getPoints = function () {
+    _polygon.prototype.getPoints = function () {
         var rotatedPoints = [];
         var theta = this.angle;
         this.pointArray.forEach(function (singlePoint) {
@@ -16,6 +16,7 @@ var SpaceRocks = (function (spaceRocks) {
         return rotatedPoints;
     };
 
-    spaceRocks.Polygon = protoClass;
+
+    spaceRocks.Polygon = _polygon;
     return spaceRocks;
 })(SpaceRocks || {});

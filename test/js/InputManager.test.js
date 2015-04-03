@@ -44,12 +44,14 @@ describe('InputManager', function () {
         var setUp = upSpy.getCall(1).args[1];
         checkKeyToggle(SpaceRocks.InputManager.isDecellerating, setDown, setUp);
     });
+
     it('should should set rotateCounterClockwise when left key is pressed', function () {
         SpaceRocks.InputManager.init(mockKibo);
         var setDown = downSpy.getCall(2).args[1];
         var setUp = upSpy.getCall(2).args[1];
         checkKeyToggle(SpaceRocks.InputManager.rotateCounterClockwise, setDown, setUp);
     });
+
     it('should should set rotateClockwise when right key is pressed', function () {
         SpaceRocks.InputManager.init(mockKibo);
         var setDown = downSpy.getCall(3).args[1];

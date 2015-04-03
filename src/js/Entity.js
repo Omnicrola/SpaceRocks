@@ -7,26 +7,27 @@ var SpaceRocks = (function (spaceRocks) {
         context.position.y = y || 0;
     }
 
-    var protoClass = function (x, y, shape) {
-        this.position = {
-            x: 0,
-            y: 0
-        };
-        this.velocity = {
-            x: 0,
-            y: 0
-        };
+    var _entity = function (x, y, shape) {
+        this.position = new spaceRocks.Point(x, y);
+        this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         setPosition(this, x, y);
     };
-    protoClass.prototype.update = function (delta) {
+    _entity.prototype.rotation = function (newAngle) {
+        if (newAngle) {
+            this.shape.angle = newAngle;
+        }
+        return this.shape.angle;
+    }
+    _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
     };
-    protoClass.build = function (x, y, shape) {
-        return new protoClass(x, y, shape)
+
+    _entity.build = function (x, y, shape) {
+        return new _entity(x, y, shape)
     };
-    spaceRocks.Entity = protoClass;
+    spaceRocks.Entity = _entity;
     return spaceRocks;
 
 })(SpaceRocks || {});
