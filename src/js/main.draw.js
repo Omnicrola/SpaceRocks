@@ -18,7 +18,7 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.Renderer.drawLine(p1.x, p1.y, p2.x, p2.y);
     };
     var drawEntityShape = function (entity) {
-        var points = entity.shape.pointArray;
+        var points = entity.shape.getPoints();
         for (var i = 0; i < points.length - 1; i++) {
             drawLine(entity.position, points[i], points[i + 1]);
         }

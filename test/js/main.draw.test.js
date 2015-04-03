@@ -47,17 +47,17 @@ describe('main.draw', function () {
     });
 
     it('should draw entities', function () {
-        var point1 = new SpaceRocks.Point(3, 4);
-        var point2 = new SpaceRocks.Point(6, 3);
-        var point3 = new SpaceRocks.Point(2, 4);
-        var shape = new SpaceRocks.Polygon([
-            point1,
-            point2,
-            point3
-        ]);
         var offX = 5;
         var offY = 5;
-        var entity = new SpaceRocks.Entity(offX, offY, shape);
+        var stubShape = {
+            getPoints:sinon.stub()
+        };
+        var point1 = new SpaceRocks.Point(4,5);
+        var point2 = new SpaceRocks.Point(2.34,5.22);
+        var point3 = new SpaceRocks.Point(4.455,-23.533);
+        stubShape.getPoints.returns([point1,point2,point3]);
+
+        var entity = new SpaceRocks.Entity(offX, offY, stubShape);
 
         SpaceRocks.draw();
         var drawFunction = callEntitySpy.getCall(0).args[0];

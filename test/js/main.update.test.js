@@ -7,7 +7,7 @@ describe('main update', function () {
     var entityCallSpy;
 
     var ACCEL_RATE = 0.25;
-    var TURN_RATE = 1;
+    var TURN_RATE = 5.0;
 
     beforeEach(function (done) {
         entityCallSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');

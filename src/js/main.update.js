@@ -3,7 +3,7 @@
  */
 var SpaceRocks = (function (spaceRocks) {
     var ACCEL_RATE = 0.25;
-    var TURN_RATE = 1.0;
+    var TURN_RATE = 5.0;
 
     function getPlayer() {
         return spaceRocks.EntityManager.player();
