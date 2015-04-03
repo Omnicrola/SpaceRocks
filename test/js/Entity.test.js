@@ -2,6 +2,20 @@
  * Created by Eric on 3/21/2015.
  */
 describe("Entity", function () {
+    var widthStub;
+    var heightStub;
+    beforeEach(function (done) {
+        widthStub = OMD.test.globalStub(SpaceRocks.Renderer, 'width');
+        heightStub = OMD.test.globalStub(SpaceRocks.Renderer, 'height');
+        widthStub.returns(100);
+        heightStub.returns(100);
+
+        done();
+    });
+
+    afterEach(function () {
+        OMD.test.restoreAll();
+    });
 
     it("should initialize it's position", function () {
         var x = 100;
@@ -62,12 +76,12 @@ describe("Entity", function () {
         var entity = SpaceRocks.Entity.build();
         expect(entity.position.x).to.be(0);
         expect(entity.position.y).to.be(0);
-        entity.velocity.x = -200;
-        entity.velocity.y = 500;
+        entity.velocity.x = 200;
+        entity.velocity.y = 100;
         entity.update(0.25);
 
-        expect(entity.position.x).to.be(-50);
-        expect(entity.position.y).to.be(125);
+        expect(entity.position.x).to.be(50);
+        expect(entity.position.y).to.be(25);
     });
 
     it("should hold a shape", function () {
@@ -75,4 +89,31 @@ describe("Entity", function () {
         var entity = SpaceRocks.Entity.build(0, 0, shape);
         expect(entity.shape).to.be(shape);
     });
+
+
+    it('should wrap to 0 when position is greater than screen size', function () {
+        var entity = SpaceRocks.Entity.build();
+        entity.position.x = 106;
+        entity.position.y = 110;
+
+        entity.update(1.0);
+        expect(entity.position.x).to.equal(6);
+        expect(entity.position.y).to.equal(10);
+    });
+
+    it('should wrap to screen max when position is less than zero', function () {
+        var maxX = 545;
+        var maxY = 632;
+        widthStub.returns(maxX);
+        heightStub.returns(maxY);
+
+        var entity = SpaceRocks.Entity.build();
+        entity.position.x = -20;
+        entity.position.y = -100;
+
+        entity.update(1.0);
+        expect(entity.position.x).to.equal(maxX - 20);
+        expect(entity.position.y).to.equal(maxY - 100);
+    });
+
 });

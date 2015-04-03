@@ -108,7 +108,6 @@ describe('main update', function () {
         expect(player.rotation.calledWith(expectedRotation)).to.be.ok();
     });
 
-
     function stubPlayer(x, y) {
         x = (x) ? x : 0;
         y = (y) ? y : 0;

@@ -18,10 +18,28 @@ var SpaceRocks = (function (spaceRocks) {
             this.shape.angle = newAngle;
         }
         return this.shape.angle;
+    };
+
+    function wrapPositionOnScreen(){
+      var maxX = spaceRocks.Renderer.width();
+      var maxY = spaceRocks.Renderer.height();
+        if(this.position.x > maxX){
+            this.position.x -=maxX;
+        } else if (this.position.x < 0){
+            this.position.x += maxX;
+        }
+        if(this.position.y > maxY){
+            this.position.y -= maxY;
+        } else if (this.position.y < 0){
+            this.position.y += maxY;
+        }
+
     }
+
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
+        wrapPositionOnScreen.call(this);
     };
 
     _entity.build = function (x, y, shape) {
