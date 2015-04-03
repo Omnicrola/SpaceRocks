@@ -11,7 +11,7 @@ var SpaceRocks = (function (globals, spaceRocks) {
 
     function spawnPlayer() {
         var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.create(0, 0, playerShape);
+        var newPlayer = spaceRocks.Entity.build(100, 100, playerShape);
         spaceRocks.EntityManager.player(newPlayer);
     }
 

@@ -32,14 +32,14 @@ describe('Main', function () {
         });
 
         it('will spawn player on EntityManager', function () {
-            var entityCreateStub = OMD.test.globalStub(SpaceRocks.Entity, 'create');
+            var entityCreateStub = OMD.test.globalStub(SpaceRocks.Entity, 'build');
             var playerShapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'player');
             var setPlayerSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'player');
 
             var expectedShape = OMD.test.randomObject();
             var expectedEntity = OMD.test.randomObject();
             playerShapeStub.returns(expectedShape);
-            entityCreateStub.withArgs(0,0,expectedShape).returns(expectedEntity);
+            entityCreateStub.withArgs(100,100,expectedShape).returns(expectedEntity);
 
             SpaceRocks.start('testCanvas');
 

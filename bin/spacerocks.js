@@ -23,7 +23,7 @@ var SpaceRocks = (function (spaceRocks) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
     };
-    protoClass.create = function (x, y, shape) {
+    protoClass.build = function (x, y, shape) {
         return new protoClass(x, y, shape)
     };
     spaceRocks.Entity = protoClass;
@@ -174,21 +174,21 @@ var SpaceRocks = (function (spaceRocks) {
 var SpaceRocks = (function (spaceRocks) {
     spaceRocks.Shapes = {
         player: function () {
-            return [
+            return new spaceRocks.Polygon([
                 new spaceRocks.Point(-5, -5),
                 new spaceRocks.Point(0, 5),
                 new spaceRocks.Point(5, -5),
                 new spaceRocks.Point(0, 0)
-            ];
+            ]);
         },
         asteroid: function () {
-            return [
+            return new spaceRocks.Polygon([
                 new spaceRocks.Point(-10, -8),
                 new spaceRocks.Point(-3, 4),
                 new spaceRocks.Point(-6, 9),
                 new spaceRocks.Point(2, 8),
                 new spaceRocks.Point(-6, -8)
-            ];
+            ]);
         }
     };
     return spaceRocks;
@@ -265,7 +265,7 @@ var SpaceRocks = (function (globals, spaceRocks) {
 
     function spawnPlayer() {
         var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.create(0, 0, playerShape);
+        var newPlayer = spaceRocks.Entity.build(100, 100, playerShape);
         spaceRocks.EntityManager.player(newPlayer);
     }
 
