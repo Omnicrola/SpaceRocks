@@ -1,4 +1,22 @@
 /**
+ * Created by Eric on 4/4/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    var BULLET_VELOCITY = 5.0;
+    function build(pX, pY) {
+        var shape = spaceRocks.Shapes.bullet();
+        var bullet = new spaceRocks.Entity(pX, pY, shape);
+        bullet.velocity.x = 0.0;
+        bullet.velocity.y = BULLET_VELOCITY;
+        return bullet;
+    }
+
+    spaceRocks.BulletFactory = {
+        build: build
+    };
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
@@ -20,17 +38,17 @@ var SpaceRocks = (function (spaceRocks) {
         return this.shape.angle;
     };
 
-    function wrapPositionOnScreen(){
-      var maxX = spaceRocks.Renderer.width();
-      var maxY = spaceRocks.Renderer.height();
-        if(this.position.x > maxX){
-            this.position.x -=maxX;
-        } else if (this.position.x < 0){
+    function wrapPositionOnScreen() {
+        var maxX = spaceRocks.Renderer.width();
+        var maxY = spaceRocks.Renderer.height();
+        if (this.position.x > maxX) {
+            this.position.x -= maxX;
+        } else if (this.position.x < 0) {
             this.position.x += maxX;
         }
-        if(this.position.y > maxY){
+        if (this.position.y > maxY) {
             this.position.y -= maxY;
-        } else if (this.position.y < 0){
+        } else if (this.position.y < 0) {
             this.position.y += maxY;
         }
 
@@ -41,7 +59,6 @@ var SpaceRocks = (function (spaceRocks) {
         this.position.y += this.velocity.y * delta;
         wrapPositionOnScreen.call(this);
     };
-
     _entity.build = function (x, y, shape) {
         return new _entity(x, y, shape)
     };
@@ -383,10 +400,8 @@ var SpaceRocks = (function (spaceRocks) {
         if(spaceRocks.InputManager.fireWeapon()){
             var x = player.position.x;
             var y = player.position.y;
-            var shape = spaceRocks.Shapes.bullet();
-            var bullet = new SpaceRocks.Entity(x, y, shape);
+            var bullet = spaceRocks.BulletFactory.build(x, y, 0);
             spaceRocks.EntityManager.addEntity(bullet);
-
         }
     }
 

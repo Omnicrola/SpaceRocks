@@ -112,21 +112,33 @@ describe('main update', function () {
         expect(player.rotation.calledWith(expectedRotation)).to.be.ok;
     });
 
-    it('should shoot a bullet when spacebar is pressed', function () {
-        var expectedY = 52.4;
-        var expectedX = 4.23;
-        var player = stubPlayer(expectedX, expectedY);
-        playerStub.returns(player);
-        var shape = SpaceRocks.Shapes.bullet();
-        var expectedBullet = new SpaceRocks.Entity(expectedX, expectedY, shape);
+    describe('Firing a weapon', function () {
+        var bulletFactoryStub;
+        beforeEach(function (done) {
+            bulletFactoryStub = OMD.test.globalStub(SpaceRocks.BulletFactory, 'build');
+            done();
+        });
 
-        mockInput.fireWeapon.returns(true);
+        afterEach(function () {
+            OMD.test.restoreAll();
+        });
 
+        it('will fire a bullet when spacebar is pressed', function () {
+            var expectedY = 52.4;
+            var expectedX = 4.23;
+            var player = stubPlayer(expectedX, expectedY);
+            playerStub.returns(player);
 
-        SpaceRocks.update(1.0);
-        expect(addEntitySpy.calledOnce).to.be.ok;
-        var newEntity = addEntitySpy.getCall(0).args[0];
-        expect(newEntity).to.deep.equal(expectedBullet);
+            var expectedBullet = {kittens: 'fluffy'};
+            bulletFactoryStub.returns(expectedBullet);
+
+            mockInput.fireWeapon.returns(true);
+            SpaceRocks.update(1.0);
+            expect(bulletFactoryStub.calledOnce).to.be.ok;
+            expect(addEntitySpy.calledOnce).to.be.ok;
+            var newEntity = addEntitySpy.getCall(0).args[0];
+            expect(newEntity).to.deep.equal(expectedBullet);
+        });
     });
 
     function stubPlayer(x, y) {

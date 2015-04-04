@@ -47,10 +47,8 @@ var SpaceRocks = (function (spaceRocks) {
         if(spaceRocks.InputManager.fireWeapon()){
             var x = player.position.x;
             var y = player.position.y;
-            var shape = spaceRocks.Shapes.bullet();
-            var bullet = new SpaceRocks.Entity(x, y, shape);
+            var bullet = spaceRocks.BulletFactory.build(x, y, 0);
             spaceRocks.EntityManager.addEntity(bullet);
-
         }
     }
 
