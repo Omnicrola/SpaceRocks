@@ -6,7 +6,8 @@ var SpaceRocks = (function (spaceRocks) {
         up: false,
         down: false,
         left: false,
-        right: false
+        right: false,
+        space: false
     };
 
     function bindKey(kibo, stateName) {
@@ -23,6 +24,7 @@ var SpaceRocks = (function (spaceRocks) {
         bindKey(kibo, 'down');
         bindKey(kibo, 'left');
         bindKey(kibo, 'right');
+        bindKey(kibo, 'space');
     };
     spaceRocks.InputManager = {
         init: initFunc,
@@ -37,6 +39,9 @@ var SpaceRocks = (function (spaceRocks) {
         },
         rotateClockwise: function () {
             return state['right'];
+        },
+        fireWeapon : function(){
+            return state['space']
         }
     };
     return spaceRocks;

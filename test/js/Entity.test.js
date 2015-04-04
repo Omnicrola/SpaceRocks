@@ -21,21 +21,21 @@ describe("Entity", function () {
         var x = 100;
         var y = 200;
         var entity = SpaceRocks.Entity.build(x, y);
-        expect(entity.position.x).to.be(x);
-        expect(entity.position.y).to.be(y);
+        expect(entity.position.x).to.equal(x);
+        expect(entity.position.y).to.equal(y);
 
     });
 
     it("should initialize it's velocity", function () {
         var entity = SpaceRocks.Entity.build(5, 2);
-        expect(entity.velocity.x).to.be(0);
-        expect(entity.velocity.y).to.be(0);
+        expect(entity.velocity.x).to.equal(0);
+        expect(entity.velocity.y).to.equal(0);
     });
 
     it('should initialize its rotation', function () {
         var shape = new SpaceRocks.Polygon([]);
         var entity = SpaceRocks.Entity.build(5, 2, shape);
-        expect(entity.rotation()).to.be(0);
+        expect(entity.rotation()).to.equal(0);
     });
 
     it('should rotate its shape', function () {
@@ -55,39 +55,39 @@ describe("Entity", function () {
         entity.position.x = x;
         entity.position.y = y;
 
-        expect(entity.position.x).to.be(x);
-        expect(entity.position.y).to.be(y);
+        expect(entity.position.x).to.equal(x);
+        expect(entity.position.y).to.equal(y);
 
     });
 
     it('will move based on velocity and delta (case1)', function () {
         var entity = SpaceRocks.Entity.build();
-        expect(entity.position.x).to.be(0);
-        expect(entity.position.y).to.be(0);
+        expect(entity.position.x).to.equal(0);
+        expect(entity.position.y).to.equal(0);
         entity.velocity.x = 50;
         entity.velocity.y = 60;
         entity.update(0.5);
 
-        expect(entity.position.x).to.be(25);
-        expect(entity.position.y).to.be(30);
+        expect(entity.position.x).to.equal(25);
+        expect(entity.position.y).to.equal(30);
     });
 
     it('will move based on velocity and delta (case2)', function () {
         var entity = SpaceRocks.Entity.build();
-        expect(entity.position.x).to.be(0);
-        expect(entity.position.y).to.be(0);
+        expect(entity.position.x).to.equal(0);
+        expect(entity.position.y).to.equal(0);
         entity.velocity.x = 200;
         entity.velocity.y = 100;
         entity.update(0.25);
 
-        expect(entity.position.x).to.be(50);
-        expect(entity.position.y).to.be(25);
+        expect(entity.position.x).to.equal(50);
+        expect(entity.position.y).to.equal(25);
     });
 
     it("should hold a shape", function () {
         var shape = [3, 4, 43, 4];
         var entity = SpaceRocks.Entity.build(0, 0, shape);
-        expect(entity.shape).to.be(shape);
+        expect(entity.shape).to.equal(shape);
     });
 
 
@@ -112,8 +112,8 @@ describe("Entity", function () {
         entity.position.y = -100;
 
         entity.update(1.0);
-        expect(entity.position.x).to.equal(maxX - 20);
-        expect(entity.position.y).to.equal(maxY - 100);
+        expect(entity.position.x).to.equal(maxX-20);
+        expect(entity.position.y).to.equal(maxY-100);
     });
 
 });

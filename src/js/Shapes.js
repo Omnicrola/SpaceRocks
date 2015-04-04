@@ -19,6 +19,12 @@ var SpaceRocks = (function (spaceRocks) {
                 new spaceRocks.Point(2, 8),
                 new spaceRocks.Point(-6, -8)
             ]);
+        },
+        bullet: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(0, 0),
+                new spaceRocks.Point(1, 0)
+            ]);
         }
     };
     return spaceRocks;

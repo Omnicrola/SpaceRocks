@@ -93,7 +93,8 @@ var SpaceRocks = (function (spaceRocks) {
         up: false,
         down: false,
         left: false,
-        right: false
+        right: false,
+        space: false
     };
 
     function bindKey(kibo, stateName) {
@@ -110,6 +111,7 @@ var SpaceRocks = (function (spaceRocks) {
         bindKey(kibo, 'down');
         bindKey(kibo, 'left');
         bindKey(kibo, 'right');
+        bindKey(kibo, 'space');
     };
     spaceRocks.InputManager = {
         init: initFunc,
@@ -124,6 +126,9 @@ var SpaceRocks = (function (spaceRocks) {
         },
         rotateClockwise: function () {
             return state['right'];
+        },
+        fireWeapon : function(){
+            return state['space']
         }
     };
     return spaceRocks;
@@ -231,6 +236,12 @@ var SpaceRocks = (function (spaceRocks) {
                 new spaceRocks.Point(-6, 9),
                 new spaceRocks.Point(2, 8),
                 new spaceRocks.Point(-6, -8)
+            ]);
+        },
+        bullet: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(0, 0),
+                new spaceRocks.Point(1, 0)
             ]);
         }
     };
@@ -346,8 +357,7 @@ var SpaceRocks = (function (spaceRocks) {
         return thrustVector;
     }
 
-    function updatePlayer(frameDelta) {
-        var player = getPlayer();
+    function updateThrust(player) {
         if (spaceRocks.InputManager.isAccellerating()) {
             var thrust = calculatePlayerThrust();
             player.velocity.x += thrust.x;
@@ -358,12 +368,33 @@ var SpaceRocks = (function (spaceRocks) {
             player.velocity.x -= thrust.x;
             player.velocity.y -= thrust.y;
         }
+    }
+
+    function updateRotation(player, frameDelta) {
         if (spaceRocks.InputManager.rotateCounterClockwise()) {
             player.rotation(TURN_RATE * frameDelta * -1 + player.rotation());
         }
         if (spaceRocks.InputManager.rotateClockwise()) {
             player.rotation(TURN_RATE * frameDelta + player.rotation());
         }
+    }
+
+    function checkForWeaponFire(player, frameDelta){
+        if(spaceRocks.InputManager.fireWeapon()){
+            var x = player.position.x;
+            var y = player.position.y;
+            var shape = spaceRocks.Shapes.bullet();
+            var bullet = new SpaceRocks.Entity(x, y, shape);
+            spaceRocks.EntityManager.addEntity(bullet);
+
+        }
+    }
+
+    function updatePlayer(frameDelta) {
+        var player = getPlayer();
+        updateThrust(player);
+        updateRotation(player, frameDelta);
+        checkForWeaponFire(player, frameDelta);
     }
 
     spaceRocks.update = function (frameDelta) {

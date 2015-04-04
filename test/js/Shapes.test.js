@@ -26,6 +26,15 @@ describe('SpaceRocks.Shape', function () {
             checkPoint(points[4], -6, -8);
         });
     });
+    describe('Bullet', function () {
+        it('should have the correct points', function () {
+            var shape = SpaceRocks.Shapes.bullet();
+            var points = shape.pointArray;
+            expect(points.length).to.equal(2);
+            checkPoint(points[0], 0, 0);
+            checkPoint(points[1], 1, 0);
+        });
+    });
 
     function checkPoint(point, expectedX, expectedY) {
         expect(point.x).to.equal(expectedX);

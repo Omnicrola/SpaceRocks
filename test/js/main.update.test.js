@@ -5,6 +5,7 @@ describe('main update', function () {
     var mockInput;
     var playerStub;
     var entityCallSpy;
+    var addEntitySpy;
 
     var ACCEL_RATE = 0.25;
     var TURN_RATE = 5.0;
@@ -12,12 +13,14 @@ describe('main update', function () {
     beforeEach(function (done) {
         entityCallSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');
         playerStub = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
+        addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         OMD.test.globalSpy(SpaceRocks, 'InputManager');
         mockInput = SpaceRocks.InputManager = {
             isAccellerating: sinon.stub(),
             isDecellerating: sinon.stub(),
             rotateCounterClockwise: sinon.stub(),
-            rotateClockwise: sinon.stub()
+            rotateClockwise: sinon.stub(),
+            fireWeapon: sinon.stub()
         };
         done();
     });
@@ -33,7 +36,7 @@ describe('main update', function () {
 
         var delta = Math.random();
         SpaceRocks.update(delta);
-        expect(entityCallSpy.calledOnce).to.be.ok();
+        expect(entityCallSpy.calledOnce).to.be.ok;
         var updateFunction = entityCallSpy.getCall(0).args[0];
 
         updateFunction(entity);
@@ -41,7 +44,7 @@ describe('main update', function () {
         expect(entity.update.getCall(0).args[0]).to.equal(delta);
     });
 
-    it('should not change velocity when no keys are pressed', function () {
+    it('should not anything when no keys are pressed', function () {
         var expectedX = Math.random();
         var expectedY = Math.random();
         var player = stubPlayer(expectedX, expectedY);
@@ -51,6 +54,7 @@ describe('main update', function () {
         mockInput.isDecellerating.returns(false);
         mockInput.rotateCounterClockwise.returns(false);
         mockInput.rotateClockwise.returns(false);
+        mockInput.fireWeapon.returns(false);
 
         SpaceRocks.update(1.0);
         expect(player.velocity.x).to.equal(expectedX);
@@ -61,7 +65,7 @@ describe('main update', function () {
         var player = stubPlayer();
         var playerRotation = Math.random() * 200;
         playerStub.returns(player);
-        player.rotation.returns (playerRotation);
+        player.rotation.returns(playerRotation);
         mockInput.isAccellerating.returns(true);
 
         var thrust = new SpaceRocks.Point(0, ACCEL_RATE).rotate(playerRotation);
@@ -91,9 +95,9 @@ describe('main update', function () {
         player.rotation.returns(startingRotation);
         mockInput.rotateCounterClockwise.returns(true);
 
-        var expectedRotation = (TURN_RATE *-1) + startingRotation;
+        var expectedRotation = (TURN_RATE * -1) + startingRotation;
         SpaceRocks.update(1.0);
-        expect(player.rotation.calledWith(expectedRotation)).to.be.ok();
+        expect(player.rotation.calledWith(expectedRotation)).to.be.ok;
     });
 
     it('should rotate clockwise when left key is pressed', function () {
@@ -105,13 +109,31 @@ describe('main update', function () {
 
         var expectedRotation = TURN_RATE + startingRotation;
         SpaceRocks.update(1.0);
-        expect(player.rotation.calledWith(expectedRotation)).to.be.ok();
+        expect(player.rotation.calledWith(expectedRotation)).to.be.ok;
+    });
+
+    it('should shoot a bullet when spacebar is pressed', function () {
+        var expectedY = 52.4;
+        var expectedX = 4.23;
+        var player = stubPlayer(expectedX, expectedY);
+        playerStub.returns(player);
+        var shape = SpaceRocks.Shapes.bullet();
+        var expectedBullet = new SpaceRocks.Entity(expectedX, expectedY, shape);
+
+        mockInput.fireWeapon.returns(true);
+
+
+        SpaceRocks.update(1.0);
+        expect(addEntitySpy.calledOnce).to.be.ok;
+        var newEntity = addEntitySpy.getCall(0).args[0];
+        expect(newEntity).to.deep.equal(expectedBullet);
     });
 
     function stubPlayer(x, y) {
         x = (x) ? x : 0;
         y = (y) ? y : 0;
         return {
+            position: {x: x, y: y},
             velocity: {x: x, y: y},
             rotation: sinon.stub()
         };

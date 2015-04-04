@@ -8,7 +8,7 @@ describe('TimeWrapper.getTime', function () {
         var allowedDelta = 0.00;
 
         var difference = Math.abs(timestamp-actualTime);
-        expect(difference).to.be(allowedDelta);
+        expect(difference).to.equal(allowedDelta);
 
     });
 });

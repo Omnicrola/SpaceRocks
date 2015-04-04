@@ -21,8 +21,7 @@ var SpaceRocks = (function (spaceRocks) {
         return thrustVector;
     }
 
-    function updatePlayer(frameDelta) {
-        var player = getPlayer();
+    function updateThrust(player) {
         if (spaceRocks.InputManager.isAccellerating()) {
             var thrust = calculatePlayerThrust();
             player.velocity.x += thrust.x;
@@ -33,12 +32,33 @@ var SpaceRocks = (function (spaceRocks) {
             player.velocity.x -= thrust.x;
             player.velocity.y -= thrust.y;
         }
+    }
+
+    function updateRotation(player, frameDelta) {
         if (spaceRocks.InputManager.rotateCounterClockwise()) {
             player.rotation(TURN_RATE * frameDelta * -1 + player.rotation());
         }
         if (spaceRocks.InputManager.rotateClockwise()) {
             player.rotation(TURN_RATE * frameDelta + player.rotation());
         }
+    }
+
+    function checkForWeaponFire(player, frameDelta){
+        if(spaceRocks.InputManager.fireWeapon()){
+            var x = player.position.x;
+            var y = player.position.y;
+            var shape = spaceRocks.Shapes.bullet();
+            var bullet = new SpaceRocks.Entity(x, y, shape);
+            spaceRocks.EntityManager.addEntity(bullet);
+
+        }
+    }
+
+    function updatePlayer(frameDelta) {
+        var player = getPlayer();
+        updateThrust(player);
+        updateRotation(player, frameDelta);
+        checkForWeaponFire(player, frameDelta);
     }
 
     spaceRocks.update = function (frameDelta) {

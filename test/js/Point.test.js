@@ -6,8 +6,8 @@ describe('Point', function () {
         var x = Math.random();
         var y = Math.random();
         var point = new SpaceRocks.Point(x, y);
-        expect(point.x).to.be(x);
-        expect(point.y).to.be(y);
+        expect(point.x).to.equal(x);
+        expect(point.y).to.equal(y);
     });
 
     it('should calculate distance', function () {
@@ -40,7 +40,7 @@ describe('Point', function () {
         var originalPoint = new SpaceRocks.Point(Math.random(), Math.random());
         var rotatedPoint = originalPoint.rotate(Math.random());
         rotatedPoint.x = 5;
-        expect(originalPoint).to.not.be(rotatedPoint);
+        expect(originalPoint).to.not.equal(rotatedPoint);
         expect(originalPoint.x).to.not.equal(rotatedPoint.x);
         expect(originalPoint.y).to.not.equal(rotatedPoint.y);
     });

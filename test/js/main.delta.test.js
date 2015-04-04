@@ -12,7 +12,7 @@ describe('SpaceRocks.delta', function () {
     });
 
     it('will have a default FPS of 24', function(){
-       expect(SpaceRocks.fps).to.be(24);
+       expect(SpaceRocks.fps).to.equal(24);
     });
 
     it('will return a delta based on a fps of 10', function () {
@@ -25,7 +25,7 @@ describe('SpaceRocks.delta', function () {
         var deltaValue2 = SpaceRocks.delta();
 
         expect(TimeWrapper.getTime.calledTwice);
-        expect(deltaValue2).to.be(1.0);
+        expect(deltaValue2).to.equal(1.0);
 
         SpaceRocks.fps = tempFps;
 
@@ -40,7 +40,7 @@ describe('SpaceRocks.delta', function () {
         var deltaValue2 = SpaceRocks.delta();
 
         expect(TimeWrapper.getTime.calledTwice);
-        expect(deltaValue2).to.be(0.528);
+        expect(deltaValue2).to.equal(0.528);
 
         SpaceRocks.fps = tempFps;
 
@@ -56,7 +56,7 @@ describe('SpaceRocks.delta', function () {
         var deltaValue2 = SpaceRocks.delta();
 
         expect(TimeWrapper.getTime.calledTwice);
-        expect(deltaValue2).to.be(10.0);
+        expect(deltaValue2).to.equal(10.0);
 
         SpaceRocks.fps = tempFps;
 

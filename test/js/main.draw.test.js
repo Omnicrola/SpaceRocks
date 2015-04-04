@@ -30,19 +30,19 @@ describe('main.draw', function () {
         heightStub.onFirstCall().returns(expectedHeight);
 
         SpaceRocks.draw();
-        expect(rectangleSpy.calledOnce).to.be(true);
+        expect(rectangleSpy.calledOnce).to.equal(true);
         var methodCall = rectangleSpy.getCall(0);
-        expect(methodCall.args[0]).to.be('#000000');
-        expect(methodCall.args[1]).to.be(0);
-        expect(methodCall.args[2]).to.be(0);
-        expect(methodCall.args[3]).to.be(expectedWidth);
-        expect(methodCall.args[4]).to.be(expectedHeight);
+        expect(methodCall.args[0]).to.equal('#000000');
+        expect(methodCall.args[1]).to.equal(0);
+        expect(methodCall.args[2]).to.equal(0);
+        expect(methodCall.args[3]).to.equal(expectedWidth);
+        expect(methodCall.args[4]).to.equal(expectedHeight);
     });
 
     it('should pass a draw function to EntityManager', function () {
         SpaceRocks.draw();
-        expect(callEntitySpy.calledOnce).to.be(true);
-        expect(typeof callEntitySpy.getCall(0).args[0]).to.be('function');
+        expect(callEntitySpy.calledOnce).to.equal(true);
+        expect(typeof callEntitySpy.getCall(0).args[0]).to.equal('function');
 
     });
 
@@ -69,6 +69,6 @@ describe('main.draw', function () {
 
     });
     function checkLineDrawn(offX, offY, p1, p2) {
-        expect(lineSpy.calledWith(p1.x + offX, p1.y + offY, p2.x + offX, p2.y + offY)).to.be(true);
+        expect(lineSpy.calledWith(p1.x + offX, p1.y + offY, p2.x + offX, p2.y + offY)).to.equal(true);
     }
 });

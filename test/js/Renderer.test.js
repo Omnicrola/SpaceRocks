@@ -22,7 +22,7 @@ describe('spacerocks renderer', function () {
             var expectedWidth = Math.random();
             mockCanvas.canvas.width = expectedWidth;
             var actualWidth = SpaceRocks.Renderer.width();
-            expect(actualWidth).to.be(expectedWidth);
+            expect(actualWidth).to.equal(expectedWidth);
         });
 
         it('should report Height from canvas', function () {
@@ -30,25 +30,25 @@ describe('spacerocks renderer', function () {
             var expectedHeight = Math.random();
             mockCanvas.canvas.height = expectedHeight;
             var actualHeight = SpaceRocks.Renderer.height();
-            expect(actualHeight).to.be(expectedHeight);
+            expect(actualHeight).to.equal(expectedHeight);
         });
 
         it('should draw a line on canvas', function () {
             SpaceRocks.Renderer.setCanvas(mockCanvas);
             SpaceRocks.Renderer.drawLine(10, 11, 20, 21);
-            expect(mockCanvas.beginPath.calledOnce).to.be(true);
-            expect(mockCanvas.moveTo.calledOnce).to.be(true);
-            expect(mockCanvas.lineTo.calledOnce).to.be(true);
-            expect(mockCanvas.stroke.calledOnce).to.be(true);
+            expect(mockCanvas.beginPath.calledOnce).to.equal(true);
+            expect(mockCanvas.moveTo.calledOnce).to.equal(true);
+            expect(mockCanvas.lineTo.calledOnce).to.equal(true);
+            expect(mockCanvas.stroke.calledOnce).to.equal(true);
 
-            expect(mockCanvas.strokeStyle).to.be('#FFFFFF');
+            expect(mockCanvas.strokeStyle).to.equal('#FFFFFF');
             var moveToCall = mockCanvas.moveTo.getCall(0);
-            expect(moveToCall.args[0]).to.be(10);
-            expect(moveToCall.args[1]).to.be(11);
+            expect(moveToCall.args[0]).to.equal(10);
+            expect(moveToCall.args[1]).to.equal(11);
 
             var lineToCall = mockCanvas.lineTo.getCall(0);
-            expect(lineToCall.args[0]).to.be(20);
-            expect(lineToCall.args[1]).to.be(21);
+            expect(lineToCall.args[0]).to.equal(20);
+            expect(lineToCall.args[1]).to.equal(21);
         });
 
         it('should fill a rectangle on canvas', function () {
@@ -63,13 +63,13 @@ describe('spacerocks renderer', function () {
                 expectedColor,
                 expectedX, expectedY,
                 expectedWidth, expectedHeight);
-            expect(mockCanvas.fillStyle).to.be(expectedColor);
-            expect(mockCanvas.fillRect.calledOnce).to.be(true);
+            expect(mockCanvas.fillStyle).to.equal(expectedColor);
+            expect(mockCanvas.fillRect.calledOnce).to.equal(true);
             var methodCall = mockCanvas.fillRect.getCall(0);
-            expect(methodCall.args[0]).to.be(expectedX);
-            expect(methodCall.args[1]).to.be(expectedY);
-            expect(methodCall.args[2]).to.be(expectedWidth);
-            expect(methodCall.args[3]).to.be(expectedHeight);
+            expect(methodCall.args[0]).to.equal(expectedX);
+            expect(methodCall.args[1]).to.equal(expectedY);
+            expect(methodCall.args[2]).to.equal(expectedWidth);
+            expect(methodCall.args[3]).to.equal(expectedHeight);
         });
     });
 });

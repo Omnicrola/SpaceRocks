@@ -26,9 +26,9 @@ describe('Main', function () {
             var contextFromTestElement = canvasElement.getContext('2d');
 
             SpaceRocks.start('testCanvas');
-            expect(setCanvasSpy.called).to.be(true);
+            expect(setCanvasSpy.called).to.equal(true);
             var contextPassedIn = setCanvasSpy.getCall(0).args[0];
-            expect(contextPassedIn).to.be(contextFromTestElement);
+            expect(contextPassedIn).to.equal(contextFromTestElement);
         });
 
         it('will spawn player on EntityManager', function () {
@@ -43,25 +43,25 @@ describe('Main', function () {
 
             SpaceRocks.start('testCanvas');
 
-            expect(setPlayerSpy.calledOnce).to.be.ok();
-            expect(setPlayerSpy.getCall(0).args[0]).to.be(expectedEntity);
+            expect(setPlayerSpy.calledOnce).to.be.ok;
+            expect(setPlayerSpy.getCall(0).args[0]).to.equal(expectedEntity);
         });
 
         it('will call setInterval with run()', function () {
             var setIntervalSpy = window.setInterval = sinon.spy();
 
             SpaceRocks.start(canvasElement.id);
-            expect(setIntervalSpy.calledOnce).to.be(true);
+            expect(setIntervalSpy.calledOnce).to.equal(true);
             var functionCall = setIntervalSpy.getCall(0);
-            expect(functionCall.args[0]).to.be(SpaceRocks.run);
-            expect(functionCall.args[1]).to.be(1000 / 24);
+            expect(functionCall.args[0]).to.equal(SpaceRocks.run);
+            expect(functionCall.args[1]).to.equal(1000 / 24);
 
         });
 
         it('will initialize InputManager with Kibo', function () {
             var initSpy = SpaceRocks.InputManager.init = sinon.spy();
             SpaceRocks.start(canvasElement.id);
-            expect(initSpy.calledOnce).to.be(true);
+            expect(initSpy.calledOnce).to.equal(true);
         });
     });
 
@@ -90,13 +90,13 @@ describe('Main', function () {
                 updateCalled = true;
             };
             SpaceRocks.draw = function () {
-                expect(updateCalled).to.be(true);
+                expect(updateCalled).to.equal(true);
                 drawCalled = true;
             };
 
             SpaceRocks.run();
-            expect(updateCalled).to.be(true);
-            expect(drawCalled).to.be(true);
+            expect(updateCalled).to.equal(true);
+            expect(drawCalled).to.equal(true);
 
             SpaceRocks.draw = tempRender;
             SpaceRocks.update = tempUpdate;
@@ -107,8 +107,8 @@ describe('Main', function () {
             var expectedDelta = 5.938;
             deltaStub.onFirstCall().returns(expectedDelta);
             SpaceRocks.run();
-            expect(updateSpy.calledOnce).to.be(true);
-            expect(updateSpy.getCall(0).args[0]).to.be(expectedDelta);
+            expect(updateSpy.calledOnce).to.equal(true);
+            expect(updateSpy.getCall(0).args[0]).to.equal(expectedDelta);
 
         });
     });

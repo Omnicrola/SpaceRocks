@@ -16,15 +16,15 @@ describe('spacerocks entityManager', function () {
 
         SpaceRocks.EntityManager.callEntities(renderSpy);
 
-        expect(renderSpy.calledTwice).to.be(true);
-        expect(renderSpy.getCall(0).args[0]).to.be(entity1);
-        expect(renderSpy.getCall(1).args[0]).to.be(entity3);
+        expect(renderSpy.calledTwice).to.equal(true);
+        expect(renderSpy.getCall(0).args[0]).to.equal(entity1);
+        expect(renderSpy.getCall(1).args[0]).to.equal(entity3);
     });
 
     it('should set a player', function(){
        var expectedPlayer = new SpaceRocks.Entity(1,2,[]);
         SpaceRocks.EntityManager.player(expectedPlayer);
-        expect(SpaceRocks.EntityManager.player()).to.be(expectedPlayer);
+        expect(SpaceRocks.EntityManager.player()).to.equal(expectedPlayer);
     });
 
     it('should run function on the player', function(){
@@ -32,7 +32,7 @@ describe('spacerocks entityManager', function () {
         var expectedEntity = new SpaceRocks.Entity();
         SpaceRocks.EntityManager.player(expectedEntity);
         SpaceRocks.EntityManager.callEntities(spy);
-        expect(spy.called).to.be(true);
-        expect(spy.getCall(0).args[0]).to.be(expectedEntity);
+        expect(spy.called).to.equal(true);
+        expect(spy.getCall(0).args[0]).to.equal(expectedEntity);
     });
 });
