@@ -6,6 +6,7 @@ describe('main update', function () {
     var playerStub;
     var entityCallSpy;
     var addEntitySpy;
+    var cleanDeadEntitiesSpy;
 
     var ACCEL_RATE = 0.25;
     var TURN_RATE = 5.0;
@@ -14,6 +15,7 @@ describe('main update', function () {
         entityCallSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');
         playerStub = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
         addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
+        cleanDeadEntitiesSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'cleanDeadEntities');
         OMD.test.globalSpy(SpaceRocks, 'InputManager');
         mockInput = SpaceRocks.InputManager = {
             isAccellerating: sinon.stub(),
@@ -42,6 +44,9 @@ describe('main update', function () {
         updateFunction(entity);
         expect(entity.update.calledOnce);
         expect(entity.update.getCall(0).args[0]).to.equal(delta);
+
+        expect(cleanDeadEntitiesSpy.calledOnce).to.equal(true);
+        expect(cleanDeadEntitiesSpy.calledAfter(entityCallSpy)).to.equal(true);
     });
 
     it('should not anything when no keys are pressed', function () {
@@ -126,7 +131,9 @@ describe('main update', function () {
         it('will fire a bullet when spacebar is pressed', function () {
             var expectedY = 52.4;
             var expectedX = 4.23;
+            var expectedRotation = Math.random();
             var player = stubPlayer(expectedX, expectedY);
+            player.rotation.returns(expectedRotation);
             playerStub.returns(player);
 
             var expectedBullet = {kittens: 'fluffy'};
@@ -135,6 +142,11 @@ describe('main update', function () {
             mockInput.fireWeapon.returns(true);
             SpaceRocks.update(1.0);
             expect(bulletFactoryStub.calledOnce).to.be.ok;
+            var factoryCall = bulletFactoryStub.getCall(0);
+            expect(factoryCall.args[0]).to.equal(expectedX);
+            expect(factoryCall.args[1]).to.equal(expectedY);
+            expect(factoryCall.args[2]).to.equal(expectedRotation);
+
             expect(addEntitySpy.calledOnce).to.be.ok;
             var newEntity = addEntitySpy.getCall(0).args[0];
             expect(newEntity).to.deep.equal(expectedBullet);

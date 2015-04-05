@@ -26,6 +26,12 @@ describe("Entity", function () {
 
     });
 
+    it("is alive by default", function () {
+        var entity = SpaceRocks.Entity.build(1,1);
+        expect(entity.isAlive).to.equal(true);
+
+    });
+
     it("should initialize it's velocity", function () {
         var entity = SpaceRocks.Entity.build(5, 2);
         expect(entity.velocity.x).to.equal(0);
@@ -114,6 +120,21 @@ describe("Entity", function () {
         entity.update(1.0);
         expect(entity.position.x).to.equal(maxX-20);
         expect(entity.position.y).to.equal(maxY-100);
+    });
+
+    it('should process behaviors', function(){
+        var entity = SpaceRocks.Entity.build();
+        var behaviorSpy = sinon.spy();
+
+        entity.addBehavior(behaviorSpy);
+        expect(behaviorSpy.called).to.equal(false);
+
+        var delta = 4.293;
+        entity.update(delta);
+        expect(behaviorSpy.calledOnce).to.equal(true);
+        var behaviorCall = behaviorSpy.getCall(0);
+        expect(behaviorCall.args[0]).to.equal(entity);
+        expect(behaviorCall.args[1]).to.equal(delta);
     });
 
 });

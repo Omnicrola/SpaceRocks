@@ -2,18 +2,32 @@
  * Created by Eric on 4/4/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
+
     var BULLET_VELOCITY = 5.0;
-    function build(pX, pY) {
+
+    function selfDestructBehavior(entity, delta) {
+        if (!entity.lifetime) {
+            entity.lifetime = delta;
+        } else {
+            entity.lifetime += delta;
+        }
+        if (entity.lifetime >= 30) {
+            entity.isAlive = false;
+        }
+    }
+
+    function build(pX, pY, rotation) {
         var shape = spaceRocks.Shapes.bullet();
         var bullet = new spaceRocks.Entity(pX, pY, shape);
-        bullet.velocity.x = 0.0;
-        bullet.velocity.y = BULLET_VELOCITY;
+        bullet.velocity = new spaceRocks.Point(0, BULLET_VELOCITY).rotate(rotation);
+        bullet.addBehavior(selfDestructBehavior);
         return bullet;
     }
 
     spaceRocks.BulletFactory = {
         build: build
     };
+
     return spaceRocks;
 })(SpaceRocks || {});
 /**
@@ -29,8 +43,11 @@ var SpaceRocks = (function (spaceRocks) {
         this.position = new spaceRocks.Point(x, y);
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
+        this.isAlive = true;
+        this.behaviors = [];
         setPosition(this, x, y);
     };
+
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
             this.shape.angle = newAngle;
@@ -54,14 +71,28 @@ var SpaceRocks = (function (spaceRocks) {
 
     }
 
+    function invokeBehaviors(delta){
+        var currentEntity = this;
+        this.behaviors.forEach(function(singleBehavior){
+            singleBehavior(currentEntity, delta);
+        });
+    }
+
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
         wrapPositionOnScreen.call(this);
+        invokeBehaviors.call(this, delta);
     };
+
+    _entity.prototype.addBehavior = function(newBehavior){
+        this.behaviors.push(newBehavior);
+    };
+
     _entity.build = function (x, y, shape) {
         return new _entity(x, y, shape)
     };
+
     spaceRocks.Entity = _entity;
     return spaceRocks;
 
@@ -72,32 +103,53 @@ var SpaceRocks = (function (spaceRocks) {
 var SpaceRocks = (function (spaceRocks) {
     var entities = [];
     var player;
-    var addEntityFunc = function (newEntity) {
+
+    function _addEntity(newEntity) {
         entities.push(newEntity);
-    };
-    var removeEntityFunc = function (entityToRemove) {
+    }
+
+    function _removeEntity(entityToRemove) {
         var index = entities.indexOf(entityToRemove);
         entities.splice(index, 1);
-    };
-    var invokeOnEntities = function (customFunction) {
+    }
+
+    function _callEntities(customFunction) {
         if (player) {
             customFunction(player);
         }
         entities.forEach(function (entity) {
             customFunction(entity);
         });
-    };
-    var playerFunc = function (newPlayer) {
+    }
+
+    function _cleanDeadEntities() {
+        var entitiesCopy = [];
+        entities.forEach(function(singleEntity){
+           if(singleEntity.isAlive){
+               entitiesCopy.push(singleEntity);
+           }
+        });
+        entities = entitiesCopy;
+    }
+
+    function _player(newPlayer) {
         if (!newPlayer) {
             return player;
         }
         player = newPlayer;
     };
+
+    function _removeAllEntities() {
+        entities = [];
+    }
+
     spaceRocks.EntityManager = {
-        addEntity: addEntityFunc,
-        player: playerFunc,
-        removeEntity: removeEntityFunc,
-        callEntities: invokeOnEntities
+        addEntity: _addEntity,
+        player: _player,
+        removeEntity: _removeEntity,
+        callEntities: _callEntities,
+        cleanDeadEntities: _cleanDeadEntities,
+        removeAllEntities: _removeAllEntities
     };
 
     return spaceRocks;
@@ -400,7 +452,8 @@ var SpaceRocks = (function (spaceRocks) {
         if(spaceRocks.InputManager.fireWeapon()){
             var x = player.position.x;
             var y = player.position.y;
-            var bullet = spaceRocks.BulletFactory.build(x, y, 0);
+            var rotation = player.rotation();
+            var bullet = spaceRocks.BulletFactory.build(x, y, rotation);
             spaceRocks.EntityManager.addEntity(bullet);
         }
     }
@@ -415,6 +468,7 @@ var SpaceRocks = (function (spaceRocks) {
     spaceRocks.update = function (frameDelta) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
+        spaceRocks.EntityManager.cleanDeadEntities();
     };
 
     return spaceRocks;

@@ -11,8 +11,11 @@ var SpaceRocks = (function (spaceRocks) {
         this.position = new spaceRocks.Point(x, y);
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
+        this.isAlive = true;
+        this.behaviors = [];
         setPosition(this, x, y);
     };
+
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
             this.shape.angle = newAngle;
@@ -36,14 +39,28 @@ var SpaceRocks = (function (spaceRocks) {
 
     }
 
+    function invokeBehaviors(delta){
+        var currentEntity = this;
+        this.behaviors.forEach(function(singleBehavior){
+            singleBehavior(currentEntity, delta);
+        });
+    }
+
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
         wrapPositionOnScreen.call(this);
+        invokeBehaviors.call(this, delta);
     };
+
+    _entity.prototype.addBehavior = function(newBehavior){
+        this.behaviors.push(newBehavior);
+    };
+
     _entity.build = function (x, y, shape) {
         return new _entity(x, y, shape)
     };
+
     spaceRocks.Entity = _entity;
     return spaceRocks;
 

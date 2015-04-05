@@ -47,7 +47,8 @@ var SpaceRocks = (function (spaceRocks) {
         if(spaceRocks.InputManager.fireWeapon()){
             var x = player.position.x;
             var y = player.position.y;
-            var bullet = spaceRocks.BulletFactory.build(x, y, 0);
+            var rotation = player.rotation();
+            var bullet = spaceRocks.BulletFactory.build(x, y, rotation);
             spaceRocks.EntityManager.addEntity(bullet);
         }
     }
@@ -62,6 +63,7 @@ var SpaceRocks = (function (spaceRocks) {
     spaceRocks.update = function (frameDelta) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
+        spaceRocks.EntityManager.cleanDeadEntities();
     };
 
     return spaceRocks;
