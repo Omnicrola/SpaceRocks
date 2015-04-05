@@ -1,4 +1,20 @@
 /**
+ * Created by Eric on 4/5/2015.
+ */
+var SpaceRocks = (function(spaceRocks){
+    function _build(){
+        var asteroidShape = spaceRocks.Shapes.asteroid();
+        var asteroid = new spaceRocks.Entity(0, 0, asteroidShape);
+        return asteroid;
+    }
+
+    spaceRocks.AsteroidFactory = {
+        build:_build
+    }
+
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
  * Created by Eric on 4/4/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
@@ -204,128 +220,38 @@ var SpaceRocks = (function (spaceRocks) {
 })
 (SpaceRocks || {});
 /**
- * Created by Eric on 3/21/2015.
+ * Created by Eric on 4/5/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
+    var currentLevelNumber = 0;
 
-    var _point = function (x, y) {
-        this.x = x;
-        this.y = y;
-    };
+    function _currentLevel() {
+        return currentLevelNumber;
+    }
 
-    _point.prototype.distance = function (otherPoint) {
-        var a = this.x - otherPoint.x;
-        var b = this.y - otherPoint.y;
-        var c2 = a*a + b*b;
-        return Math.sqrt(c2);
-    };
+    function spawnAsteroid(pX, pY) {
+        var asteroid = new spaceRocks.Entity(pX, pY, spaceRocks.Shapes.asteroid());
+        spaceRocks.EntityManager.addEntity(asteroid);
+    }
 
-    _point.prototype.rotate = function(degrees){
-        var theta = degrees * Math.PI / 180.0;
-        var x = Math.cos(theta) * this.x - Math.sin(theta) * this.y;
-        var y = Math.sin(theta) * this.x + Math.cos(theta) * this.y;
-        return new spaceRocks.Point(x, y);
-    };
-
-    spaceRocks.Point = _point;
-    return spaceRocks;
-})(SpaceRocks || {});
-
-/**
- * Created by Eric on 3/21/2015.
- */
-var SpaceRocks = (function (spaceRocks) {
-    var _polygon = function (points) {
-        this.pointArray = points;
-        this.angle = 0;
-    };
-
-    _polygon.prototype.getPoints = function () {
-        var rotatedPoints = [];
-        var theta = this.angle;
-        this.pointArray.forEach(function (singlePoint) {
-            rotatedPoints.push(singlePoint.rotate(theta));
-        });
-        return rotatedPoints;
-    };
-
-
-    spaceRocks.Polygon = _polygon;
-    return spaceRocks;
-})(SpaceRocks || {});
-/**
- * Created by Eric on 3/21/2015.
- */
-var SpaceRocks = (function (spaceRocks) {
-    var canvasContext;
-    var lineFunc = function (x1, y1, x2, y2) {
-        canvasContext.strokeStyle = '#FFFFFF';
-        canvasContext.beginPath();
-        canvasContext.moveTo(x1, y1);
-        canvasContext.lineTo(x2, y2);
-        canvasContext.stroke();
-    };
-    var fillRectFunc = function (style, x, y, w, h) {
-        canvasContext.fillStyle = style;
-        canvasContext.fillRect(x, y, w, h);
-    };
-    var setCanvasFunc = function (newContext) {
-        canvasContext = newContext;
-    };
-    spaceRocks.Renderer = {
-        drawLine: lineFunc,
-        fillRectangle: fillRectFunc,
-        setCanvas: setCanvasFunc,
-        width: function () {
-            return canvasContext.canvas.width;
-        },
-        height: function () {
-            return canvasContext.canvas.height;
+    function _startNextLevel() {
+        currentLevelNumber++;
+        var random = new Random(currentLevelNumber);
+        for (var i = 0; i < 5; i++) {
+            var pX = random.nextInteger(800);
+            var pY = random.nextInteger(600);
+            spawnAsteroid(pX, pY);
         }
+    }
+
+
+    spaceRocks.LevelManager = {
+        currentLevel: _currentLevel,
+        startNextLevel: _startNextLevel
     };
     return spaceRocks;
-})(SpaceRocks || {});
-/**
- * Created by Eric on 3/31/2015.
- */
-var SpaceRocks = (function (spaceRocks) {
-    spaceRocks.Shapes = {
-        player: function () {
-            return new spaceRocks.Polygon([
-                new spaceRocks.Point(-5, -5),
-                new spaceRocks.Point(0, 5),
-                new spaceRocks.Point(5, -5),
-                new spaceRocks.Point(0, 0)
-            ]);
-        },
-        asteroid: function () {
-            return new spaceRocks.Polygon([
-                new spaceRocks.Point(-10, -8),
-                new spaceRocks.Point(-3, 4),
-                new spaceRocks.Point(-6, 9),
-                new spaceRocks.Point(2, 8),
-                new spaceRocks.Point(-6, -8)
-            ]);
-        },
-        bullet: function () {
-            return new spaceRocks.Polygon([
-                new spaceRocks.Point(0, 0),
-                new spaceRocks.Point(1, 0)
-            ]);
-        }
-    };
-    return spaceRocks;
-})(SpaceRocks || {});
-/**
- * Created by Eric on 3/21/2015.
- */
-var TimeWrapper = (function () {
-    return {
-        getTime: function () {
-            return new Date().getTime();
-        }
-    };
-})();
+})
+(SpaceRocks || {});
 /**
  * Created by Eric on 3/19/2015.
  */
@@ -473,6 +399,162 @@ var SpaceRocks = (function (spaceRocks) {
 
     return spaceRocks;
 })(SpaceRocks || {});
+/**
+ * Created by Eric on 3/21/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    var canvasContext;
+    var lineFunc = function (x1, y1, x2, y2) {
+        canvasContext.strokeStyle = '#FFFFFF';
+        canvasContext.beginPath();
+        canvasContext.moveTo(x1, y1);
+        canvasContext.lineTo(x2, y2);
+        canvasContext.stroke();
+    };
+    var fillRectFunc = function (style, x, y, w, h) {
+        canvasContext.fillStyle = style;
+        canvasContext.fillRect(x, y, w, h);
+    };
+    var setCanvasFunc = function (newContext) {
+        canvasContext = newContext;
+    };
+    spaceRocks.Renderer = {
+        drawLine: lineFunc,
+        fillRectangle: fillRectFunc,
+        setCanvas: setCanvasFunc,
+        width: function () {
+            return canvasContext.canvas.width;
+        },
+        height: function () {
+            return canvasContext.canvas.height;
+        }
+    };
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
+ * Created by Eric on 3/21/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+
+    var _point = function (x, y) {
+        this.x = x;
+        this.y = y;
+    };
+
+    _point.prototype.distance = function (otherPoint) {
+        var a = this.x - otherPoint.x;
+        var b = this.y - otherPoint.y;
+        var c2 = a*a + b*b;
+        return Math.sqrt(c2);
+    };
+
+    _point.prototype.rotate = function(degrees){
+        var theta = degrees * Math.PI / 180.0;
+        var x = Math.cos(theta) * this.x - Math.sin(theta) * this.y;
+        var y = Math.sin(theta) * this.x + Math.cos(theta) * this.y;
+        return new spaceRocks.Point(x, y);
+    };
+
+    spaceRocks.Point = _point;
+    return spaceRocks;
+})(SpaceRocks || {});
+
+/**
+ * Created by Eric on 3/21/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    var _polygon = function (points) {
+        this.pointArray = points;
+        this.angle = 0;
+    };
+
+    _polygon.prototype.getPoints = function () {
+        var rotatedPoints = [];
+        var theta = this.angle;
+        this.pointArray.forEach(function (singlePoint) {
+            rotatedPoints.push(singlePoint.rotate(theta));
+        });
+        return rotatedPoints;
+    };
+
+
+    spaceRocks.Polygon = _polygon;
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
+ * Created by Eric on 3/31/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    spaceRocks.Shapes = {
+        player: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(-5, -5),
+                new spaceRocks.Point(0, 5),
+                new spaceRocks.Point(5, -5),
+                new spaceRocks.Point(0, 0)
+            ]);
+        },
+        asteroid: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(-10, -8),
+                new spaceRocks.Point(-3, 4),
+                new spaceRocks.Point(-6, 9),
+                new spaceRocks.Point(2, 8),
+                new spaceRocks.Point(-6, -8)
+            ]);
+        },
+        bullet: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(0, 0),
+                new spaceRocks.Point(1, 0)
+            ]);
+        }
+    };
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
+ * Created by Eric on 4/5/2015.
+ */
+var Random = (function () {
+    function _random(seedToUse) {
+        if (!seedToUse) {
+            this.seed = generateSeed();
+        } else {
+            this.seed = seedToUse;
+        }
+    }
+
+    function generateSeed() {
+        return new Date().getUTCMilliseconds() + Math.random() * 100;
+    }
+
+    function _nextInteger(max) {
+        if (!max) {
+            max = Number.MAX_VALUE;
+        }
+        var v = Math.sin(this.seed++) * max;
+        return Math.abs(Math.floor(v));
+    }
+
+    function _next() {
+        var v = Math.sin(this.seed++) * 10000;
+        return Math.abs(v - Math.floor(v));
+    }
+
+    _random.prototype.next = _next;
+    _random.prototype.nextInteger = _nextInteger;
+    return _random;
+})();
+/**
+ * Created by Eric on 3/21/2015.
+ */
+var TimeWrapper = (function () {
+    return {
+        getTime: function () {
+            return new Date().getTime();
+        }
+    };
+})();
 var Kibo = function(element) {
     this.element = element || window.document;
     this.initialize();
