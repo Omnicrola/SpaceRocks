@@ -490,6 +490,7 @@ var SpaceRocks = (function (globals, spaceRocks) {
         var canvasContext = document.getElementById(elementId).getContext('2d');
         spaceRocks.Renderer.setCanvas(canvasContext);
         spaceRocks.InputManager.init(new Kibo());
+        spaceRocks.LevelManager.startNextLevel();
     };
     return spaceRocks;
 })(window, SpaceRocks || {});

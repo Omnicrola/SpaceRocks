@@ -47,6 +47,12 @@ describe('Main', function () {
             expect(setPlayerSpy.getCall(0).args[0]).to.equal(expectedEntity);
         });
 
+        it('will start next level', function(){
+           var nextLevelSpy = OMD.test.globalSpy(SpaceRocks.LevelManager, 'startNextLevel');
+            SpaceRocks.start('testCanvas');
+            expect(nextLevelSpy.calledOnce).to.be.ok;
+        });
+
         it('will call setInterval with run()', function () {
             var setIntervalSpy = window.setInterval = sinon.spy();
 
