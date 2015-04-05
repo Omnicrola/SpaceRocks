@@ -6,8 +6,8 @@ var SpaceRocks = (function (spaceRocks) {
     var lineFunc = function (x1, y1, x2, y2) {
         canvasContext.strokeStyle = '#FFFFFF';
         canvasContext.beginPath();
-        canvasContext.moveTo(x1, y1);
-        canvasContext.lineTo(x2, y2);
+        canvasContext.moveTo(x1 | 0, y1 | 0);
+        canvasContext.lineTo(x2 | 0, y2 | 0);
         canvasContext.stroke();
     };
     var fillRectFunc = function (style, x, y, w, h) {

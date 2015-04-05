@@ -2,9 +2,9 @@
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    function setPosition(context, x, y) {
-        context.position.x = x || 0;
-        context.position.y = y || 0;
+    function setPosition( x, y) {
+        this.position.x = x || 0;
+        this.position.y = y || 0;
     }
 
     var _entity = function (x, y, shape) {
@@ -13,7 +13,7 @@ var SpaceRocks = (function (spaceRocks) {
         this.shape = shape;
         this.isAlive = true;
         this.behaviors = [];
-        setPosition(this, x, y);
+        setPosition.call(this, x, y);
     };
 
     _entity.prototype.rotation = function (newAngle) {
@@ -49,6 +49,9 @@ var SpaceRocks = (function (spaceRocks) {
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
+        if(isNaN(this.position.x )|| isNaN(this.position.y)){
+            throw "position was NaN";
+        }
         wrapPositionOnScreen.call(this);
         invokeBehaviors.call(this, delta);
     };

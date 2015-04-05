@@ -3,10 +3,10 @@
  */
 
 
-var SpaceRocks = (function (spaceRocks) {
-    var lastFrame;
+var SpaceRocks = (function (spaceRocks, timeWrapper) {
+    var lastFrame = timeWrapper.getTime();
     spaceRocks.delta = function () {
-        var now = TimeWrapper.getTime();
+        var now = timeWrapper.getTime();
         var elapsed = now - lastFrame;
         var delta = elapsed / (1000 / spaceRocks.fps);
         lastFrame = now;
@@ -14,4 +14,4 @@ var SpaceRocks = (function (spaceRocks) {
     };
     spaceRocks.fps = 24;
     return spaceRocks;
-})(SpaceRocks || {});
+})(SpaceRocks || {}, TimeWrapper);
