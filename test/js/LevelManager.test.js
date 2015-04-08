@@ -4,8 +4,10 @@
 describe('Level Manager', function () {
     var addEntitySpy;
     var stubAsteroidFactory;
+    var playerStub;
 
     beforeEach(function (done) {
+        playerStub = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
         addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         stubAsteroidFactory = OMD.test.globalStub(SpaceRocks.AsteroidFactory, 'build');
         done();
@@ -26,29 +28,32 @@ describe('Level Manager', function () {
 
     });
 
-    it('should spawn 5 asteroids on level start', function () {
-        var expectedAsteroid1 = OMD.test.randomObject();
-        var expectedAsteroid2 = OMD.test.randomObject();
-        var expectedAsteroid3 = OMD.test.randomObject();
-        var expectedAsteroid4 = OMD.test.randomObject();
-        var expectedAsteroid5 = OMD.test.randomObject();
+    it('should define level state enum', function(){
+       expect(LevelState.START()).to.equal('START');
+       expect(LevelState.END()).to.equal('END');
+       expect(LevelState.DEAD()).to.equal('DEAD');
+       expect(LevelState.SPAWN()).to.equal('SPAWN');
+       expect(LevelState.PLAY()).to.equal('PLAY');
+    });
 
-        stubAsteroidFactory.onCall(0).returns(expectedAsteroid1);
-        stubAsteroidFactory.onCall(1).returns(expectedAsteroid2);
-        stubAsteroidFactory.onCall(2).returns(expectedAsteroid3);
-        stubAsteroidFactory.onCall(3).returns(expectedAsteroid4);
-        stubAsteroidFactory.onCall(4).returns(expectedAsteroid5);
+    it('should notify of level state change', function(){
 
         var levelManager = SpaceRocks.LevelManager;
-        levelManager.startNextLevel();
+        var observerSpy1 = sinon.spy();
+        var observerSpy2 = sinon.spy();
+        levelManager.addObserver(observerSpy1);
+        levelManager.addObserver(observerSpy2);
 
-        expect(addEntitySpy.called).to.equal(true);
-        expect(addEntitySpy.getCalls().length).to.equal(5);
-        expect(addEntitySpy.calledWith(expectedAsteroid1)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid2)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid3)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid4)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid5)).to.equal(true);
+        levelManager.setState(LevelState.START());
+
+        expect(observerSpy1.calledOnce).to.equal(true);
+        expect(observerSpy2.calledOnce).to.equal(true);
+        expect(observerSpy1.getCall(0).args[0]).to.equal(LevelState.START());
+        expect(observerSpy2.getCall(0).args[0]).to.equal(LevelState.START());
+
+
     });
+
+
 
 });

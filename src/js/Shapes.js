@@ -13,11 +13,12 @@ var SpaceRocks = (function (spaceRocks) {
         },
         asteroid: function () {
             return new spaceRocks.Polygon([
-                new spaceRocks.Point(-10, -8),
-                new spaceRocks.Point(-3, 4),
-                new spaceRocks.Point(-6, 9),
-                new spaceRocks.Point(2, 8),
-                new spaceRocks.Point(-6, -8)
+                new spaceRocks.Point(-12, 0),
+                new spaceRocks.Point(-8, 8),
+                new spaceRocks.Point(0, 16),
+                new spaceRocks.Point(8, 6),
+                new spaceRocks.Point(8, -4),
+                new spaceRocks.Point(-2, -14)
             ]);
         },
         bullet: function () {

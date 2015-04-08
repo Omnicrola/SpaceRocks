@@ -18,12 +18,13 @@ describe('SpaceRocks.Shape', function () {
         it('should have the correct points', function () {
             var shape = SpaceRocks.Shapes.asteroid();
             var points = shape.pointArray;
-            expect(points.length).to.equal(5);
-            checkPoint(points[0], -10, -8);
-            checkPoint(points[1], -3, 4);
-            checkPoint(points[2], -6, 9);
-            checkPoint(points[3], 2, 8);
-            checkPoint(points[4], -6, -8);
+            expect(points.length).to.equal(6);
+            checkPoint(points[0], -12, 0);
+            checkPoint(points[1], -8, 8);
+            checkPoint(points[2], 0, 16);
+            checkPoint(points[3], 8, 6);
+            checkPoint(points[4], 8, -4);
+            checkPoint(points[5], -2, -14);
         });
     });
     describe('Bullet', function () {

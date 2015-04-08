@@ -255,31 +255,101 @@ var SpaceRocks = (function (spaceRocks) {
 /**
  * Created by Eric on 4/5/2015.
  */
+var LevelState = (function () {
+    return {
+        START: function () {
+            return 'START'
+        },
+        END: function () {
+            return 'END'
+        },
+        DEAD: function () {
+            return 'DEAD'
+        },
+        SPAWN: function () {
+            return 'SPAWN'
+        },
+        PLAY: function () {
+            return 'PLAY'
+        }
+    }
+})();
+
 var SpaceRocks = (function (spaceRocks) {
+
     var currentLevelNumber = 0;
+    var levelState = LevelState.END();
+    var _observers = [];
 
     function _currentLevel() {
         return currentLevelNumber;
     }
 
+    function _addObserver(observer) {
+        _observers.push(observer);
+    }
+
 
     function _startNextLevel() {
         currentLevelNumber++;
-        var random = new Random(currentLevelNumber);
+    }
+
+    function _spawnPlayer() {
+        var playerShape = spaceRocks.Shapes.player();
+        var newPlayer = spaceRocks.Entity.build(100, 100, playerShape);
+        spaceRocks.EntityManager.player(newPlayer);
+    }
+
+    function notifyObserversOfState(){
+        _observers.forEach(function(singleObserver){
+           singleObserver(levelState);
+        });
+    }
+
+    function _setState(newState){
+        levelState = newState;
+        notifyObserversOfState();
+    }
+
+    spaceRocks.LevelManager = {
+        currentLevel: _currentLevel,
+        startNextLevel: _startNextLevel,
+        addObserver: _addObserver,
+        setState : _setState
+    };
+    return spaceRocks;
+})
+(SpaceRocks || {});
+
+/**
+ * Created by Eric on 4/7/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+
+    function _spawnPlayer() {
+        var pX = spaceRocks.Renderer.width() / 2;
+        var pY = spaceRocks.Renderer.height() / 2;
+        var player = spaceRocks.Entity.build(pX, pY, spaceRocks.Shapes.player());
+        spaceRocks.EntityManager.player(player);
+    }
+
+    function _spawnAsteroids(){
         for (var i = 0; i < 5; i++) {
             var asteroid = spaceRocks.AsteroidFactory.build();
             spaceRocks.EntityManager.addEntity(asteroid);
         }
     }
 
+    function _init() {
+        spaceRocks.LevelManager.addObserver(_spawnPlayer);
+        spaceRocks.LevelManager.addObserver(_spawnAsteroids);
+    }
 
-    spaceRocks.LevelManager = {
-        currentLevel: _currentLevel,
-        startNextLevel: _startNextLevel
+    spaceRocks.Logic = {
+        init: _init
     };
     return spaceRocks;
-})
-(SpaceRocks || {});
+})(SpaceRocks || {});
 /**
  * Created by Eric on 3/21/2015.
  */
@@ -410,11 +480,12 @@ var SpaceRocks = (function (spaceRocks) {
         },
         asteroid: function () {
             return new spaceRocks.Polygon([
-                new spaceRocks.Point(-10, -8),
-                new spaceRocks.Point(-3, 4),
-                new spaceRocks.Point(-6, 9),
-                new spaceRocks.Point(2, 8),
-                new spaceRocks.Point(-6, -8)
+                new spaceRocks.Point(-12, 0),
+                new spaceRocks.Point(-8, 8),
+                new spaceRocks.Point(0, 16),
+                new spaceRocks.Point(8, 6),
+                new spaceRocks.Point(8, -4),
+                new spaceRocks.Point(-2, -14)
             ]);
         },
         bullet: function () {
@@ -496,19 +567,14 @@ var SpaceRocks = (function (globals, spaceRocks) {
         spaceRocks.draw();
     };
 
-    function spawnPlayer() {
-        var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.build(100, 100, playerShape);
-        spaceRocks.EntityManager.player(newPlayer);
-    }
 
     spaceRocks.start = function (elementId) {
         globals.setInterval(spaceRocks.run, 1000 / 24);
-        spawnPlayer();
         var canvasContext = document.getElementById(elementId).getContext('2d');
         spaceRocks.Renderer.setCanvas(canvasContext);
         spaceRocks.InputManager.init(new Kibo());
-        spaceRocks.LevelManager.startNextLevel();
+        spaceRocks.Logic.init();
+        spaceRocks.LevelManager.setState(LevelState.START());
     };
     return spaceRocks;
 })(window, SpaceRocks || {});

@@ -68,7 +68,7 @@ describe('Asteroid Factory', function () {
         expect(mockEntity.rotation.firstCall.args.length).to.equal(0);
 
         var newAngle = mockEntity.rotation.secondCall.args[0];
-        expect(newAngle).to.be.within(0.25,2.0);
+        expect(newAngle).to.be.within(0.0, 2.0);
 
         rotationBehavior(mockEntity);
         expect(mockEntity.rotation.getCalls().length).to.equal(4);

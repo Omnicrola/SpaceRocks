@@ -31,26 +31,22 @@ describe('Main', function () {
             expect(contextPassedIn).to.equal(contextFromTestElement);
         });
 
-        it('will spawn player on EntityManager', function () {
-            var entityCreateStub = OMD.test.globalStub(SpaceRocks.Entity, 'build');
-            var playerShapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'player');
-            var setPlayerSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'player');
 
-            var expectedShape = OMD.test.randomObject();
-            var expectedEntity = OMD.test.randomObject();
-            playerShapeStub.returns(expectedShape);
-            entityCreateStub.withArgs(100,100,expectedShape).returns(expectedEntity);
+
+        it('will connect logic observers', function(){
+            var setStateSpy = OMD.test.globalSpy(SpaceRocks.LevelManager, 'setState');
+            var logicInitSpy = OMD.test.globalSpy(SpaceRocks.Logic, 'init');
 
             SpaceRocks.start('testCanvas');
-
-            expect(setPlayerSpy.calledOnce).to.be.ok;
-            expect(setPlayerSpy.getCall(0).args[0]).to.equal(expectedEntity);
+            expect(logicInitSpy.calledOnce).to.equal(true);
+            expect(logicInitSpy.calledBefore(setStateSpy)).to.equal(true);
         });
 
-        it('will start next level', function(){
-           var nextLevelSpy = OMD.test.globalSpy(SpaceRocks.LevelManager, 'startNextLevel');
+        it('will start next level', function () {
+            var setStateSpy = OMD.test.globalSpy(SpaceRocks.LevelManager, 'setState');
             SpaceRocks.start('testCanvas');
-            expect(nextLevelSpy.calledOnce).to.be.ok;
+            expect(setStateSpy.calledOnce).to.equal(true);
+            expect(setStateSpy.getCall(0).args[0]).to.equal(LevelState.START());
         });
 
         it('will call setInterval with run()', function () {
