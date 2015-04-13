@@ -7,6 +7,7 @@ describe('main.draw', function () {
     var widthStub;
     var heightStub;
     var callEntitySpy;
+    var guiRenderSpy;
 
     beforeEach(function (done) {
         lineSpy = OMD.test.globalSpy(SpaceRocks.Renderer, 'drawLine');
@@ -14,6 +15,8 @@ describe('main.draw', function () {
         widthStub = OMD.test.globalStub(SpaceRocks.Renderer, 'width');
         heightStub = OMD.test.globalStub(SpaceRocks.Renderer, 'height');
         callEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'callEntities');
+        guiRenderSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'render');
+
         done();
     });
 
@@ -46,16 +49,21 @@ describe('main.draw', function () {
 
     });
 
+    it('should draw gui', function () {
+        SpaceRocks.draw();
+        expect(guiRenderSpy.calledOnce).to.equal(true);
+    });
+
     it('should draw entities', function () {
         var offX = 5;
         var offY = 5;
         var stubShape = {
-            getPoints:sinon.stub()
+            getPoints: sinon.stub()
         };
-        var point1 = new SpaceRocks.Point(4,5);
-        var point2 = new SpaceRocks.Point(2.34,5.22);
-        var point3 = new SpaceRocks.Point(4.455,-23.533);
-        stubShape.getPoints.returns([point1,point2,point3]);
+        var point1 = new SpaceRocks.Point(4, 5);
+        var point2 = new SpaceRocks.Point(2.34, 5.22);
+        var point3 = new SpaceRocks.Point(4.455, -23.533);
+        stubShape.getPoints.returns([point1, point2, point3]);
 
         var entity = new SpaceRocks.Entity(offX, offY, stubShape);
 

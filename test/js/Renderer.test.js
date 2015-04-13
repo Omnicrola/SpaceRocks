@@ -11,6 +11,7 @@ describe('spacerocks renderer', function () {
             mockCanvas.moveTo = sinon.spy();
             mockCanvas.lineTo = sinon.spy();
             mockCanvas.stroke = sinon.spy();
+            mockCanvas.fillText = sinon.spy();
             mockCanvas.strokeStyle = {};
             mockCanvas.fillStyle = {};
             mockCanvas.fillRect = sinon.spy();
@@ -70,6 +71,27 @@ describe('spacerocks renderer', function () {
             expect(methodCall.args[1]).to.equal(expectedY);
             expect(methodCall.args[2]).to.equal(expectedWidth);
             expect(methodCall.args[3]).to.equal(expectedHeight);
+        });
+
+        it('should draw text', function(){
+            var renderer = SpaceRocks.Renderer;
+            renderer.setCanvas(mockCanvas);
+
+
+            var expectedFont = '12px monospace';
+            var expectedText = 'test STRnig';
+            var expectedColor = '#FFFFFF';
+            var expectedY = 67;
+            var expectedX = 45;
+            renderer.drawText(expectedX, expectedY, expectedText);
+
+            expect(mockCanvas.font).to.equal(expectedFont);
+            expect(mockCanvas.fillText.calledOnce).to.equal(true);
+            var firstCall = mockCanvas.fillText.firstCall;
+            expect(mockCanvas.fillStyle).to.equal(expectedColor);
+            expect(firstCall.args[0]).to.equal(expectedText);
+            expect(firstCall.args[1]).to.equal(expectedX);
+            expect(firstCall.args[2]).to.equal(expectedY);
         });
     });
 });

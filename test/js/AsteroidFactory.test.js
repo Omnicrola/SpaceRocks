@@ -106,7 +106,7 @@ describe('Asteroid Factory', function () {
     function stubScreenSize(width, height) {
         stubHeight.returns(width);
         stubWidth.returns(height);
-    };
+    }
 
 
 });

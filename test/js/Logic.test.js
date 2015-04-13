@@ -19,7 +19,7 @@ describe('Logic', function () {
         var stubHeight = OMD.test.globalStub(SpaceRocks.Renderer, 'height');
         var stubEntityBuild = OMD.test.globalStub(SpaceRocks.Entity, 'build');
 
-        var expectedEntity = OMD.test.randomObject()
+        var expectedEntity = OMD.test.randomObject();
         stubEntityBuild.returns(expectedEntity);
 
         var expectedShape = SpaceRocks.Shapes.player();

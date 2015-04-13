@@ -27,6 +27,7 @@ var SpaceRocks = (function (spaceRocks) {
     spaceRocks.draw = function () {
         fillBackground();
         spaceRocks.EntityManager.callEntities(drawEntityShape);
+        spaceRocks.Gui.render();
     };
     return spaceRocks;
 })(SpaceRocks || {});
