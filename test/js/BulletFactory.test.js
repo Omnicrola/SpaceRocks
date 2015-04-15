@@ -49,13 +49,13 @@ describe('BulletFactory', function () {
         it('should self destruct after 1 second', function () {
 
             var bullet = SpaceRocks.BulletFactory.build(1, 2, 3);
-            expect(bullet.isAlive).to.equal(true);
+            expect(bullet.isAlive()).to.equal(true);
 
             bullet.update(29.0);
-            expect(bullet.isAlive).to.equal(true);
+            expect(bullet.isAlive()).to.equal(true);
 
             bullet.update(1.0);
-            expect(bullet.isAlive).to.equal(false);
+            expect(bullet.isAlive()).to.equal(false);
         });
     });
 

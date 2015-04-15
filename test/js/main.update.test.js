@@ -16,6 +16,8 @@ describe('main update', function () {
         playerStub = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
         addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         cleanDeadEntitiesSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'cleanDeadEntities');
+        OMD.test.globalSpy(SpaceRocks.EntityManager, 'checkCollisions');
+
         OMD.test.globalSpy(SpaceRocks, 'InputManager');
         mockInput = SpaceRocks.InputManager = {
             isAccellerating: sinon.stub(),
@@ -47,6 +49,12 @@ describe('main update', function () {
 
         expect(cleanDeadEntitiesSpy.calledOnce).to.equal(true);
         expect(cleanDeadEntitiesSpy.calledAfter(entityCallSpy)).to.equal(true);
+    });
+
+    it('should check for collisions on EntityManager', function(){
+       var collisionSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'checkCollisions');
+        SpaceRocks.update(1.0);
+        expect(collisionSpy.calledOnce).to.equal(true);
     });
 
     it('should not anything when no keys are pressed', function () {

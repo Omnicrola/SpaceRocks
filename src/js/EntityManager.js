@@ -25,12 +25,31 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _cleanDeadEntities() {
         var entitiesCopy = [];
-        entities.forEach(function(singleEntity){
-           if(singleEntity.isAlive){
-               entitiesCopy.push(singleEntity);
-           }
+        entities.forEach(function (singleEntity) {
+            if (singleEntity.isAlive()) {
+                entitiesCopy.push(singleEntity);
+            }
         });
         entities = entitiesCopy;
+    }
+
+    function _checkCollisions() {
+        entities.forEach(function (firstEntity) {
+            entities.forEach(function (secondEntity) {
+                _checkSingleCollision(firstEntity, secondEntity);
+            });
+        });
+    }
+
+    function _checkSingleCollision(firstEntity, secondEntity) {
+        var bothAreAlive = firstEntity.isAlive() && secondEntity.isAlive();
+        var areNotSameEntity = (firstEntity !== secondEntity);
+        if (bothAreAlive && areNotSameEntity) {
+            if (firstEntity.collide(secondEntity)) {
+                firstEntity.destroy();
+                secondEntity.destroy();
+            }
+        }
     }
 
     function _player(newPlayer) {
@@ -49,6 +68,7 @@ var SpaceRocks = (function (spaceRocks) {
         player: _player,
         removeEntity: _removeEntity,
         callEntities: _callEntities,
+        checkCollisions: _checkCollisions,
         cleanDeadEntities: _cleanDeadEntities,
         removeAllEntities: _removeAllEntities
     };

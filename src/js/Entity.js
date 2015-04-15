@@ -2,7 +2,7 @@
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    function setPosition( x, y) {
+    function setPosition(x, y) {
         this.position.x = x || 0;
         this.position.y = y || 0;
     }
@@ -11,7 +11,9 @@ var SpaceRocks = (function (spaceRocks) {
         this.position = new spaceRocks.Point(x, y);
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
-        this.isAlive = true;
+        this._isAlive = true;
+        this._deathBehavior = function () {
+        };
         this.behaviors = [];
         setPosition.call(this, x, y);
     };
@@ -39,9 +41,9 @@ var SpaceRocks = (function (spaceRocks) {
 
     }
 
-    function invokeBehaviors(delta){
+    function invokeBehaviors(delta) {
         var currentEntity = this;
-        this.behaviors.forEach(function(singleBehavior){
+        this.behaviors.forEach(function (singleBehavior) {
             singleBehavior(currentEntity, delta);
         });
     }
@@ -49,16 +51,34 @@ var SpaceRocks = (function (spaceRocks) {
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
-        if(isNaN(this.position.x )|| isNaN(this.position.y)){
+        if (isNaN(this.position.x) || isNaN(this.position.y)) {
             throw "position was NaN";
         }
         wrapPositionOnScreen.call(this);
         invokeBehaviors.call(this, delta);
     };
 
-    _entity.prototype.addBehavior = function(newBehavior){
+    _entity.prototype.addBehavior = function (newBehavior) {
         this.behaviors.push(newBehavior);
     };
+
+    _entity.prototype.collide = function (otherEntity) {
+        var offsetX = this.position.x - otherEntity.position.x;
+        var offsetY = this.position.y - otherEntity.position.y;
+        return this.shape.intersects(otherEntity.shape, offsetX, offsetY);
+    }
+    _entity.prototype.isAlive = function () {
+        return this._isAlive;
+    }
+
+    _entity.prototype.setDeathBehavior = function (deathBehavior) {
+        this._deathBehavior = deathBehavior;
+    }
+
+    _entity.prototype.destroy = function () {
+        this._isAlive = false;
+        this._deathBehavior(this);
+    }
 
     _entity.build = function (x, y, shape) {
         return new _entity(x, y, shape)

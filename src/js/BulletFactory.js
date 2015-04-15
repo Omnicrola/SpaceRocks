@@ -12,7 +12,7 @@ var SpaceRocks = (function (spaceRocks) {
             entity.lifetime += delta;
         }
         if (entity.lifetime >= 30) {
-            entity.isAlive = false;
+            entity.destroy();
         }
     }
 

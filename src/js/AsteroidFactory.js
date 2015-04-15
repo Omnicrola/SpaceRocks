@@ -4,7 +4,7 @@
 var SpaceRocks = (function (spaceRocks) {
     var VELOCITY_RANGE = 4.0;
 
-    function getRandomPosition() {
+    function _getRandomPosition() {
         var random = new Random();
         var screenWidth = spaceRocks.Renderer.width();
         var screenHeight = spaceRocks.Renderer.height();
@@ -14,13 +14,13 @@ var SpaceRocks = (function (spaceRocks) {
         return {x: pX, y: pY};
     }
 
-    function createRandomVelocity() {
+    function _createRandomVelocity() {
         var vX = (Math.random() * VELOCITY_RANGE) - (VELOCITY_RANGE / 2);
         var vY = (Math.random() * VELOCITY_RANGE) - (VELOCITY_RANGE / 2);
         return new spaceRocks.Point(vX, vY);
     }
 
-    function createSpinBehavior() {
+    function _createSpinBehavior() {
         var spinRate = Math.random() * 2;
         return function (entity) {
             var currentAngle = entity.rotation();
@@ -29,11 +29,11 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _build() {
-        var position = getRandomPosition();
+        var position = _getRandomPosition();
         var asteroidShape = spaceRocks.Shapes.asteroid();
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
-        asteroid.velocity = createRandomVelocity();
-        asteroid.addBehavior(createSpinBehavior());
+        asteroid.velocity = _createRandomVelocity();
+        asteroid.addBehavior(_createSpinBehavior());
         return asteroid;
     }
 

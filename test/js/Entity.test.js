@@ -27,8 +27,8 @@ describe("Entity", function () {
     });
 
     it("is alive by default", function () {
-        var entity = SpaceRocks.Entity.build(1,1);
-        expect(entity.isAlive).to.equal(true);
+        var entity = SpaceRocks.Entity.build(1, 1);
+        expect(entity.isAlive()).to.equal(true);
 
     });
 
@@ -118,11 +118,11 @@ describe("Entity", function () {
         entity.position.y = -100;
 
         entity.update(1.0);
-        expect(entity.position.x).to.equal(maxX-20);
-        expect(entity.position.y).to.equal(maxY-100);
+        expect(entity.position.x).to.equal(maxX - 20);
+        expect(entity.position.y).to.equal(maxY - 100);
     });
 
-    it('should process behaviors', function(){
+    it('should process behaviors', function () {
         var entity = SpaceRocks.Entity.build();
         var behaviorSpy = sinon.spy();
 
@@ -135,6 +135,45 @@ describe("Entity", function () {
         var behaviorCall = behaviorSpy.getCall(0);
         expect(behaviorCall.args[0]).to.equal(entity);
         expect(behaviorCall.args[1]).to.equal(delta);
+    });
+
+    it('should process behavior on death', function () {
+        var entity = SpaceRocks.Entity.build();
+        var deathSpy = sinon.spy();
+
+        entity.setDeathBehavior(deathSpy);
+
+        expect(entity.isAlive()).to.be.ok;
+        expect(deathSpy.called).to.not.be.ok;
+
+        entity.destroy();
+        expect(entity.isAlive()).to.not.be.ok;
+        expect(deathSpy.calledOnce).to.be.ok;
+        expect(deathSpy.firstCall.args[0]).to.equal(entity);
+    });
+
+    it('should report collisions from shape', function () {
+        var intersectStub = sinon.stub();
+        var shape2 = OMD.test.randomObject();
+        intersectStub.returns(true);
+
+
+        var x1 = Math.random();
+        var y1 = Math.random();
+        var x2 = Math.random();
+        var y2 = Math.random();
+        var expectedX = x1 - x2;
+        var expectedY = y1 - y2;
+        var entity1 = SpaceRocks.Entity.build(x1, y1, {intersects: intersectStub});
+        var entity2 = SpaceRocks.Entity.build(x2, y2, shape2);
+
+        var result = entity1.collide(entity2);
+        expect(result).to.equal(true);
+        expect(intersectStub.calledOnce);
+        expect(intersectStub.firstCall.args[0]).to.equal(shape2);
+        expect(intersectStub.firstCall.args[1]).to.equal(expectedX);
+        expect(intersectStub.firstCall.args[2]).to.equal(expectedY);
+
     });
 
 });

@@ -64,6 +64,7 @@ var SpaceRocks = (function (spaceRocks) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
         spaceRocks.EntityManager.cleanDeadEntities();
+        spaceRocks.EntityManager.checkCollisions();
     };
 
     return spaceRocks;

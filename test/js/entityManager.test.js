@@ -49,7 +49,7 @@ describe('spacerocks entityManager', function () {
 
         var entityManager = SpaceRocks.EntityManager;
         entityManager.addEntity(expectedEntity);
-        expectedEntity.isAlive = false;
+        expectedEntity.destroy();
 
         entityManager.callEntities(spy1);
 
@@ -59,4 +59,54 @@ describe('spacerocks entityManager', function () {
         entityManager.callEntities(spy2);
         expect(spy2.calledWith(expectedEntity)).to.equal(false);
     });
+
+    it('will destroy two entities if they collide', function () {
+        var entity1 = createMockEntity();
+        var entity2 = createMockEntity();
+        entity1.collide.returns(true);
+        entity2.collide.returns(false);
+
+        var entityManager = SpaceRocks.EntityManager;
+        entityManager.addEntity(entity1);
+        entityManager.addEntity(entity2);
+
+        entityManager.checkCollisions();
+
+        expect(entity1.collide.calledOnce).to.equal(true);
+        expect(entity1.collide.firstCall.args[0]).to.equal(entity2);
+        expect(entity2.collide.calledOnce).to.equal(true);
+        expect(entity2.collide.firstCall.args[0]).to.equal(entity1);
+
+        expect(entity1.destroy.calledOnce).to.equal(true);
+        expect(entity2.destroy.calledOnce).to.equal(true);
+    });
+
+    it('will not destroy two entities if they do not collide', function () {
+        var entity1 = createMockEntity();
+        var entity2 = createMockEntity();
+        entity1.collide.returns(false);
+        entity2.collide.returns(false);
+
+        var entityManager = SpaceRocks.EntityManager;
+        entityManager.addEntity(entity1);
+        entityManager.addEntity(entity2);
+
+        entityManager.checkCollisions();
+
+        expect(entity1.collide.calledOnce).to.equal(true);
+        expect(entity1.collide.firstCall.args[0]).to.equal(entity2);
+        expect(entity2.collide.calledOnce).to.equal(true);
+        expect(entity2.collide.firstCall.args[0]).to.equal(entity1);
+
+        expect(entity1.destroy.calledOnce).to.equal(false);
+        expect(entity2.destroy.calledOnce).to.equal(false);
+    });
+
+    function createMockEntity() {
+        var entity = new SpaceRocks.Entity(0, 0, {});
+        sinon.stub(entity, 'collide');
+        sinon.stub(entity, 'destroy');
+        return entity;
+    }
+
 });

@@ -7,11 +7,17 @@ var SpaceRocks = (function (spaceRocks) {
         this.angle = 0;
     };
 
-    _polygon.prototype.getPoints = function () {
+    _polygon.prototype.getPoints = _getPoints
+    function _getPoints(offsetX, offsetY) {
+        offsetX = offsetX || 0;
+        offsetY = offsetY || 0;
         var rotatedPoints = [];
         var theta = this.angle;
         this.pointArray.forEach(function (singlePoint) {
-            rotatedPoints.push(singlePoint.rotate(theta));
+            var rotatedPoint = singlePoint.rotate(theta);
+            rotatedPoint.x += offsetX;
+            rotatedPoint.y += offsetY;
+            rotatedPoints.push(rotatedPoint);
         });
         return rotatedPoints;
     };
@@ -36,17 +42,30 @@ var SpaceRocks = (function (spaceRocks) {
         return new spaceRocks.Point(minX, minY);
     }
 
-    _polygon.prototype.contains = function (pointToContain) {
+    _polygon.prototype.contains = _contains;
+    function _contains(pointToContain) {
         var rotatedPoints = this.getPoints();
         var max = _findMaxPoint(rotatedPoints);
         var min = _findMinPoint(rotatedPoints);
-        if(pointToContain.x < min.x || pointToContain.x > max.x){
+        if (pointToContain.x < min.x || pointToContain.x > max.x) {
             return false;
         }
-        if(pointToContain.y < min.y || pointToContain.y > max.y){
+        if (pointToContain.y < min.y || pointToContain.y > max.y) {
             return false;
         }
         return true;
+    }
+
+    _polygon.prototype.intersects = _intersects;
+    function _intersects(otherPolygon, offsetX, offsetY) {
+        var otherPoints = otherPolygon.getPoints(offsetX, offsetY);
+        var intersects = false;
+        otherPoints.forEach(function (singlePoint) {
+            if (this.contains(singlePoint)) {
+                intersects = true;
+            }
+        }.bind(this));
+        return intersects;
     }
 
 

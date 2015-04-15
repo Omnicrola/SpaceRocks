@@ -4,7 +4,7 @@
 var SpaceRocks = (function (spaceRocks) {
     var VELOCITY_RANGE = 4.0;
 
-    function getRandomPosition() {
+    function _getRandomPosition() {
         var random = new Random();
         var screenWidth = spaceRocks.Renderer.width();
         var screenHeight = spaceRocks.Renderer.height();
@@ -14,13 +14,13 @@ var SpaceRocks = (function (spaceRocks) {
         return {x: pX, y: pY};
     }
 
-    function createRandomVelocity() {
+    function _createRandomVelocity() {
         var vX = (Math.random() * VELOCITY_RANGE) - (VELOCITY_RANGE / 2);
         var vY = (Math.random() * VELOCITY_RANGE) - (VELOCITY_RANGE / 2);
         return new spaceRocks.Point(vX, vY);
     }
 
-    function createSpinBehavior() {
+    function _createSpinBehavior() {
         var spinRate = Math.random() * 2;
         return function (entity) {
             var currentAngle = entity.rotation();
@@ -29,11 +29,11 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _build() {
-        var position = getRandomPosition();
+        var position = _getRandomPosition();
         var asteroidShape = spaceRocks.Shapes.asteroid();
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
-        asteroid.velocity = createRandomVelocity();
-        asteroid.addBehavior(createSpinBehavior());
+        asteroid.velocity = _createRandomVelocity();
+        asteroid.addBehavior(_createSpinBehavior());
         return asteroid;
     }
 
@@ -58,7 +58,7 @@ var SpaceRocks = (function (spaceRocks) {
             entity.lifetime += delta;
         }
         if (entity.lifetime >= 30) {
-            entity.isAlive = false;
+            entity.destroy();
         }
     }
 
@@ -80,7 +80,7 @@ var SpaceRocks = (function (spaceRocks) {
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    function setPosition( x, y) {
+    function setPosition(x, y) {
         this.position.x = x || 0;
         this.position.y = y || 0;
     }
@@ -89,7 +89,9 @@ var SpaceRocks = (function (spaceRocks) {
         this.position = new spaceRocks.Point(x, y);
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
-        this.isAlive = true;
+        this._isAlive = true;
+        this._deathBehavior = function () {
+        };
         this.behaviors = [];
         setPosition.call(this, x, y);
     };
@@ -117,9 +119,9 @@ var SpaceRocks = (function (spaceRocks) {
 
     }
 
-    function invokeBehaviors(delta){
+    function invokeBehaviors(delta) {
         var currentEntity = this;
-        this.behaviors.forEach(function(singleBehavior){
+        this.behaviors.forEach(function (singleBehavior) {
             singleBehavior(currentEntity, delta);
         });
     }
@@ -127,16 +129,34 @@ var SpaceRocks = (function (spaceRocks) {
     _entity.prototype.update = function (delta) {
         this.position.x += this.velocity.x * delta;
         this.position.y += this.velocity.y * delta;
-        if(isNaN(this.position.x )|| isNaN(this.position.y)){
+        if (isNaN(this.position.x) || isNaN(this.position.y)) {
             throw "position was NaN";
         }
         wrapPositionOnScreen.call(this);
         invokeBehaviors.call(this, delta);
     };
 
-    _entity.prototype.addBehavior = function(newBehavior){
+    _entity.prototype.addBehavior = function (newBehavior) {
         this.behaviors.push(newBehavior);
     };
+
+    _entity.prototype.collide = function (otherEntity) {
+        var offsetX = this.position.x - otherEntity.position.x;
+        var offsetY = this.position.y - otherEntity.position.y;
+        return this.shape.intersects(otherEntity.shape, offsetX, offsetY);
+    }
+    _entity.prototype.isAlive = function () {
+        return this._isAlive;
+    }
+
+    _entity.prototype.setDeathBehavior = function (deathBehavior) {
+        this._deathBehavior = deathBehavior;
+    }
+
+    _entity.prototype.destroy = function () {
+        this._isAlive = false;
+        this._deathBehavior(this);
+    }
 
     _entity.build = function (x, y, shape) {
         return new _entity(x, y, shape)
@@ -173,12 +193,31 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _cleanDeadEntities() {
         var entitiesCopy = [];
-        entities.forEach(function(singleEntity){
-           if(singleEntity.isAlive){
-               entitiesCopy.push(singleEntity);
-           }
+        entities.forEach(function (singleEntity) {
+            if (singleEntity.isAlive()) {
+                entitiesCopy.push(singleEntity);
+            }
         });
         entities = entitiesCopy;
+    }
+
+    function _checkCollisions() {
+        entities.forEach(function (firstEntity) {
+            entities.forEach(function (secondEntity) {
+                _checkSingleCollision(firstEntity, secondEntity);
+            });
+        });
+    }
+
+    function _checkSingleCollision(firstEntity, secondEntity) {
+        var bothAreAlive = firstEntity.isAlive() && secondEntity.isAlive();
+        var areNotSameEntity = (firstEntity !== secondEntity);
+        if (bothAreAlive && areNotSameEntity) {
+            if (firstEntity.collide(secondEntity)) {
+                firstEntity.destroy();
+                secondEntity.destroy();
+            }
+        }
     }
 
     function _player(newPlayer) {
@@ -197,6 +236,7 @@ var SpaceRocks = (function (spaceRocks) {
         player: _player,
         removeEntity: _removeEntity,
         callEntities: _callEntities,
+        checkCollisions: _checkCollisions,
         cleanDeadEntities: _cleanDeadEntities,
         removeAllEntities: _removeAllEntities
     };
@@ -214,7 +254,7 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _render() {
-        spaceRocks.Renderer.drawText(5, 20, 'Score: ' + _score);
+        spaceRocks.Renderer.drawText(10, 20, 'Score: ' + _score);
     }
 
     spaceRocks.Gui = {
@@ -408,14 +448,66 @@ var SpaceRocks = (function (spaceRocks) {
         this.angle = 0;
     };
 
-    _polygon.prototype.getPoints = function () {
+    _polygon.prototype.getPoints = _getPoints
+    function _getPoints(offsetX, offsetY) {
+        offsetX = offsetX || 0;
+        offsetY = offsetY || 0;
         var rotatedPoints = [];
         var theta = this.angle;
         this.pointArray.forEach(function (singlePoint) {
-            rotatedPoints.push(singlePoint.rotate(theta));
+            var rotatedPoint = singlePoint.rotate(theta);
+            rotatedPoint.x += offsetX;
+            rotatedPoint.y += offsetY;
+            rotatedPoints.push(rotatedPoint);
         });
         return rotatedPoints;
     };
+
+    function _findMaxPoint(points) {
+        var maxX = Number.MIN_VALUE;
+        var maxY = Number.MIN_VALUE;
+        points.forEach(function (singlePoint) {
+            maxX = (singlePoint.x > maxX) ? singlePoint.x : maxX;
+            maxY = (singlePoint.y > maxY) ? singlePoint.y : maxY;
+        });
+        return new spaceRocks.Point(maxX, maxY);
+    }
+
+    function _findMinPoint(points) {
+        var minX = Number.MAX_VALUE;
+        var minY = Number.MAX_VALUE;
+        points.forEach(function (singlePoint) {
+            minX = (singlePoint.x < minX) ? singlePoint.x : minX;
+            minY = (singlePoint.y < minY) ? singlePoint.y : minY;
+        });
+        return new spaceRocks.Point(minX, minY);
+    }
+
+    _polygon.prototype.contains = _contains;
+    function _contains(pointToContain) {
+        var rotatedPoints = this.getPoints();
+        var max = _findMaxPoint(rotatedPoints);
+        var min = _findMinPoint(rotatedPoints);
+        if (pointToContain.x < min.x || pointToContain.x > max.x) {
+            return false;
+        }
+        if (pointToContain.y < min.y || pointToContain.y > max.y) {
+            return false;
+        }
+        return true;
+    }
+
+    _polygon.prototype.intersects = _intersects;
+    function _intersects(otherPolygon, offsetX, offsetY) {
+        var otherPoints = otherPolygon.getPoints(offsetX, offsetY);
+        var intersects = false;
+        otherPoints.forEach(function (singlePoint) {
+            if (this.contains(singlePoint)) {
+                intersects = true;
+            }
+        }.bind(this));
+        return intersects;
+    }
 
 
     spaceRocks.Polygon = _polygon;
@@ -679,6 +771,7 @@ var SpaceRocks = (function (spaceRocks) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
         spaceRocks.EntityManager.cleanDeadEntities();
+        spaceRocks.EntityManager.checkCollisions();
     };
 
     return spaceRocks;
