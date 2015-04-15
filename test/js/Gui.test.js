@@ -9,7 +9,7 @@ describe('Gui', function () {
 
     it('should draw score', function () {
         var drawTextSpy = OMD.test.globalSpy(SpaceRocks.Renderer, 'drawText');
-        var expectedX = 5;
+        var expectedX = 10;
         var expectedY = 20;
         var expectedScore = new Random().nextInteger(5000);
         var expectedText = 'Score: ' + expectedScore;

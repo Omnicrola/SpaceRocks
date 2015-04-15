@@ -9,7 +9,7 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _render() {
-        spaceRocks.Renderer.drawText(5, 20, 'Score: ' + _score);
+        spaceRocks.Renderer.drawText(10, 20, 'Score: ' + _score);
     }
 
     spaceRocks.Gui = {
