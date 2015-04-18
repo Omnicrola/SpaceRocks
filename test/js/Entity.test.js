@@ -151,28 +151,31 @@ describe("Entity", function () {
         expect(deathSpy.calledOnce).to.be.ok;
         expect(deathSpy.firstCall.args[0]).to.equal(entity);
     });
+    describe('collisions', function () {
 
-    it('should report collisions from shape', function () {
-        var intersectStub = sinon.stub();
-        var shape2 = OMD.test.randomObject();
-        intersectStub.returns(true);
+        it('should report collisions from shape', function () {
+            var intersectStub = sinon.stub();
+            var shape2 = OMD.test.randomObject();
+            intersectStub.returns(true);
 
 
-        var x1 = Math.random();
-        var y1 = Math.random();
-        var x2 = Math.random();
-        var y2 = Math.random();
-        var expectedX = x1 - x2;
-        var expectedY = y1 - y2;
-        var entity1 = SpaceRocks.Entity.build(x1, y1, {intersects: intersectStub});
-        var entity2 = SpaceRocks.Entity.build(x2, y2, shape2);
+            var x1 = Math.random();
+            var y1 = Math.random();
+            var x2 = Math.random();
+            var y2 = Math.random();
+            var expectedX = x1 - x2;
+            var expectedY = y1 - y2;
+            var entity1 = SpaceRocks.Entity.build(x1, y1, {intersects: intersectStub});
+            var entity2 = SpaceRocks.Entity.build(x2, y2, shape2);
 
-        var result = entity1.collide(entity2);
-        expect(result).to.equal(true);
-        expect(intersectStub.calledOnce);
-        expect(intersectStub.firstCall.args[0]).to.equal(shape2);
-        expect(intersectStub.firstCall.args[1]).to.equal(expectedX);
-        expect(intersectStub.firstCall.args[2]).to.equal(expectedY);
+            var result = entity1.collide(entity2);
+            expect(result).to.equal(true);
+            expect(intersectStub.calledOnce);
+            expect(intersectStub.firstCall.args[0]).to.equal(shape2);
+            expect(intersectStub.firstCall.args[1]).to.equal(expectedX);
+            expect(intersectStub.firstCall.args[2]).to.equal(expectedY);
+
+        });
 
     });
 

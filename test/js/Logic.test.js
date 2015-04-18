@@ -45,6 +45,7 @@ describe('Logic', function () {
         var stubAsteroidFactory = OMD.test.globalStub(SpaceRocks.AsteroidFactory, 'build');
         var addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
 
+        var expectedCollisionGroup = SpaceRocks.CollisionManager.ASTEROIDS_GROUP();
         var expectedAsteroid1 = OMD.test.randomObject();
         var expectedAsteroid2 = OMD.test.randomObject();
         var expectedAsteroid3 = OMD.test.randomObject();
@@ -62,11 +63,11 @@ describe('Logic', function () {
 
         expect(addEntitySpy.called).to.equal(true);
         expect(addEntitySpy.getCalls().length).to.equal(5);
-        expect(addEntitySpy.calledWith(expectedAsteroid1)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid2)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid3)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid4)).to.equal(true);
-        expect(addEntitySpy.calledWith(expectedAsteroid5)).to.equal(true);
+        expect(addEntitySpy.calledWith(expectedAsteroid1, expectedCollisionGroup)).to.equal(true);
+        expect(addEntitySpy.calledWith(expectedAsteroid2, expectedCollisionGroup)).to.equal(true);
+        expect(addEntitySpy.calledWith(expectedAsteroid3, expectedCollisionGroup)).to.equal(true);
+        expect(addEntitySpy.calledWith(expectedAsteroid4, expectedCollisionGroup)).to.equal(true);
+        expect(addEntitySpy.calledWith(expectedAsteroid5, expectedCollisionGroup)).to.equal(true);
     });
 
     function logicInitAndGetObserver(observerIndex) {

@@ -16,7 +16,7 @@ describe('main update', function () {
         playerStub = OMD.test.globalStub(SpaceRocks.EntityManager, 'player');
         addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         cleanDeadEntitiesSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'cleanDeadEntities');
-        OMD.test.globalSpy(SpaceRocks.EntityManager, 'checkCollisions');
+        OMD.test.globalSpy(SpaceRocks.CollisionManager, 'checkCollisions');
 
         OMD.test.globalSpy(SpaceRocks, 'InputManager');
         mockInput = SpaceRocks.InputManager = {
@@ -51,8 +51,8 @@ describe('main update', function () {
         expect(cleanDeadEntitiesSpy.calledAfter(entityCallSpy)).to.equal(true);
     });
 
-    it('should check for collisions on EntityManager', function(){
-       var collisionSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'checkCollisions');
+    it('should check for collisions using CollisionManager', function(){
+       var collisionSpy = OMD.test.globalSpy(SpaceRocks.CollisionManager, 'checkCollisions');
         SpaceRocks.update(1.0);
         expect(collisionSpy.calledOnce).to.equal(true);
     });
@@ -156,8 +156,8 @@ describe('main update', function () {
             expect(factoryCall.args[2]).to.equal(expectedRotation);
 
             expect(addEntitySpy.calledOnce).to.be.ok;
-            var newEntity = addEntitySpy.getCall(0).args[0];
-            expect(newEntity).to.deep.equal(expectedBullet);
+            expect(addEntitySpy.firstCall.args[0]).to.deep.equal(expectedBullet);
+            expect(addEntitySpy.firstCall.args[1]).to.equal(SpaceRocks.CollisionManager.PLAYER_GROUP());
         });
     });
 

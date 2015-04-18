@@ -5,7 +5,12 @@ describe('spacerocks entityManager', function () {
 
     beforeEach(function (done) {
         SpaceRocks.EntityManager.removeAllEntities();
+        OMD.test.globalSpy(SpaceRocks.CollisionManager, 'addEntity');
         done();
+    });
+
+    afterEach(function () {
+        OMD.test.restoreAll();
     });
 
     it('should pass entities to function', function () {
@@ -28,9 +33,17 @@ describe('spacerocks entityManager', function () {
     });
 
     it('should set a player', function () {
+        var addEntitySpy = OMD.test.globalSpy(SpaceRocks.CollisionManager, 'addEntity');
+
         var expectedPlayer = new SpaceRocks.Entity(1, 2, []);
+        var expectedCollisionGroup = SpaceRocks.CollisionManager.PLAYER_GROUP();
+
         SpaceRocks.EntityManager.player(expectedPlayer);
+
         expect(SpaceRocks.EntityManager.player()).to.equal(expectedPlayer);
+        expect(addEntitySpy.calledOnce).to.equal(true);
+        expect(addEntitySpy.firstCall.args[0]).to.equal(expectedPlayer);
+        expect(addEntitySpy.firstCall.args[1]).to.equal(expectedCollisionGroup);
     });
 
     it('should run function on the player', function () {
@@ -60,53 +73,25 @@ describe('spacerocks entityManager', function () {
         expect(spy2.calledWith(expectedEntity)).to.equal(false);
     });
 
-    it('will destroy two entities if they collide', function () {
-        var entity1 = createMockEntity();
-        var entity2 = createMockEntity();
-        entity1.collide.returns(true);
-        entity2.collide.returns(false);
+
+    it('should add and remove entities to CollisionManager', function () {
+        var addSpy = OMD.test.globalSpy(SpaceRocks.CollisionManager, 'addEntity');
+        var removeSpy = OMD.test.globalSpy(SpaceRocks.CollisionManager, 'removeEntity');
+
+        var expectedCollisionGroup = 4;
+        var expectedEntity = new SpaceRocks.Entity();
 
         var entityManager = SpaceRocks.EntityManager;
-        entityManager.addEntity(entity1);
-        entityManager.addEntity(entity2);
+        entityManager.addEntity(expectedEntity, expectedCollisionGroup);
 
-        entityManager.checkCollisions();
+        expect(addSpy.calledOnce).to.equal(true);
+        expect(addSpy.firstCall.args[0]).to.equal(expectedEntity);
+        expect(addSpy.firstCall.args[1]).to.equal(expectedCollisionGroup);
+        expect(removeSpy.called).to.equal(false);
 
-        expect(entity1.collide.calledOnce).to.equal(true);
-        expect(entity1.collide.firstCall.args[0]).to.equal(entity2);
-        expect(entity2.collide.calledOnce).to.equal(true);
-        expect(entity2.collide.firstCall.args[0]).to.equal(entity1);
-
-        expect(entity1.destroy.calledOnce).to.equal(true);
-        expect(entity2.destroy.calledOnce).to.equal(true);
+        entityManager.removeEntity(expectedEntity);
+        expect(removeSpy.calledOnce).to.equal(true);
+        expect(removeSpy.firstCall.args[0]).to.equal(expectedEntity);
     });
-
-    it('will not destroy two entities if they do not collide', function () {
-        var entity1 = createMockEntity();
-        var entity2 = createMockEntity();
-        entity1.collide.returns(false);
-        entity2.collide.returns(false);
-
-        var entityManager = SpaceRocks.EntityManager;
-        entityManager.addEntity(entity1);
-        entityManager.addEntity(entity2);
-
-        entityManager.checkCollisions();
-
-        expect(entity1.collide.calledOnce).to.equal(true);
-        expect(entity1.collide.firstCall.args[0]).to.equal(entity2);
-        expect(entity2.collide.calledOnce).to.equal(true);
-        expect(entity2.collide.firstCall.args[0]).to.equal(entity1);
-
-        expect(entity1.destroy.calledOnce).to.equal(false);
-        expect(entity2.destroy.calledOnce).to.equal(false);
-    });
-
-    function createMockEntity() {
-        var entity = new SpaceRocks.Entity(0, 0, {});
-        sinon.stub(entity, 'collide');
-        sinon.stub(entity, 'destroy');
-        return entity;
-    }
 
 });

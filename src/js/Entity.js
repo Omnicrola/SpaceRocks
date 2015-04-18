@@ -12,11 +12,12 @@ var SpaceRocks = (function (spaceRocks) {
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         this._isAlive = true;
-        this._deathBehavior = function () {
-        };
+        this._deathBehavior = function () { };
         this.behaviors = [];
         setPosition.call(this, x, y);
     };
+
+
 
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
@@ -67,6 +68,7 @@ var SpaceRocks = (function (spaceRocks) {
         var offsetY = this.position.y - otherEntity.position.y;
         return this.shape.intersects(otherEntity.shape, offsetX, offsetY);
     }
+
     _entity.prototype.isAlive = function () {
         return this._isAlive;
     }
@@ -80,8 +82,8 @@ var SpaceRocks = (function (spaceRocks) {
         this._deathBehavior(this);
     }
 
-    _entity.build = function (x, y, shape) {
-        return new _entity(x, y, shape)
+    _entity.build = function (x, y, shape, type) {
+        return new _entity(x, y, shape, type)
     };
 
     spaceRocks.Entity = _entity;

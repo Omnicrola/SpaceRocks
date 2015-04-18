@@ -3,6 +3,7 @@
  */
 var SpaceRocks = (function (spaceRocks) {
 
+
     function _spawnPlayer() {
         var pX = spaceRocks.Renderer.width() / 2;
         var pY = spaceRocks.Renderer.height() / 2;
@@ -11,9 +12,10 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _spawnAsteroids(){
+        var collisionGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         for (var i = 0; i < 5; i++) {
             var asteroid = spaceRocks.AsteroidFactory.build();
-            spaceRocks.EntityManager.addEntity(asteroid);
+            spaceRocks.EntityManager.addEntity(asteroid, collisionGroup);
         }
     }
 

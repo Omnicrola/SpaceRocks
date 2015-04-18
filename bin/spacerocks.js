@@ -77,6 +77,80 @@ var SpaceRocks = (function (spaceRocks) {
     return spaceRocks;
 })(SpaceRocks || {});
 /**
+ * Created by Eric on 4/18/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+    var entities = {};
+    var groups = [];
+
+    function _addEntity(entity, collisionGroup) {
+        if (!collisionGroup) {
+            throw 'No collision group specified.';
+        }
+        if (!entities.hasOwnProperty(collisionGroup)) {
+            entities[collisionGroup] = [];
+            groups.push(collisionGroup);
+        }
+        entities[collisionGroup].push(entity);
+    }
+
+    function _removeEntity(entity) {
+
+    }
+
+    function _removeAllEntities() {
+        entities = {};
+        groups = [];
+    }
+
+    function _checkCollisions() {
+        groups.forEach(function (firstGroupName) {
+            groups.forEach(function (secondGroupName) {
+                if (firstGroupName !== secondGroupName) {
+                    _collideTwoGroupsByName(firstGroupName, secondGroupName);
+                }
+            });
+        });
+    }
+
+    function _collideTwoGroupsByName(firstGroupName, secondGroupName) {
+        var firstGroup = entities[firstGroupName];
+        var secondGroup;
+        firstGroup.forEach(function (firstEntity) {
+            secondGroup = entities[secondGroupName];
+            secondGroup.forEach(function (secondEntity) {
+                _checkSingleCollision(firstEntity, secondEntity);
+            });
+        });
+    }
+
+    function _checkSingleCollision(firstEntity, secondEntity) {
+        var bothAreAlive = firstEntity.isAlive() && secondEntity.isAlive();
+        var areNotSameEntity = (firstEntity !== secondEntity);
+        if (bothAreAlive && areNotSameEntity) {
+            if (firstEntity.collide(secondEntity)) {
+                firstEntity.destroy();
+                secondEntity.destroy();
+            }
+        }
+    }
+
+
+    spaceRocks.CollisionManager = {
+        addEntity: _addEntity,
+        removeEntity: _removeEntity,
+        checkCollisions: _checkCollisions,
+        removeAllEntities: _removeAllEntities,
+        ASTEROIDS_GROUP: function () {
+            return 1;
+        },
+        PLAYER_GROUP: function () {
+            return 2;
+        }
+    };
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
@@ -90,11 +164,12 @@ var SpaceRocks = (function (spaceRocks) {
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         this._isAlive = true;
-        this._deathBehavior = function () {
-        };
+        this._deathBehavior = function () { };
         this.behaviors = [];
         setPosition.call(this, x, y);
     };
+
+
 
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
@@ -145,6 +220,7 @@ var SpaceRocks = (function (spaceRocks) {
         var offsetY = this.position.y - otherEntity.position.y;
         return this.shape.intersects(otherEntity.shape, offsetX, offsetY);
     }
+
     _entity.prototype.isAlive = function () {
         return this._isAlive;
     }
@@ -158,8 +234,8 @@ var SpaceRocks = (function (spaceRocks) {
         this._deathBehavior(this);
     }
 
-    _entity.build = function (x, y, shape) {
-        return new _entity(x, y, shape)
+    _entity.build = function (x, y, shape, type) {
+        return new _entity(x, y, shape, type)
     };
 
     spaceRocks.Entity = _entity;
@@ -173,13 +249,15 @@ var SpaceRocks = (function (spaceRocks) {
     var entities = [];
     var player;
 
-    function _addEntity(newEntity) {
+    function _addEntity(newEntity, collisionGroup) {
         entities.push(newEntity);
+        spaceRocks.CollisionManager.addEntity(newEntity, collisionGroup);
     }
 
     function _removeEntity(entityToRemove) {
         var index = entities.indexOf(entityToRemove);
         entities.splice(index, 1);
+        spaceRocks.CollisionManager.removeEntity(entityToRemove);
     }
 
     function _callEntities(customFunction) {
@@ -201,30 +279,13 @@ var SpaceRocks = (function (spaceRocks) {
         entities = entitiesCopy;
     }
 
-    function _checkCollisions() {
-        entities.forEach(function (firstEntity) {
-            entities.forEach(function (secondEntity) {
-                _checkSingleCollision(firstEntity, secondEntity);
-            });
-        });
-    }
-
-    function _checkSingleCollision(firstEntity, secondEntity) {
-        var bothAreAlive = firstEntity.isAlive() && secondEntity.isAlive();
-        var areNotSameEntity = (firstEntity !== secondEntity);
-        if (bothAreAlive && areNotSameEntity) {
-            if (firstEntity.collide(secondEntity)) {
-                firstEntity.destroy();
-                secondEntity.destroy();
-            }
-        }
-    }
-
     function _player(newPlayer) {
         if (!newPlayer) {
             return player;
         }
         player = newPlayer;
+        var collisionGroup = spaceRocks.CollisionManager.PLAYER_GROUP();
+        spaceRocks.CollisionManager.addEntity(newPlayer, collisionGroup);
     };
 
     function _removeAllEntities() {
@@ -236,7 +297,6 @@ var SpaceRocks = (function (spaceRocks) {
         player: _player,
         removeEntity: _removeEntity,
         callEntities: _callEntities,
-        checkCollisions: _checkCollisions,
         cleanDeadEntities: _cleanDeadEntities,
         removeAllEntities: _removeAllEntities
     };
@@ -387,6 +447,7 @@ var SpaceRocks = (function (spaceRocks) {
  */
 var SpaceRocks = (function (spaceRocks) {
 
+
     function _spawnPlayer() {
         var pX = spaceRocks.Renderer.width() / 2;
         var pY = spaceRocks.Renderer.height() / 2;
@@ -395,9 +456,10 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _spawnAsteroids(){
+        var collisionGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         for (var i = 0; i < 5; i++) {
             var asteroid = spaceRocks.AsteroidFactory.build();
-            spaceRocks.EntityManager.addEntity(asteroid);
+            spaceRocks.EntityManager.addEntity(asteroid, collisionGroup);
         }
     }
 
@@ -756,7 +818,7 @@ var SpaceRocks = (function (spaceRocks) {
             var y = player.position.y;
             var rotation = player.rotation();
             var bullet = spaceRocks.BulletFactory.build(x, y, rotation);
-            spaceRocks.EntityManager.addEntity(bullet);
+            spaceRocks.EntityManager.addEntity(bullet, spaceRocks.CollisionManager.PLAYER_GROUP());
         }
     }
 
@@ -771,7 +833,7 @@ var SpaceRocks = (function (spaceRocks) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
         spaceRocks.EntityManager.cleanDeadEntities();
-        spaceRocks.EntityManager.checkCollisions();
+        spaceRocks.CollisionManager.checkCollisions();
     };
 
     return spaceRocks;

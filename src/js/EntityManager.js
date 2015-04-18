@@ -5,13 +5,15 @@ var SpaceRocks = (function (spaceRocks) {
     var entities = [];
     var player;
 
-    function _addEntity(newEntity) {
+    function _addEntity(newEntity, collisionGroup) {
         entities.push(newEntity);
+        spaceRocks.CollisionManager.addEntity(newEntity, collisionGroup);
     }
 
     function _removeEntity(entityToRemove) {
         var index = entities.indexOf(entityToRemove);
         entities.splice(index, 1);
+        spaceRocks.CollisionManager.removeEntity(entityToRemove);
     }
 
     function _callEntities(customFunction) {
@@ -33,30 +35,13 @@ var SpaceRocks = (function (spaceRocks) {
         entities = entitiesCopy;
     }
 
-    function _checkCollisions() {
-        entities.forEach(function (firstEntity) {
-            entities.forEach(function (secondEntity) {
-                _checkSingleCollision(firstEntity, secondEntity);
-            });
-        });
-    }
-
-    function _checkSingleCollision(firstEntity, secondEntity) {
-        var bothAreAlive = firstEntity.isAlive() && secondEntity.isAlive();
-        var areNotSameEntity = (firstEntity !== secondEntity);
-        if (bothAreAlive && areNotSameEntity) {
-            if (firstEntity.collide(secondEntity)) {
-                firstEntity.destroy();
-                secondEntity.destroy();
-            }
-        }
-    }
-
     function _player(newPlayer) {
         if (!newPlayer) {
             return player;
         }
         player = newPlayer;
+        var collisionGroup = spaceRocks.CollisionManager.PLAYER_GROUP();
+        spaceRocks.CollisionManager.addEntity(newPlayer, collisionGroup);
     };
 
     function _removeAllEntities() {
@@ -68,7 +53,6 @@ var SpaceRocks = (function (spaceRocks) {
         player: _player,
         removeEntity: _removeEntity,
         callEntities: _callEntities,
-        checkCollisions: _checkCollisions,
         cleanDeadEntities: _cleanDeadEntities,
         removeAllEntities: _removeAllEntities
     };

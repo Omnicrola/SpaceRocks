@@ -49,7 +49,7 @@ var SpaceRocks = (function (spaceRocks) {
             var y = player.position.y;
             var rotation = player.rotation();
             var bullet = spaceRocks.BulletFactory.build(x, y, rotation);
-            spaceRocks.EntityManager.addEntity(bullet);
+            spaceRocks.EntityManager.addEntity(bullet, spaceRocks.CollisionManager.PLAYER_GROUP());
         }
     }
 
@@ -64,7 +64,7 @@ var SpaceRocks = (function (spaceRocks) {
         updatePlayer(frameDelta);
         updateEntities(frameDelta);
         spaceRocks.EntityManager.cleanDeadEntities();
-        spaceRocks.EntityManager.checkCollisions();
+        spaceRocks.CollisionManager.checkCollisions();
     };
 
     return spaceRocks;
