@@ -28,12 +28,20 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
+    function _createIncrementScoreBehavior(){
+        var score = 25;
+        return function(entity){
+            spaceRocks.Gui.incrementScore(score);
+        }
+    }
+
     function _build() {
         var position = _getRandomPosition();
         var asteroidShape = spaceRocks.Shapes.asteroid();
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(_createSpinBehavior());
+        asteroid.setDeathBehavior(_createIncrementScoreBehavior());
         return asteroid;
     }
 

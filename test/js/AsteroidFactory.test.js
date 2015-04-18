@@ -89,6 +89,17 @@ describe('Asteroid Factory', function () {
 
     });
 
+    it('should attach a score incrementing death behavior', function(){
+       var scoreSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'incrementScore');
+        var oneAsteroid = createOneAsteroid();
+        oneAsteroid.update(1.0);
+
+        expect(scoreSpy.called).to.equal(false);
+        oneAsteroid.destroy();
+        expect(scoreSpy.calledOnce).to.equal(true);
+        expect(scoreSpy.firstCall.args[0]).to.equal(25);
+    });
+
     function createOneHundredAsteroids() {
         var asteroids = [];
         for (var i = 0; i < 100; i++) {
