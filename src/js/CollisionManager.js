@@ -68,6 +68,9 @@ var SpaceRocks = (function (spaceRocks) {
         },
         PLAYER_GROUP: function () {
             return 2;
+        },
+        EFFECTS_GROUP: function () {
+            return 99;
         }
     };
     return spaceRocks;

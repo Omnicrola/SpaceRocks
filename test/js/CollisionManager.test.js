@@ -85,6 +85,7 @@ describe('CollisionManager', function () {
     it('has collision group constants', function () {
         expect(SpaceRocks.CollisionManager.ASTEROIDS_GROUP()).to.equal(1);
         expect(SpaceRocks.CollisionManager.PLAYER_GROUP()).to.equal(2);
+        expect(SpaceRocks.CollisionManager.EFFECTS_GROUP()).to.equal(99);
     });
 
     function createMockEntity() {

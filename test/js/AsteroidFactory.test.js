@@ -90,7 +90,8 @@ describe('Asteroid Factory', function () {
     });
 
     it('should attach a score incrementing death behavior', function(){
-       var scoreSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'incrementScore');
+        OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
+        var scoreSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'incrementScore');
         var oneAsteroid = createOneAsteroid();
         oneAsteroid.update(1.0);
 
@@ -98,6 +99,39 @@ describe('Asteroid Factory', function () {
         oneAsteroid.destroy();
         expect(scoreSpy.calledOnce).to.equal(true);
         expect(scoreSpy.firstCall.args[0]).to.equal(25);
+    });
+
+    it('should spawn some particles on death', function(){
+        var particle1 = OMD.test.randomObject();
+        var particle2 = OMD.test.randomObject();
+        var particle3 = OMD.test.randomObject();
+        var particle4 = OMD.test.randomObject();
+
+        var particleStub = OMD.test.globalStub(SpaceRocks.ParticleFactory, 'build');
+        particleStub.onCall(0).returns(particle1);
+        particleStub.onCall(1).returns(particle2);
+        particleStub.onCall(2).returns(particle3);
+        particleStub.onCall(3).returns(particle4);
+
+        var addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
+        var expectedCollisionGroup = SpaceRocks.CollisionManager.EFFECTS_GROUP();
+        var oneAsteroid = createOneAsteroid();
+
+        expect(addEntitySpy.called).to.equal(false);
+
+        oneAsteroid.destroy();
+        expect(addEntitySpy.called).to.equal(true);
+        expect(addEntitySpy.getCall(0).args[0]).to.equal(particle1);
+        expect(addEntitySpy.getCall(0).args[1]).to.equal(expectedCollisionGroup);
+
+        expect(addEntitySpy.getCall(1).args[0]).to.equal(particle2);
+        expect(addEntitySpy.getCall(1).args[1]).to.equal(expectedCollisionGroup);
+
+        expect(addEntitySpy.getCall(2).args[0]).to.equal(particle3);
+        expect(addEntitySpy.getCall(2).args[1]).to.equal(expectedCollisionGroup);
+
+        expect(addEntitySpy.getCall(3).args[0]).to.equal(particle4);
+        expect(addEntitySpy.getCall(3).args[1]).to.equal(expectedCollisionGroup);
     });
 
     function createOneHundredAsteroids() {

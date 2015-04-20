@@ -28,11 +28,22 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
-    function _createIncrementScoreBehavior(){
+    function _createDeathBehavior(){
         var score = 25;
         return function(entity){
             spaceRocks.Gui.incrementScore(score);
+            spawnParticles(entity.position);
         }
+    }
+    function spawnParticles(position){
+        spawnParticle(0,0,0,0);
+        spawnParticle(0,0,0,0);
+        spawnParticle(0,0,0,0);
+        spawnParticle(0,0,0,0);
+    }
+    function spawnParticle(x,y,vX,vY){
+        var particle = spaceRocks.ParticleFactory.build(x, y, vX, vY, 1);
+        spaceRocks.EntityManager.addEntity(particle, spaceRocks.CollisionManager.EFFECTS_GROUP());
     }
 
     function _build() {
@@ -41,7 +52,7 @@ var SpaceRocks = (function (spaceRocks) {
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(_createSpinBehavior());
-        asteroid.setDeathBehavior(_createIncrementScoreBehavior());
+        asteroid.setDeathBehavior(_createDeathBehavior());
         return asteroid;
     }
 

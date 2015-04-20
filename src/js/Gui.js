@@ -12,9 +12,14 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.Renderer.drawText(10, 20, 'Score: ' + _score);
     }
 
+    function _resetScore(){
+        _score = 0;
+    }
+
     spaceRocks.Gui = {
         render: _render,
-        incrementScore: _incrementScore
+        incrementScore: _incrementScore,
+        resetScore : _resetScore
     };
 
     return spaceRocks;

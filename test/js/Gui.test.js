@@ -3,8 +3,23 @@
  */
 describe('Gui', function () {
 
+    beforeEach(function(){
+        SpaceRocks.Gui.resetScore();
+    });
+
     afterEach(function () {
         OMD.test.restoreAll();
+    });
+
+    it('should reset the score', function(){
+        var drawTextSpy = OMD.test.globalSpy(SpaceRocks.Renderer, 'drawText');
+        SpaceRocks.Gui.incrementScore(20);
+       SpaceRocks.Gui.incrementScore(60);
+
+        SpaceRocks.Gui.resetScore();
+        SpaceRocks.Gui.render();
+
+        expect(drawTextSpy.getCall(0).args[2]).to.equal('Score: 0');
     });
 
     it('should draw score', function () {

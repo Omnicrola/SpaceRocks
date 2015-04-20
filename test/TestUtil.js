@@ -31,6 +31,11 @@ var OMD = (function () {
                 swapProperty(targetObj, propertyName, stub);
                 return stub;
             },
+            globalMock : function(targetObject, propertyName){
+                var mock = sinon.mock(targetObject);
+                swapProperty(targetObject,propertyName, mock);
+                return mock;
+            },
             restoreAll: function () {
                 shims.forEach(function (singleShim) {
                     singleShim.restore();
