@@ -144,11 +144,14 @@ describe('main update', function () {
             player.rotation.returns(expectedRotation);
             playerStub.returns(player);
 
-            var expectedBullet = {kittens: 'fluffy'};
+            var expectedBullet = OMD.test.randomObject();
             bulletFactoryStub.returns(expectedBullet);
+
+            var soundSpy = sinon.spy(SpaceRocks.SoundManager, 'playLaser');
 
             mockInput.fireWeapon.returns(true);
             SpaceRocks.update(1.0);
+
             expect(bulletFactoryStub.calledOnce).to.be.ok;
             var factoryCall = bulletFactoryStub.getCall(0);
             expect(factoryCall.args[0]).to.equal(expectedX);
@@ -158,6 +161,28 @@ describe('main update', function () {
             expect(addEntitySpy.calledOnce).to.be.ok;
             expect(addEntitySpy.firstCall.args[0]).to.deep.equal(expectedBullet);
             expect(addEntitySpy.firstCall.args[1]).to.equal(SpaceRocks.CollisionManager.PLAYER_GROUP());
+
+            expect(soundSpy.calledOnce).to.equal(true);
+            soundSpy.restore();
+        });
+
+        it('should not fire more than once every 5 frames', function(){
+            var player = stubPlayer(1, 1);
+            player.rotation.returns(1);
+            playerStub.returns(player);
+            mockInput.fireWeapon.returns(true);
+
+           expect(addEntitySpy.called).to.equal(false);
+
+            SpaceRocks.update(999.0);
+            expect(addEntitySpy.getCalls().length).to.equal(1);
+            SpaceRocks.update(2.0);
+            expect(addEntitySpy.getCalls().length).to.equal(1);
+            SpaceRocks.update(2.9);
+            expect(addEntitySpy.getCalls().length).to.equal(1);
+            SpaceRocks.update(1.0);
+            expect(addEntitySpy.getCalls().length).to.equal(2);
+
         });
     });
 
