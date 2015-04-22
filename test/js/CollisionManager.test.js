@@ -70,6 +70,22 @@ describe('CollisionManager', function () {
         expect(entity2.destroy.called).to.equal(false);
     });
 
+    it('will not collide entities in the FX group', function(){
+        var asteroidEntity = createMockEntity();
+        var playerEntity = createMockEntity();
+        var effectsEntity = createMockEntity();
+
+        var collisionManager = SpaceRocks.CollisionManager;
+        collisionManager.addEntity(asteroidEntity, collisionManager.ASTEROIDS_GROUP());
+        collisionManager.addEntity(playerEntity, collisionManager.PLAYER_GROUP());
+        collisionManager.addEntity(effectsEntity, collisionManager.EFFECTS_GROUP());
+
+        collisionManager.checkCollisions();
+        expect(effectsEntity.collide.called).to.equal(false);
+        expect(asteroidEntity.collide.calledWith(effectsEntity)).to.equal(false);
+        expect(playerEntity.collide.calledWith(effectsEntity)).to.equal(false);
+    });
+
     it('will throw an error if no collision group is specified', function () {
         var mockEntity = createMockEntity();
         var actualError = null;

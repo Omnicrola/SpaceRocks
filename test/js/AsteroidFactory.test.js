@@ -89,7 +89,7 @@ describe('Asteroid Factory', function () {
 
     });
 
-    it('should attach a score incrementing death behavior', function(){
+    it('should attach a score incrementing death behavior', function () {
         OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         var scoreSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'incrementScore');
         var oneAsteroid = createOneAsteroid();
@@ -101,21 +101,25 @@ describe('Asteroid Factory', function () {
         expect(scoreSpy.firstCall.args[0]).to.equal(25);
     });
 
-    it('should spawn some particles on death', function(){
+    it('should spawn some particles on death', function () {
         var particle1 = OMD.test.randomObject();
         var particle2 = OMD.test.randomObject();
         var particle3 = OMD.test.randomObject();
         var particle4 = OMD.test.randomObject();
+        var expectedX = Math.random() * 100;
+        var expectedY = Math.random() * 100;
 
         var particleStub = OMD.test.globalStub(SpaceRocks.ParticleFactory, 'build');
-        particleStub.onCall(0).returns(particle1);
-        particleStub.onCall(1).returns(particle2);
-        particleStub.onCall(2).returns(particle3);
-        particleStub.onCall(3).returns(particle4);
+        particleStub.withArgs(expectedX, expectedY, 5, 5).returns(particle1);
+        particleStub.withArgs(expectedX, expectedY, 5, -5).returns(particle2);
+        particleStub.withArgs(expectedX, expectedY, -5, 5).returns(particle3);
+        particleStub.withArgs(expectedX, expectedY, -5, -5).returns(particle4);
 
         var addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
         var expectedCollisionGroup = SpaceRocks.CollisionManager.EFFECTS_GROUP();
         var oneAsteroid = createOneAsteroid();
+        oneAsteroid.position.x = expectedX;
+        oneAsteroid.position.y = expectedY;
 
         expect(addEntitySpy.called).to.equal(false);
 

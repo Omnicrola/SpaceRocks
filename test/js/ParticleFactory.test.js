@@ -17,7 +17,11 @@ describe('ParticleFactory', function () {
         var expectedVelX = Math.random();
         var expectedVelY = Math.random();
 
-        var expectedShape = new SpaceRocks.Polygon([new SpaceRocks.Point(0, 0)]);
+        var expectedShape = new SpaceRocks.Polygon([
+            new SpaceRocks.Point(0, 0),
+            new SpaceRocks.Point(1, 0)
+        ]);
+
         var expectedEntity = new SpaceRocks.Entity(expectedX, expectedY, expectedShape);
         expectedEntity.velocity.x = expectedVelX;
         expectedEntity.velocity.y = expectedVelY;

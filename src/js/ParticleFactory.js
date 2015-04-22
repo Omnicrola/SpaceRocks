@@ -5,7 +5,8 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _pointShape() {
         return new spaceRocks.Polygon([
-            new spaceRocks.Point(0, 0)
+            new spaceRocks.Point(0, 0),
+            new spaceRocks.Point(1, 0)
         ]);
     }
 

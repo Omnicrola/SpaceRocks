@@ -28,21 +28,23 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
-    function _createDeathBehavior(){
+    function _createDeathBehavior() {
         var score = 25;
-        return function(entity){
+        return function (entity) {
             spaceRocks.Gui.incrementScore(score);
             spawnParticles(entity.position);
         }
     }
-    function spawnParticles(position){
-        spawnParticle(0,0,0,0);
-        spawnParticle(0,0,0,0);
-        spawnParticle(0,0,0,0);
-        spawnParticle(0,0,0,0);
+
+    function spawnParticles(position) {
+        spawnParticle(position.x, position.y, 5, 5);
+        spawnParticle(position.x, position.y, 5, -5);
+        spawnParticle(position.x, position.y, -5, 5);
+        spawnParticle(position.x, position.y, -5, -5);
     }
-    function spawnParticle(x,y,vX,vY){
-        var particle = spaceRocks.ParticleFactory.build(x, y, vX, vY, 1);
+
+    function spawnParticle(x, y, vX, vY) {
+        var particle = spaceRocks.ParticleFactory.build(x, y, vX, vY, 10);
         spaceRocks.EntityManager.addEntity(particle, spaceRocks.CollisionManager.EFFECTS_GROUP());
     }
 

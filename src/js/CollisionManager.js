@@ -26,20 +26,23 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _checkCollisions() {
-        groups.forEach(function (firstGroupName) {
-            groups.forEach(function (secondGroupName) {
-                if (firstGroupName !== secondGroupName) {
-                    _collideTwoGroupsByName(firstGroupName, secondGroupName);
+        var effectGroupId = spaceRocks.CollisionManager.EFFECTS_GROUP();
+        groups.forEach(function (firstGroupId) {
+            groups.forEach(function (secondGroupId) {
+                var isNotSameGroup = firstGroupId !== secondGroupId;
+                var isNotEffects = (firstGroupId !== effectGroupId) && (secondGroupId !== effectGroupId);
+                if (isNotSameGroup && isNotEffects) {
+                    _collideTwoGroupsByName(firstGroupId, secondGroupId);
                 }
             });
         });
     }
 
-    function _collideTwoGroupsByName(firstGroupName, secondGroupName) {
-        var firstGroup = entities[firstGroupName];
+    function _collideTwoGroupsByName(firstGroupId, secondGroupId) {
+        var firstGroup = entities[firstGroupId];
         var secondGroup;
         firstGroup.forEach(function (firstEntity) {
-            secondGroup = entities[secondGroupName];
+            secondGroup = entities[secondGroupId];
             secondGroup.forEach(function (secondEntity) {
                 _checkSingleCollision(firstEntity, secondEntity);
             });
