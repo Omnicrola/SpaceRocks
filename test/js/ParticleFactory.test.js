@@ -17,34 +17,42 @@ describe('ParticleFactory', function () {
         var expectedVelX = Math.random();
         var expectedVelY = Math.random();
 
+        var life = Math.random() * 100;
+        var entityBuildStub = OMD.test.globalStub(SpaceRocks.Entity, 'build');
+        var expectedEntity = sinon.stub(new SpaceRocks.Entity());
+        entityBuildStub.returns(expectedEntity);
+
+
         var expectedShape = new SpaceRocks.Polygon([
             new SpaceRocks.Point(0, 0),
             new SpaceRocks.Point(1, 0)
         ]);
 
-        var expectedEntity = new SpaceRocks.Entity(expectedX, expectedY, expectedShape);
-        expectedEntity.velocity.x = expectedVelX;
-        expectedEntity.velocity.y = expectedVelY;
+        var actualParticle = SpaceRocks.ParticleFactory.build(expectedX, expectedY, expectedVelX, expectedVelY);
+        expect(entityBuildStub.calledOnce).to.equal(true);
+        expect(actualParticle).to.equal(expectedEntity);
 
-        var particle = SpaceRocks.ParticleFactory.build(expectedX, expectedY, expectedVelX, expectedVelY);
-        expect(particle.position).to.deep.equal(expectedEntity.position);
-        expect(particle.velocity).to.deep.equal(expectedEntity.velocity);
-        expect(particle.shape).to.deep.equal(expectedEntity.shape);
+        expect(actualParticle.position).to.deep.equal(expectedEntity.position);
+        expect(actualParticle.velocity).to.deep.equal(expectedEntity.velocity);
+        expect(actualParticle.shape).to.deep.equal(expectedEntity.shape);
     });
 
-    it('should self destruct after the specified time', function () {
-        var life = 100;
+    it('should add self destruct behavior', function () {
+        var life = Math.random() * 100;
+        var entityBuildStub = OMD.test.globalStub(SpaceRocks.Entity, 'build');
+        var stubEntity = sinon.stub(new SpaceRocks.Entity());
+        entityBuildStub.returns(stubEntity);
+
+        var selfDestructStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSelfDestruct');
+        var expectedSelfDestruct = OMD.test.randomObject();
+        selfDestructStub.returns(expectedSelfDestruct);
+
         var particle = SpaceRocks.ParticleFactory.build(0, 0, 0, 0, life);
 
-        expect(particle.isAlive()).to.equal(true);
-        particle.update(10);
-        expect(particle.isAlive()).to.equal(true);
-        particle.update(10);
-        expect(particle.isAlive()).to.equal(true);
-        particle.update(10);
-        expect(particle.isAlive()).to.equal(true);
-        particle.update(71);
-        expect(particle.isAlive()).to.equal(false);
+        expect(entityBuildStub.calledOnce).to.equal(true);
+        expect(selfDestructStub.calledOnce).to.equal(true);
+        expect(stubEntity.addBehavior.calledWith(expectedSelfDestruct)).to.equal(true);
+
     });
 
 });

@@ -81,6 +81,17 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
+    function _buildSpawnSmallAsteroids() {
+        var asteroidGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
+        return function (entity) {
+            var p = entity.position;
+            var asteroid1 = spaceRocks.AsteroidFactory.buildSmall(p.x, p.y);
+            var asteroid2 = spaceRocks.AsteroidFactory.buildSmall(p.x, p.y);
+            spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
+            spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
+        }
+    }
+
     function _buildParticleSpawnBehavior() {
         var life = 10;
         var effectsGroup = spaceRocks.CollisionManager.EFFECTS_GROUP();
@@ -97,9 +108,28 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
+    function _buildIncrementScore(scoreValue) {
+        return function (entity) {
+            spaceRocks.Gui.incrementScore(scoreValue);
+        }
+    }
+
+    function _buildSelfDestruct(lifetime) {
+        var life = 0;
+        return function (entity, delta) {
+            life += delta;
+            if(life >= lifetime){
+                entity.destroy();
+            }
+        }
+    }
+
     spaceRocks.BehaviorFactory = {
         buildSpawnMediumAsteroids: _buildSpawnMediumAsteroids,
-        buildParticleSpawnBehavior: _buildParticleSpawnBehavior
+        buildSpawnSmallAsteroids: _buildSpawnSmallAsteroids,
+        buildParticleSpawnBehavior: _buildParticleSpawnBehavior,
+        buildIncrementScore: _buildIncrementScore,
+        buildSelfDestruct: _buildSelfDestruct
     };
     return spaceRocks;
 })(SpaceRocks || {});
@@ -555,22 +585,11 @@ var SpaceRocks = (function (spaceRocks) {
         ]);
     }
 
-    function _buildSelfDestructBehavior(maximumLifetime) {
-        var timeSpentAlive = 0;
-        return function selfDestructBehavior(entity, delta) {
-            timeSpentAlive += delta;
-            if (timeSpentAlive >= maximumLifetime) {
-                entity.destroy();
-            }
-        }
-    }
-
-
     function _build(positionX, positionY, velocityX, velocityY, life) {
-        var particle = new spaceRocks.Entity(positionX, positionY, _pointShape());
+        var particle = spaceRocks.Entity.build(positionX, positionY, _pointShape());
         particle.velocity.x = velocityX;
         particle.velocity.y = velocityY;
-        particle.addBehavior(_buildSelfDestructBehavior(life));
+        particle.addBehavior(spaceRocks.BehaviorFactory.buildSelfDestruct(life));
         return particle;
     }
 
@@ -592,11 +611,11 @@ var SpaceRocks = (function (spaceRocks) {
     _point.prototype.distance = function (otherPoint) {
         var a = this.x - otherPoint.x;
         var b = this.y - otherPoint.y;
-        var c2 = a*a + b*b;
+        var c2 = a * a + b * b;
         return Math.sqrt(c2);
     };
 
-    _point.prototype.rotate = function(degrees){
+    _point.prototype.rotate = function (degrees) {
         var theta = degrees * Math.PI / 180.0;
         var x = Math.cos(theta) * this.x - Math.sin(theta) * this.y;
         var y = Math.sin(theta) * this.x + Math.cos(theta) * this.y;

@@ -10,22 +10,11 @@ var SpaceRocks = (function (spaceRocks) {
         ]);
     }
 
-    function _buildSelfDestructBehavior(maximumLifetime) {
-        var timeSpentAlive = 0;
-        return function selfDestructBehavior(entity, delta) {
-            timeSpentAlive += delta;
-            if (timeSpentAlive >= maximumLifetime) {
-                entity.destroy();
-            }
-        }
-    }
-
-
     function _build(positionX, positionY, velocityX, velocityY, life) {
-        var particle = new spaceRocks.Entity(positionX, positionY, _pointShape());
+        var particle = spaceRocks.Entity.build(positionX, positionY, _pointShape());
         particle.velocity.x = velocityX;
         particle.velocity.y = velocityY;
-        particle.addBehavior(_buildSelfDestructBehavior(life));
+        particle.addBehavior(spaceRocks.BehaviorFactory.buildSelfDestruct(life));
         return particle;
     }
 
