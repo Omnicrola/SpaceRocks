@@ -17,7 +17,7 @@ describe('Asteroid Factory', function () {
     it('should have an asteroid shape', function () {
         stubScreenSize(100, 100);
 
-        var expectedShape = SpaceRocks.Shapes.asteroid();
+        var expectedShape = SpaceRocks.Shapes.asteroidLarge();
         var oneHundredAsteroids = createOneHundredAsteroids();
         oneHundredAsteroids.forEach(function (oneAsteroid) {
             expect(oneAsteroid.shape).to.deep.equal(expectedShape);

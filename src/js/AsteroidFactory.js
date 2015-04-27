@@ -50,7 +50,7 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _build() {
         var position = _getRandomPosition();
-        var asteroidShape = spaceRocks.Shapes.asteroid();
+        var asteroidShape = spaceRocks.Shapes.asteroidLarge();
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(_createSpinBehavior());

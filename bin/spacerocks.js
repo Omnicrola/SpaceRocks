@@ -50,7 +50,7 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _build() {
         var position = _getRandomPosition();
-        var asteroidShape = spaceRocks.Shapes.asteroid();
+        var asteroidShape = spaceRocks.Shapes.asteroidLarge();
         var asteroid = new spaceRocks.Entity(position.x, position.y, asteroidShape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(_createSpinBehavior());
@@ -63,6 +63,44 @@ var SpaceRocks = (function (spaceRocks) {
         build: _build
     }
 
+    return spaceRocks;
+})(SpaceRocks || {});
+/**
+ * Created by Eric on 4/21/2015.
+ */
+var SpaceRocks = (function (spaceRocks) {
+
+    function _buildSpawnMediumAsteroids() {
+        var asteroidGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
+        return function (entity) {
+            var p = entity.position;
+            var asteroid1 = spaceRocks.AsteroidFactory.buildMedium(p.x, p.y);
+            var asteroid2 = spaceRocks.AsteroidFactory.buildMedium(p.x, p.y);
+            spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
+            spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
+        }
+    }
+
+    function _buildParticleSpawnBehavior() {
+        var life = 10;
+        var effectsGroup = spaceRocks.CollisionManager.EFFECTS_GROUP();
+        return function (entity) {
+            var p = entity.position;
+            var particle1 = spaceRocks.ParticleFactory.build(p.x, p.y, 5, 5, life);
+            var particle2 = spaceRocks.ParticleFactory.build(p.x, p.y, 5, -5, life);
+            var particle3 = spaceRocks.ParticleFactory.build(p.x, p.y, -5, 5, life);
+            var particle4 = spaceRocks.ParticleFactory.build(p.x, p.y, -5, -5, life);
+            spaceRocks.EntityManager.addEntity(particle1, effectsGroup);
+            spaceRocks.EntityManager.addEntity(particle2, effectsGroup);
+            spaceRocks.EntityManager.addEntity(particle3, effectsGroup);
+            spaceRocks.EntityManager.addEntity(particle4, effectsGroup);
+        }
+    }
+
+    spaceRocks.BehaviorFactory = {
+        buildSpawnMediumAsteroids: _buildSpawnMediumAsteroids,
+        buildParticleSpawnBehavior: _buildParticleSpawnBehavior
+    };
     return spaceRocks;
 })(SpaceRocks || {});
 /**
@@ -732,14 +770,34 @@ var SpaceRocks = (function (spaceRocks) {
                 new spaceRocks.Point(0, 0)
             ]);
         },
-        asteroid: function () {
+        asteroidSmall: function () {
             return new spaceRocks.Polygon([
-                new spaceRocks.Point(-12, 0),
-                new spaceRocks.Point(-8, 8),
-                new spaceRocks.Point(0, 16),
-                new spaceRocks.Point(8, 6),
-                new spaceRocks.Point(8, -4),
-                new spaceRocks.Point(-2, -14)
+                new spaceRocks.Point(-2, 6),
+                new spaceRocks.Point(5, 2),
+                new spaceRocks.Point(4, -3),
+                new spaceRocks.Point(-1, -4),
+                new spaceRocks.Point(-5, -1),
+                new spaceRocks.Point(-4, 5)
+            ]);
+        },
+        asteroidMedium: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(-10, 30),
+                new spaceRocks.Point(25, 10),
+                new spaceRocks.Point(20, -15),
+                new spaceRocks.Point(-5, -20),
+                new spaceRocks.Point(-25, -5),
+                new spaceRocks.Point(-20, 25)
+            ]);
+        },
+        asteroidLarge: function () {
+            return new spaceRocks.Polygon([
+                new spaceRocks.Point(-20, 60),
+                new spaceRocks.Point(50, 20),
+                new spaceRocks.Point(40, -30),
+                new spaceRocks.Point(-10, -40),
+                new spaceRocks.Point(-50, -10),
+                new spaceRocks.Point(-40, 50)
             ]);
         },
         bullet: function () {

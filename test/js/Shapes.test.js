@@ -16,15 +16,15 @@ describe('SpaceRocks.Shape', function () {
 
     describe('Asteroid', function () {
         it('should have the correct points', function () {
-            var shape = SpaceRocks.Shapes.asteroid();
+            var shape = SpaceRocks.Shapes.asteroidSmall();
             var points = shape.pointArray;
             expect(points.length).to.equal(6);
-            checkPoint(points[0], -12, 0);
-            checkPoint(points[1], -8, 8);
-            checkPoint(points[2], 0, 16);
-            checkPoint(points[3], 8, 6);
-            checkPoint(points[4], 8, -4);
-            checkPoint(points[5], -2, -14);
+            checkPoint(points[0], -2, 6);
+            checkPoint(points[1], 5, 2);
+            checkPoint(points[2], 4, -3);
+            checkPoint(points[3], -1, -4);
+            checkPoint(points[4], -5, -1);
+            checkPoint(points[5], -4, 5);
         });
     });
     describe('Bullet', function () {
