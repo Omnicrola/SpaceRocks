@@ -14,7 +14,7 @@ var SpaceRocks = (function (spaceRocks) {
     function _spawnAsteroids(){
         var collisionGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         for (var i = 0; i < 5; i++) {
-            var asteroid = spaceRocks.AsteroidFactory.build();
+            var asteroid = spaceRocks.AsteroidFactory.buildLarge();
             spaceRocks.EntityManager.addEntity(asteroid, collisionGroup);
         }
     }

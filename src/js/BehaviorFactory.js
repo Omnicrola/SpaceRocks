@@ -51,10 +51,16 @@ var SpaceRocks = (function (spaceRocks) {
         var life = 0;
         return function (entity, delta) {
             life += delta;
-            if(life >= lifetime){
+            if (life >= lifetime) {
                 entity.destroy();
             }
         }
+    }
+
+    function _buildSpin(spinRate) {
+        return function (entity, delta) {
+            entity.rotation(spinRate * delta);
+        };
     }
 
     spaceRocks.BehaviorFactory = {
@@ -62,7 +68,8 @@ var SpaceRocks = (function (spaceRocks) {
         buildSpawnSmallAsteroids: _buildSpawnSmallAsteroids,
         buildParticleSpawnBehavior: _buildParticleSpawnBehavior,
         buildIncrementScore: _buildIncrementScore,
-        buildSelfDestruct: _buildSelfDestruct
+        buildSelfDestruct: _buildSelfDestruct,
+        buildSpin: _buildSpin
     };
     return spaceRocks;
 })(SpaceRocks || {});

@@ -42,7 +42,7 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _spawnPlayer() {
         var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.build(100, 100, playerShape);
+        var newPlayer = spaceRocks.Entity.buildLarge(100, 100, playerShape);
         spaceRocks.EntityManager.player(newPlayer);
     }
 

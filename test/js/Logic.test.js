@@ -42,7 +42,7 @@ describe('Logic', function () {
     });
 
     it('should add observer to spawn asteroids on level start', function () {
-        var stubAsteroidFactory = OMD.test.globalStub(SpaceRocks.AsteroidFactory, 'build');
+        var stubAsteroidFactory = OMD.test.globalStub(SpaceRocks.AsteroidFactory, 'buildLarge');
         var addEntitySpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'addEntity');
 
         var expectedCollisionGroup = SpaceRocks.CollisionManager.ASTEROIDS_GROUP();

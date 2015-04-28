@@ -144,56 +144,77 @@ describe('BehaviorFactory', function () {
         });
     });
 
-    describe('self destruct behavior', function(){
-       it('should destroy entity after a specified time has passed', function(){
-         var timeTillDeath = 23.3;
-           var fakeEntity = {
-               destroy:sinon.spy()
-           };
+    describe('self destruct behavior', function () {
+        it('should destroy entity after a specified time has passed', function () {
+            var timeTillDeath = 23.3;
+            var fakeEntity = {
+                destroy: sinon.spy()
+            };
 
-           var behaviorFactory = SpaceRocks.BehaviorFactory;
-           var behavior = behaviorFactory.buildSelfDestruct(timeTillDeath);
+            var behaviorFactory = SpaceRocks.BehaviorFactory;
+            var behavior = behaviorFactory.buildSelfDestruct(timeTillDeath);
 
-           behavior(fakeEntity, 0);
-           expect(fakeEntity.destroy.called).to.equal(false);
+            behavior(fakeEntity, 0);
+            expect(fakeEntity.destroy.called).to.equal(false);
 
-           behavior(fakeEntity, 1.0);
-           expect(fakeEntity.destroy.called).to.equal(false);
+            behavior(fakeEntity, 1.0);
+            expect(fakeEntity.destroy.called).to.equal(false);
 
-           behavior(fakeEntity, 22.0);
-           expect(fakeEntity.destroy.called).to.equal(false);
+            behavior(fakeEntity, 22.0);
+            expect(fakeEntity.destroy.called).to.equal(false);
 
-           behavior(fakeEntity, 0.4);
-           expect(fakeEntity.destroy.calledOnce).to.equal(true);
-
-
-       });
-       it('two different destruct behaviors should not interact', function(){
-         var timeTillDeath = 10.0;
-           var fakeEntity1 = {
-               destroy:sinon.spy()
-           };
-           var fakeEntity2 = {
-               destroy:sinon.spy()
-           };
-
-           var behaviorFactory = SpaceRocks.BehaviorFactory;
-           var behavior1 = behaviorFactory.buildSelfDestruct(timeTillDeath);
-           var behavior2 = behaviorFactory.buildSelfDestruct(timeTillDeath);
-
-           behavior1(fakeEntity1, 8);
-           behavior2(fakeEntity2, 8);
-           expect(fakeEntity1.destroy.called).to.equal(false);
-           expect(fakeEntity2.destroy.called).to.equal(false);
-
-           behavior1(fakeEntity1, 2);
-           behavior2(fakeEntity2, 1);
-           expect(fakeEntity1.destroy.calledOnce).to.equal(true);
-           expect(fakeEntity2.destroy.called).to.equal(false);
+            behavior(fakeEntity, 0.4);
+            expect(fakeEntity.destroy.calledOnce).to.equal(true);
 
 
+        });
+        it('two different destruct behaviors should not interact', function () {
+            var timeTillDeath = 10.0;
+            var fakeEntity1 = {
+                destroy: sinon.spy()
+            };
+            var fakeEntity2 = {
+                destroy: sinon.spy()
+            };
 
-       });
+            var behaviorFactory = SpaceRocks.BehaviorFactory;
+            var behavior1 = behaviorFactory.buildSelfDestruct(timeTillDeath);
+            var behavior2 = behaviorFactory.buildSelfDestruct(timeTillDeath);
+
+            behavior1(fakeEntity1, 8);
+            behavior2(fakeEntity2, 8);
+            expect(fakeEntity1.destroy.called).to.equal(false);
+            expect(fakeEntity2.destroy.called).to.equal(false);
+
+            behavior1(fakeEntity1, 2);
+            behavior2(fakeEntity2, 1);
+            expect(fakeEntity1.destroy.calledOnce).to.equal(true);
+            expect(fakeEntity2.destroy.called).to.equal(false);
+
+
+        });
     });
 
+
+    describe('spin behavior', function () {
+        it('should rotate the entity according to delta', function () {
+            var fakeEntity = {
+                rotation: sinon.spy()
+            };
+            var spinRate = 4.0;
+
+            var behaviorFactory = SpaceRocks.BehaviorFactory;
+            var behavior = behaviorFactory.buildSpin(spinRate);
+
+            behavior(fakeEntity, 1.0);
+            expect(fakeEntity.rotation.calledOnce).to.equal(true);
+            expect(fakeEntity.rotation.calledWith(4.0)).to.equal(true);
+
+            behavior(fakeEntity, 0.5);
+            expect(fakeEntity.rotation.calledTwice).to.equal(true);
+            expect(fakeEntity.rotation.calledWith(2.0)).to.equal(true);
+
+
+        });
+    });
 });
