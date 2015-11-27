@@ -76,6 +76,28 @@ describe('Asteroid Factory', function () {
         expect(singleAsteroid.velocity.y).to.be.within(-2, 2);
     });
 
+    it('will create a medium asteroid at a given position', function () {
+        stubScreenSize(500, 500);
+        var expectedX = Math.random();
+        var expectedY = Math.random();
+        var asteroidFactory = SpaceRocks.AsteroidFactory;
+        var singleAsteroid = asteroidFactory.buildMedium({x: expectedX, y: expectedY});
+
+        expect(buildEntityStub.firstCall.args[0]).to.equal(expectedX);
+        expect(buildEntityStub.firstCall.args[1]).to.equal(expectedY);
+    });
+
+    it('will create a small asteroid at a given position', function () {
+        stubScreenSize(500, 500);
+        var expectedX = Math.random();
+        var expectedY = Math.random();
+        var asteroidFactory = SpaceRocks.AsteroidFactory;
+        var singleAsteroid = asteroidFactory.buildSmall({x: expectedX, y: expectedY});
+
+        expect(buildEntityStub.firstCall.args[0]).to.equal(expectedX);
+        expect(buildEntityStub.firstCall.args[1]).to.equal(expectedY);
+    });
+
     describe('adding behaviors', function () {
         describe('spawn on death behaviors', function () {
 

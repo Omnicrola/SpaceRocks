@@ -45,6 +45,7 @@ describe('BehaviorFactory', function () {
         it('should build two medium asteroids at location', function () {
             var expectedX = Math.random();
             var expectedY = Math.random();
+            var expectedPosition = {x: expectedX, y: expectedY};
 
             var asteroid1 = OMD.test.randomObject();
             var asteroid2 = OMD.test.randomObject();
@@ -61,10 +62,8 @@ describe('BehaviorFactory', function () {
             spawnMediumAsteroids(entity);
 
             expect(buildAsteroidStub.getCalls().length).to.equal(2);
-            expect(buildAsteroidStub.firstCall.args[0]).to.equal(expectedX);
-            expect(buildAsteroidStub.firstCall.args[1]).to.equal(expectedY);
-            expect(buildAsteroidStub.secondCall.args[0]).to.equal(expectedX);
-            expect(buildAsteroidStub.secondCall.args[1]).to.equal(expectedY);
+            expect(buildAsteroidStub.firstCall.args[0]).to.deep.equal(expectedPosition);
+            expect(buildAsteroidStub.secondCall.args[0]).to.deep.equal(expectedPosition);
 
             var expectedGroup = SpaceRocks.CollisionManager.ASTEROIDS_GROUP();
             expect(addEntitySpy.getCalls().length).to.equal(2);
@@ -77,6 +76,8 @@ describe('BehaviorFactory', function () {
         it('should build two small asteroids at location', function () {
             var expectedX = Math.random();
             var expectedY = Math.random();
+            var expectedPosition = {x: expectedX, y: expectedY};
+
 
             var asteroid1 = OMD.test.randomObject();
             var asteroid2 = OMD.test.randomObject();
@@ -93,10 +94,8 @@ describe('BehaviorFactory', function () {
             spawnSmallAsteroids(entity);
 
             expect(buildAsteroidStub.getCalls().length).to.equal(2);
-            expect(buildAsteroidStub.firstCall.args[0]).to.equal(expectedX);
-            expect(buildAsteroidStub.firstCall.args[1]).to.equal(expectedY);
-            expect(buildAsteroidStub.secondCall.args[0]).to.equal(expectedX);
-            expect(buildAsteroidStub.secondCall.args[1]).to.equal(expectedY);
+            expect(buildAsteroidStub.firstCall.args[0]).to.deep.equal(expectedPosition);
+            expect(buildAsteroidStub.secondCall.args[0]).to.deep.equal(expectedPosition);
 
             var expectedGroup = SpaceRocks.CollisionManager.ASTEROIDS_GROUP();
             expect(addEntitySpy.getCalls().length).to.equal(2);

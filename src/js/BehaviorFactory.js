@@ -6,20 +6,21 @@ var SpaceRocks = (function (spaceRocks) {
     function _buildSpawnMediumAsteroids() {
         var asteroidGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         return function (entity) {
-            var p = entity.position;
-            var asteroid1 = spaceRocks.AsteroidFactory.buildMedium(p.x, p.y);
-            var asteroid2 = spaceRocks.AsteroidFactory.buildMedium(p.x, p.y);
+            var position = {x: entity.position.x, y: entity.position.y};
+            var asteroid1 = spaceRocks.AsteroidFactory.buildMedium(position);
+            var asteroid2 = spaceRocks.AsteroidFactory.buildMedium(position);
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
+            asteroid1.position
         }
     }
 
     function _buildSpawnSmallAsteroids() {
         var asteroidGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         return function (entity) {
-            var p = entity.position;
-            var asteroid1 = spaceRocks.AsteroidFactory.buildSmall(p.x, p.y);
-            var asteroid2 = spaceRocks.AsteroidFactory.buildSmall(p.x, p.y);
+            var position = {x: entity.position.x, y: entity.position.y};
+            var asteroid1 = spaceRocks.AsteroidFactory.buildSmall(position);
+            var asteroid2 = spaceRocks.AsteroidFactory.buildSmall(position);
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
         }

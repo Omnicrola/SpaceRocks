@@ -40,14 +40,15 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.EntityManager.addEntity(particle, spaceRocks.CollisionManager.EFFECTS_GROUP());
     }
 
-    function _buildAsteroid(shape){
-        var position = _getRandomPosition();
-        var asteroid =  spaceRocks.Entity.build(position.x, position.y, shape);
+    function _buildAsteroid(shape, position) {
+        position = position || _getRandomPosition();
+        var asteroid = spaceRocks.Entity.build(position.x, position.y, shape);
         asteroid.velocity = _createRandomVelocity();
-        asteroid.addBehavior(spaceRocks.BehaviorFactory.buildSpin(Math.random()*2));
+        asteroid.addBehavior(spaceRocks.BehaviorFactory.buildSpin(Math.random() * 2));
         asteroid.addDeathBehavior(_createDeathBehavior());
         return asteroid;
     }
+
     function _buildLarge() {
         var largeShape = spaceRocks.Shapes.asteroidLarge();
         var largeAsteroid = _buildAsteroid(largeShape);
@@ -55,16 +56,16 @@ var SpaceRocks = (function (spaceRocks) {
         return largeAsteroid;
     }
 
-    function _buildMedium(){
+    function _buildMedium(position) {
         var mediumShape = spaceRocks.Shapes.asteroidMedium();
-        var mediumAsteroid = _buildAsteroid(mediumShape);
+        var mediumAsteroid = _buildAsteroid(mediumShape, position);
         mediumAsteroid.addDeathBehavior(spaceRocks.BehaviorFactory.buildSpawnSmallAsteroids());
         return mediumAsteroid;
     }
 
-    function _buildSmall(){
+    function _buildSmall(position) {
         var smallShape = spaceRocks.Shapes.asteroidSmall();
-        return _buildAsteroid(smallShape);
+        return _buildAsteroid(smallShape, position);
     }
 
     spaceRocks.AsteroidFactory = {
