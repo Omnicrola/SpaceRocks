@@ -45,22 +45,26 @@ var SpaceRocks = (function (spaceRocks) {
         var asteroid =  spaceRocks.Entity.build(position.x, position.y, shape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(spaceRocks.BehaviorFactory.buildSpin(Math.random()*2));
-        asteroid.setDeathBehavior(_createDeathBehavior());
+        asteroid.addDeathBehavior(_createDeathBehavior());
         return asteroid;
     }
     function _buildLarge() {
         var largeShape = spaceRocks.Shapes.asteroidLarge();
-        return _buildAsteroid(largeShape)
+        var largeAsteroid = _buildAsteroid(largeShape);
+        largeAsteroid.addDeathBehavior(spaceRocks.BehaviorFactory.buildSpawnMediumAsteroids());
+        return largeAsteroid;
     }
 
     function _buildMedium(){
         var mediumShape = spaceRocks.Shapes.asteroidMedium();
-        return _buildAsteroid(mediumShape)
+        var mediumAsteroid = _buildAsteroid(mediumShape);
+        mediumAsteroid.addDeathBehavior(spaceRocks.BehaviorFactory.buildSpawnSmallAsteroids());
+        return mediumAsteroid;
     }
 
     function _buildSmall(){
         var smallShape = spaceRocks.Shapes.asteroidSmall();
-        return _buildAsteroid(smallShape)
+        return _buildAsteroid(smallShape);
     }
 
     spaceRocks.AsteroidFactory = {
@@ -272,12 +276,10 @@ var SpaceRocks = (function (spaceRocks) {
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         this._isAlive = true;
-        this._deathBehavior = function () { };
-        this.behaviors = [];
+        this._deathBehaviors = [];
+        this._behaviors = [];
         setPosition.call(this, x, y);
     };
-
-
 
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
@@ -299,12 +301,11 @@ var SpaceRocks = (function (spaceRocks) {
         } else if (this.position.y < 0) {
             this.position.y += maxY;
         }
-
     }
 
     function invokeBehaviors(delta) {
         var currentEntity = this;
-        this.behaviors.forEach(function (singleBehavior) {
+        this._behaviors.forEach(function (singleBehavior) {
             singleBehavior(currentEntity, delta);
         });
     }
@@ -320,7 +321,7 @@ var SpaceRocks = (function (spaceRocks) {
     };
 
     _entity.prototype.addBehavior = function (newBehavior) {
-        this.behaviors.push(newBehavior);
+        this._behaviors.push(newBehavior);
     };
 
     _entity.prototype.collide = function (otherEntity) {
@@ -333,13 +334,16 @@ var SpaceRocks = (function (spaceRocks) {
         return this._isAlive;
     }
 
-    _entity.prototype.setDeathBehavior = function (deathBehavior) {
-        this._deathBehavior = deathBehavior;
+    _entity.prototype.addDeathBehavior = function (deathBehavior) {
+        this._deathBehaviors.push(deathBehavior);
     }
 
     _entity.prototype.destroy = function () {
         this._isAlive = false;
-        this._deathBehavior(this);
+        var thisEntity = this;
+        this._deathBehaviors.forEach(function (behavior) {
+            behavior(thisEntity);
+        });
     }
 
     _entity.build = function (x, y, shape, type) {

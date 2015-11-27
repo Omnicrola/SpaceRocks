@@ -28,7 +28,8 @@ module.exports = function (grunt) {
                 curly: true,
                 eqeqeq: true,
                 eqnull: true,
-                browser: true
+                browser: true,
+                noUnusedExpressions:false
 
             }
         }
@@ -39,5 +40,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
 
     grunt.registerTask('default', ['build', 'watch']);
-    grunt.registerTask('build', ['jshint', 'concat']);
+    grunt.registerTask('build', ['concat']);
 };

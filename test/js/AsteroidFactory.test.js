@@ -21,42 +21,37 @@ describe('Asteroid Factory', function () {
 
     describe('shapes of asteroids', function () {
 
+        beforeEach(function () {
+            stubScreenSize(100, 100);
+        });
+
         it('should have a large shape', function () {
-            stubScreenSize(100, 100);
-
-            var shapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'asteroidLarge');
-            var expectedShape = OMD.test.randomObject();
-            shapeStub.returns(expectedShape);
-
+            var expectedShape = stubShape('asteroidLarge');
             var actualAsteroid = SpaceRocks.AsteroidFactory.buildLarge();
-            expect(buildEntityStub.calledOnce).to.equal(true);
-            expect(buildEntityStub.firstCall.args[2]).to.equal(expectedShape);
+            expectShapePassedToFactory(expectedShape, actualAsteroid);
         });
-
         it('should have a medium shape', function () {
-            stubScreenSize(100, 100);
-
-            var shapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'asteroidMedium');
-            var expectedShape = OMD.test.randomObject();
-            shapeStub.returns(expectedShape);
-
+            var expectedShape = stubShape('asteroidMedium');
             var actualAsteroid = SpaceRocks.AsteroidFactory.buildMedium();
-            expect(buildEntityStub.calledOnce).to.equal(true);
-            expect(buildEntityStub.firstCall.args[2]).to.equal(expectedShape);
+            expectShapePassedToFactory(expectedShape, actualAsteroid);
+        });
+        it('should have a small shape', function () {
+            var expectedShape = stubShape('asteroidSmall');
+            var actualAsteroid = SpaceRocks.AsteroidFactory.buildSmall();
+            expectShapePassedToFactory(expectedShape, actualAsteroid);
         });
 
-        it('should have a small shape', function () {
-            stubScreenSize(100, 100);
+        function expectShapePassedToFactory(expectedShape, actualAsteroid) {
+            expect(buildEntityStub.calledOnce).to.equal(true);
+            expect(buildEntityStub.firstCall.args[2]).to.equal(expectedShape);
+        }
 
-            var shapeStub = OMD.test.globalStub(SpaceRocks.Shapes, 'asteroidSmall');
+        function stubShape(shapeName) {
+            var shapeStub = OMD.test.globalStub(SpaceRocks.Shapes, shapeName);
             var expectedShape = OMD.test.randomObject();
             shapeStub.returns(expectedShape);
-
-            var actualAsteroid = SpaceRocks.AsteroidFactory.buildSmall();
-            expect(buildEntityStub.calledOnce).to.equal(true);
-            expect(buildEntityStub.firstCall.args[2]).to.equal(expectedShape);
-        });
-
+            return expectedShape;
+        }
     });
 
     it('should create an asteroid at a random position', function () {
@@ -82,39 +77,62 @@ describe('Asteroid Factory', function () {
     });
 
     describe('adding behaviors', function () {
+        describe('spawn on death behaviors', function () {
+
+            it('should attach spawn behavior to large asteroids', function () {
+                var spawnMediumStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpawnMediumAsteroids');
+                var expectedBehavior = OMD.test.randomObject();
+                spawnMediumStub.returns(expectedBehavior);
+
+                var largeAsteroid = SpaceRocks.AsteroidFactory.buildLarge();
+                expectBehaviorOnEntity(largeAsteroid, expectedBehavior);
+            });
+
+            it('should attach spawn behavior to medium asteroids', function () {
+                var spawnSmallStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpawnSmallAsteroids');
+                var expectedBehavior = OMD.test.randomObject();
+                spawnSmallStub.returns(expectedBehavior);
+
+                var mediumAsteroid = SpaceRocks.AsteroidFactory.buildMedium();
+                expectBehaviorOnEntity(mediumAsteroid, expectedBehavior);
+            });
+
+            function expectBehaviorOnEntity(actualEntity, expectedBehavior) {
+                expect(actualEntity).to.equal(expectedEntity);
+                expect(expectedEntity.addDeathBehavior.calledWith(expectedBehavior)).to.equal(true);
+            }
+        });
 
         describe('spin behaviors', function () {
 
+            var spinStub;
+            var expectedBehavior;
+            beforeEach(function () {
+                spinStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpin');
+                expectedBehavior = OMD.test.randomObject();
+                spinStub.returns(expectedBehavior);
+            });
+
             it('should attach spin behavior to large asteroids', function () {
-                var spinStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpin');
-                var expectedBehavior = spinStub.returns(OMD.test.randomObject());
-                spinStub.returns(expectedBehavior);
-                var buildLarge = SpaceRocks.AsteroidFactory.buildLarge();
-
-                expect(expectedEntity.addBehavior.calledOnce).to.equal(true);
-                expect(expectedEntity.addBehavior.calledWith(expectedBehavior)).to.equal(true);
-
+                var largeAsteroid = SpaceRocks.AsteroidFactory.buildLarge();
+                expectBehaviorOnEntity(largeAsteroid);
             });
+
+
             it('should attach spin behavior to medium asteroids', function () {
-                var spinStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpin');
-                var expectedBehavior = spinStub.returns(OMD.test.randomObject());
-                spinStub.returns(expectedBehavior);
-                var buildLarge = SpaceRocks.AsteroidFactory.buildMedium();
-
-                expect(expectedEntity.addBehavior.calledOnce).to.equal(true);
-                expect(expectedEntity.addBehavior.calledWith(expectedBehavior)).to.equal(true);
-
+                var mediumAsteroid = SpaceRocks.AsteroidFactory.buildMedium();
+                expectBehaviorOnEntity(mediumAsteroid);
             });
+
             it('should attach spin behavior to small asteroids', function () {
-                var spinStub = OMD.test.globalStub(SpaceRocks.BehaviorFactory, 'buildSpin');
-                var expectedBehavior = spinStub.returns(OMD.test.randomObject());
-                spinStub.returns(expectedBehavior);
-                var buildLarge = SpaceRocks.AsteroidFactory.buildSmall();
-
-                expect(expectedEntity.addBehavior.calledOnce).to.equal(true);
-                expect(expectedEntity.addBehavior.calledWith(expectedBehavior)).to.equal(true);
-
+                var smallAsteroid = SpaceRocks.AsteroidFactory.buildSmall();
+                expectBehaviorOnEntity(smallAsteroid);
             });
+
+            function expectBehaviorOnEntity(actualEntity) {
+                expect(actualEntity).to.equal(expectedEntity);
+                expect(expectedEntity.addBehavior.calledWith(expectedBehavior)).to.equal(true);
+            }
         });
     });
 

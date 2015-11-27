@@ -12,12 +12,10 @@ var SpaceRocks = (function (spaceRocks) {
         this.velocity = new spaceRocks.Point(0, 0);
         this.shape = shape;
         this._isAlive = true;
-        this._deathBehavior = function () { };
-        this.behaviors = [];
+        this._deathBehaviors = [];
+        this._behaviors = [];
         setPosition.call(this, x, y);
     };
-
-
 
     _entity.prototype.rotation = function (newAngle) {
         if (newAngle) {
@@ -39,12 +37,11 @@ var SpaceRocks = (function (spaceRocks) {
         } else if (this.position.y < 0) {
             this.position.y += maxY;
         }
-
     }
 
     function invokeBehaviors(delta) {
         var currentEntity = this;
-        this.behaviors.forEach(function (singleBehavior) {
+        this._behaviors.forEach(function (singleBehavior) {
             singleBehavior(currentEntity, delta);
         });
     }
@@ -60,7 +57,7 @@ var SpaceRocks = (function (spaceRocks) {
     };
 
     _entity.prototype.addBehavior = function (newBehavior) {
-        this.behaviors.push(newBehavior);
+        this._behaviors.push(newBehavior);
     };
 
     _entity.prototype.collide = function (otherEntity) {
@@ -73,13 +70,16 @@ var SpaceRocks = (function (spaceRocks) {
         return this._isAlive;
     }
 
-    _entity.prototype.setDeathBehavior = function (deathBehavior) {
-        this._deathBehavior = deathBehavior;
+    _entity.prototype.addDeathBehavior = function (deathBehavior) {
+        this._deathBehaviors.push(deathBehavior);
     }
 
     _entity.prototype.destroy = function () {
         this._isAlive = false;
-        this._deathBehavior(this);
+        var thisEntity = this;
+        this._deathBehaviors.forEach(function (behavior) {
+            behavior(thisEntity);
+        });
     }
 
     _entity.build = function (x, y, shape, type) {

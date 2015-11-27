@@ -139,18 +139,24 @@ describe("Entity", function () {
 
     it('should process behavior on death', function () {
         var entity = SpaceRocks.Entity.build();
-        var deathSpy = sinon.spy();
+        var deathSpy1 = sinon.spy();
+        var deathSpy2 = sinon.spy();
 
-        entity.setDeathBehavior(deathSpy);
+        entity.addDeathBehavior(deathSpy1);
+        entity.addDeathBehavior(deathSpy2);
 
-        expect(entity.isAlive()).to.be.ok;
-        expect(deathSpy.called).to.not.be.ok;
+        expect(entity.isAlive()).to.equal(true);
+        expect(deathSpy1.called).to.equal(false);
+        expect(deathSpy2.called).to.equal(false);
 
         entity.destroy();
-        expect(entity.isAlive()).to.not.be.ok;
-        expect(deathSpy.calledOnce).to.be.ok;
-        expect(deathSpy.firstCall.args[0]).to.equal(entity);
+        expect(entity.isAlive()).to.equal(false);
+        expect(deathSpy1.calledOnce).to.equal(true);
+        expect(deathSpy1.firstCall.args[0]).to.equal(entity);
+        expect(deathSpy2.calledOnce).to.equal(true);
+        expect(deathSpy2.firstCall.args[0]).to.equal(entity);
     });
+
     describe('collisions', function () {
 
         it('should report collisions from shape', function () {
