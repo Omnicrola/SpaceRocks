@@ -40,12 +40,6 @@ var SpaceRocks = (function (spaceRocks) {
         currentLevelNumber++;
     }
 
-    function _spawnPlayer() {
-        var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.buildLarge(100, 100, playerShape);
-        spaceRocks.EntityManager.player(newPlayer);
-    }
-
     function notifyObserversOfState(){
         _observers.forEach(function(singleObserver){
            singleObserver(levelState);

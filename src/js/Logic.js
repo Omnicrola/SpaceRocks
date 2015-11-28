@@ -11,7 +11,7 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.EntityManager.player(player);
     }
 
-    function _spawnAsteroids(){
+    function _spawnAsteroids() {
         var collisionGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         for (var i = 0; i < 5; i++) {
             var asteroid = spaceRocks.AsteroidFactory.buildLarge();
@@ -20,12 +20,18 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _init() {
-        spaceRocks.LevelManager.addObserver(_spawnPlayer);
+        spaceRocks.LevelManager.addObserver(spaceRocks.Logic.spawnPlayer);
         spaceRocks.LevelManager.addObserver(_spawnAsteroids);
     }
 
+    function _registerEvent(options) {
+        window.setTimeout(options.event, options.delay);
+    }
+
     spaceRocks.Logic = {
-        init: _init
+        init: _init,
+        spawnPlayer : _spawnPlayer,
+        registerEvent: _registerEvent
     };
     return spaceRocks;
 })(SpaceRocks || {});

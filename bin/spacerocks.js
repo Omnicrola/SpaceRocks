@@ -42,13 +42,10 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _buildAsteroid(shape, position) {
         position = position || _getRandomPosition();
-        console.log('create');
-        console.log(position);
         var asteroid = spaceRocks.Entity.build(position.x, position.y, shape);
         asteroid.velocity = _createRandomVelocity();
         asteroid.addBehavior(spaceRocks.BehaviorFactory.buildSpin(Math.random() * 2));
         asteroid.addDeathBehavior(_createDeathBehavior());
-        console.log(asteroid.position);
         return asteroid;
     }
 
@@ -123,6 +120,12 @@ var SpaceRocks = (function (spaceRocks) {
         }
     }
 
+    function _buildDespawnBehavior() {
+        return function(entity){
+            spaceRocks.EntityManager.removeEntity(entity);
+        }
+    }
+
     function _buildIncrementScore(scoreValue) {
         return function (entity) {
             spaceRocks.Gui.incrementScore(scoreValue);
@@ -151,7 +154,8 @@ var SpaceRocks = (function (spaceRocks) {
         buildParticleSpawnBehavior: _buildParticleSpawnBehavior,
         buildIncrementScore: _buildIncrementScore,
         buildSelfDestruct: _buildSelfDestruct,
-        buildSpin: _buildSpin
+        buildSpin: _buildSpin,
+        buildDespawnBehavior : _buildDespawnBehavior
     };
     return spaceRocks;
 })(SpaceRocks || {});
@@ -363,50 +367,50 @@ var SpaceRocks = (function (spaceRocks) {
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    var entities = [];
-    var player;
+    var _entities = [];
+    var _player;
 
     function _addEntity(newEntity, collisionGroup) {
-        entities.push(newEntity);
+        _entities.push(newEntity);
         spaceRocks.CollisionManager.addEntity(newEntity, collisionGroup);
     }
 
     function _removeEntity(entityToRemove) {
-        var index = entities.indexOf(entityToRemove);
-        entities.splice(index, 1);
+        var index = _entities.indexOf(entityToRemove);
+        _entities.splice(index, 1);
         spaceRocks.CollisionManager.removeEntity(entityToRemove);
     }
 
     function _callEntities(customFunction) {
-        if (player) {
-            customFunction(player);
+        if (_player) {
+            customFunction(_player);
         }
-        entities.forEach(function (entity) {
+        _entities.forEach(function (entity) {
             customFunction(entity);
         });
     }
 
     function _cleanDeadEntities() {
         var entitiesCopy = [];
-        entities.forEach(function (singleEntity) {
+        _entities.forEach(function (singleEntity) {
             if (singleEntity.isAlive()) {
                 entitiesCopy.push(singleEntity);
             }
         });
-        entities = entitiesCopy;
+        _entities = entitiesCopy;
     }
 
     function _player(newPlayer) {
         if (!newPlayer) {
-            return player;
+            return _player;
         }
-        player = newPlayer;
+        _player = newPlayer;
         var collisionGroup = spaceRocks.CollisionManager.PLAYER_GROUP();
         spaceRocks.CollisionManager.addEntity(newPlayer, collisionGroup);
     };
 
     function _removeAllEntities() {
-        entities = [];
+        _entities = [];
     }
 
     spaceRocks.EntityManager = {
@@ -535,12 +539,6 @@ var SpaceRocks = (function (spaceRocks) {
 
     function _startNextLevel() {
         currentLevelNumber++;
-    }
-
-    function _spawnPlayer() {
-        var playerShape = spaceRocks.Shapes.player();
-        var newPlayer = spaceRocks.Entity.buildLarge(100, 100, playerShape);
-        spaceRocks.EntityManager.player(newPlayer);
     }
 
     function notifyObserversOfState(){

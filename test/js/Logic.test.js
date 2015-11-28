@@ -14,6 +14,13 @@ describe('Logic', function () {
 
 
     it('should add observer to spawn player on level START', function () {
+        var spawnPlayerStub = OMD.test.globalStub(SpaceRocks.Logic, 'spawnPlayer');
+
+        var startObserver = logicInitAndGetObserver(0);
+        expect(startObserver).to.equal(spawnPlayerStub);
+    });
+
+    it('should spawn a player', function () {
         var setPlayerSpy = OMD.test.globalSpy(SpaceRocks.EntityManager, 'player');
         var stubWidth = OMD.test.globalStub(SpaceRocks.Renderer, 'width');
         var stubHeight = OMD.test.globalStub(SpaceRocks.Renderer, 'height');
@@ -28,18 +35,29 @@ describe('Logic', function () {
         stubWidth.returns(width);
         stubHeight.returns(height);
 
-        var startObserver = logicInitAndGetObserver(0);
-        startObserver(LevelState.START());
+        var startObserver = SpaceRocks.Logic.spawnPlayer();
 
         expect(setPlayerSpy.calledOnce).to.equal(true);
         var actualPlayer = setPlayerSpy.getCall(0).args[0];
 
         expect(actualPlayer).to.equal(expectedEntity);
-        expect(stubEntityBuild.calledOnce).to.equal(true);
         expect(stubEntityBuild.firstCall.args[0]).to.equal(width / 2);
         expect(stubEntityBuild.firstCall.args[1]).to.equal(height / 2);
         expect(stubEntityBuild.firstCall.args[2]).to.deep.equal(expectedShape);
     });
+
+    it('should execute a function on a timer', sinon.test(function () {
+        var timeoutStub = this.stub(window, 'setTimeout');
+        var eventSpy = this.spy();
+        var expectedDelay = Math.random() * 1000;
+
+        SpaceRocks.Logic.registerEvent({
+            delay: expectedDelay,
+            event: eventSpy
+        });
+
+        expect(timeoutStub.calledWith(eventSpy, expectedDelay)).to.equal(true, 'timeout was called');
+    }));
 
     it('should add observer to spawn asteroids on level start', function () {
         var stubAsteroidFactory = OMD.test.globalStub(SpaceRocks.AsteroidFactory, 'buildLarge');

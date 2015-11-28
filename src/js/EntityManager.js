@@ -2,50 +2,50 @@
  * Created by Eric on 3/21/2015.
  */
 var SpaceRocks = (function (spaceRocks) {
-    var entities = [];
-    var player;
+    var _entities = [];
+    var _player;
 
     function _addEntity(newEntity, collisionGroup) {
-        entities.push(newEntity);
+        _entities.push(newEntity);
         spaceRocks.CollisionManager.addEntity(newEntity, collisionGroup);
     }
 
     function _removeEntity(entityToRemove) {
-        var index = entities.indexOf(entityToRemove);
-        entities.splice(index, 1);
+        var index = _entities.indexOf(entityToRemove);
+        _entities.splice(index, 1);
         spaceRocks.CollisionManager.removeEntity(entityToRemove);
     }
 
     function _callEntities(customFunction) {
-        if (player) {
-            customFunction(player);
+        if (_player) {
+            customFunction(_player);
         }
-        entities.forEach(function (entity) {
+        _entities.forEach(function (entity) {
             customFunction(entity);
         });
     }
 
     function _cleanDeadEntities() {
         var entitiesCopy = [];
-        entities.forEach(function (singleEntity) {
+        _entities.forEach(function (singleEntity) {
             if (singleEntity.isAlive()) {
                 entitiesCopy.push(singleEntity);
             }
         });
-        entities = entitiesCopy;
+        _entities = entitiesCopy;
     }
 
     function _player(newPlayer) {
         if (!newPlayer) {
-            return player;
+            return _player;
         }
-        player = newPlayer;
+        _player = newPlayer;
         var collisionGroup = spaceRocks.CollisionManager.PLAYER_GROUP();
         spaceRocks.CollisionManager.addEntity(newPlayer, collisionGroup);
     };
 
     function _removeAllEntities() {
-        entities = [];
+        _entities = [];
     }
 
     spaceRocks.EntityManager = {

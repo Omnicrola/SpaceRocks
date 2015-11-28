@@ -2,6 +2,11 @@
  * Created by Eric on 4/21/2015.
  */
 describe('BehaviorFactory', function () {
+    var behaviorFactory;
+    beforeEach(function () {
+        behaviorFactory = SpaceRocks.BehaviorFactory;
+    });
+
     afterEach(function () {
         OMD.test.restoreAll();
     });
@@ -27,7 +32,6 @@ describe('BehaviorFactory', function () {
 
             var expectedCollisionGroup = SpaceRocks.CollisionManager.EFFECTS_GROUP();
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var particleBehavior = behaviorFactory.buildParticleSpawnBehavior();
 
             particleBehavior(entity);
@@ -57,7 +61,6 @@ describe('BehaviorFactory', function () {
             buildAsteroidStub.onFirstCall().returns(asteroid1);
             buildAsteroidStub.onSecondCall().returns(asteroid2);
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var spawnMediumAsteroids = behaviorFactory.buildSpawnMediumAsteroids();
             spawnMediumAsteroids(entity);
 
@@ -89,7 +92,6 @@ describe('BehaviorFactory', function () {
             buildAsteroidStub.onFirstCall().returns(asteroid1);
             buildAsteroidStub.onSecondCall().returns(asteroid2);
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var spawnSmallAsteroids = behaviorFactory.buildSpawnSmallAsteroids();
             spawnSmallAsteroids(entity);
 
@@ -110,7 +112,6 @@ describe('BehaviorFactory', function () {
             var scoreSpy = OMD.test.globalSpy(SpaceRocks.Gui, 'incrementScore');
             var scoreAmount = Math.random() * 100;
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var behavior = behaviorFactory.buildIncrementScore(scoreAmount);
 
             expect(scoreSpy.called).to.equal(false);
@@ -123,7 +124,6 @@ describe('BehaviorFactory', function () {
             var scoreAmount2 = Math.random() * 100;
             var scoreAmount3 = Math.random() * 100;
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var behavior1 = behaviorFactory.buildIncrementScore(scoreAmount1);
             var behavior2 = behaviorFactory.buildIncrementScore(scoreAmount2);
             var behavior3 = behaviorFactory.buildIncrementScore(scoreAmount3);
@@ -150,7 +150,6 @@ describe('BehaviorFactory', function () {
                 destroy: sinon.spy()
             };
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var behavior = behaviorFactory.buildSelfDestruct(timeTillDeath);
 
             behavior(fakeEntity, 0);
@@ -176,7 +175,6 @@ describe('BehaviorFactory', function () {
                 destroy: sinon.spy()
             };
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var behavior1 = behaviorFactory.buildSelfDestruct(timeTillDeath);
             var behavior2 = behaviorFactory.buildSelfDestruct(timeTillDeath);
 
@@ -194,6 +192,44 @@ describe('BehaviorFactory', function () {
         });
     });
 
+    describe('despawn behavior', function () {
+        it('should remove entity from entity manager', function () {
+            var stubEntity = sinon.stub(new SpaceRocks.Entity());
+            var removeEntityStub = sinon.stub(SpaceRocks.EntityManager, 'removeEntity');
+            var addEntityStub = sinon.stub(SpaceRocks.EntityManager, 'addEntity');
+            var respawnBehavior = behaviorFactory.buildDespawnBehavior();
+
+            respawnBehavior(stubEntity);
+            expect(addEntityStub.called).to.equal(false);
+            expect(removeEntityStub.calledOnce).to.equal(true);
+            expect(removeEntityStub.firstCall.args[0]).to.equal(stubEntity);
+
+            removeEntityStub.restore();
+            addEntityStub.restore();
+        });
+    });
+
+    describe('spawn player', function () {
+        it('should trigger spawn player', sinon.test(function () {
+            var registerStub = this.stub(SpaceRocks.Logic, 'registerEvent');
+            var spawnPlayerStub = this.stub(SpaceRocks.Logic, 'spawnPlayer');
+
+            var respawnPlayer = behaviorFactory.buildRespawnPlayer();
+
+            expect(registerStub.called).to.equal(false, 'register should not have been called');
+
+            respawnPlayer();
+            expect(registerStub.calledOnce).to.equal(true, 'should have registered event');
+
+            var actualEvent = registerStub.firstCall.args[0];
+            expect(actualEvent.delay).to.equal(1000);
+            expect(spawnPlayerStub.called).to.equal(false, 'spawn player not have been called');
+
+            actualEvent.event();
+            expect(spawnPlayerStub.called).to.equal(true, 'spawn player should have been called');
+
+        }));
+    });
 
     describe('spin behavior', function () {
         it('should rotate the entity according to delta', function () {
@@ -202,7 +238,6 @@ describe('BehaviorFactory', function () {
             };
             var spinRate = 4.0;
 
-            var behaviorFactory = SpaceRocks.BehaviorFactory;
             var behavior = behaviorFactory.buildSpin(spinRate);
 
             behavior(fakeEntity, 1.0);

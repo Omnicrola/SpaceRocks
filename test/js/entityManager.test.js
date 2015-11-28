@@ -3,10 +3,14 @@
  */
 describe('spacerocks entityManager', function () {
 
-    beforeEach(function (done) {
-        SpaceRocks.EntityManager.removeAllEntities();
+    var entityManager;
+    var Entity;
+    beforeEach(function () {
+        Entity = SpaceRocks.Entity;
+        entityManager = SpaceRocks.EntityManager;
+        entityManager.removeAllEntities();
+        entityManager.player(null);
         OMD.test.globalSpy(SpaceRocks.CollisionManager, 'addEntity');
-        done();
     });
 
     afterEach(function () {
@@ -16,20 +20,16 @@ describe('spacerocks entityManager', function () {
     it('should pass entities to function', function () {
         var renderSpy = sinon.spy();
 
-        var entity2 = new SpaceRocks.Entity(2, 20, []);
-        var entity3 = new SpaceRocks.Entity(3, 30, {});
-        var entity1 = new SpaceRocks.Entity(1, 10, {});
+        var entity1 = sinon.spy();
+        var entity2 = sinon.spy();
 
-        SpaceRocks.EntityManager.addEntity(entity1);
-        SpaceRocks.EntityManager.addEntity(entity2);
-        SpaceRocks.EntityManager.addEntity(entity3);
-        SpaceRocks.EntityManager.removeEntity(entity2);
+        entityManager.addEntity(entity1);
+        entityManager.addEntity(entity2);
 
-        SpaceRocks.EntityManager.callEntities(renderSpy);
+        entityManager.callEntities(renderSpy);
 
-        expect(renderSpy.calledTwice).to.equal(true);
-        expect(renderSpy.getCall(0).args[0]).to.equal(entity1);
-        expect(renderSpy.getCall(1).args[0]).to.equal(entity3);
+        expect(renderSpy.calledWith(entity1)).to.equal(true, 'entity1 was rendered');
+        expect(renderSpy.calledWith(entity2)).to.equal(true, 'entity2 was rendered');
     });
 
     it('should set a player', function () {
@@ -57,20 +57,16 @@ describe('spacerocks entityManager', function () {
 
     it('should clean dead entities', function () {
         var spy1 = sinon.spy();
-        var spy2 = sinon.spy();
         var expectedEntity = new SpaceRocks.Entity();
 
         var entityManager = SpaceRocks.EntityManager;
         entityManager.addEntity(expectedEntity);
+
         expectedEntity.destroy();
-
-        entityManager.callEntities(spy1);
-
-        expect(spy1.calledWith(expectedEntity)).to.equal(true);
         entityManager.cleanDeadEntities();
 
-        entityManager.callEntities(spy2);
-        expect(spy2.calledWith(expectedEntity)).to.equal(false);
+        entityManager.callEntities(spy1);
+        expect(spy1.calledWith(expectedEntity)).to.equal(false, 'spy was called with entity');
     });
 
 
@@ -81,17 +77,13 @@ describe('spacerocks entityManager', function () {
         var expectedCollisionGroup = 4;
         var expectedEntity = new SpaceRocks.Entity();
 
-        var entityManager = SpaceRocks.EntityManager;
         entityManager.addEntity(expectedEntity, expectedCollisionGroup);
 
-        expect(addSpy.calledOnce).to.equal(true);
-        expect(addSpy.firstCall.args[0]).to.equal(expectedEntity);
-        expect(addSpy.firstCall.args[1]).to.equal(expectedCollisionGroup);
-        expect(removeSpy.called).to.equal(false);
+        expect(addSpy.calledWith(expectedEntity, expectedCollisionGroup)).to.equal(true, 'entity not added');
+        expect(removeSpy.called).to.equal(false, 'remove not called');
 
         entityManager.removeEntity(expectedEntity);
-        expect(removeSpy.calledOnce).to.equal(true);
-        expect(removeSpy.firstCall.args[0]).to.equal(expectedEntity);
+        expect(removeSpy.calledWith(expectedEntity)).to.equal(true, 'remove was called');
     });
 
 });

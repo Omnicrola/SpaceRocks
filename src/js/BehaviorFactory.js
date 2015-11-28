@@ -12,7 +12,7 @@ var SpaceRocks = (function (spaceRocks) {
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
             asteroid1.position
-        }
+        };
     }
 
     function _buildSpawnSmallAsteroids() {
@@ -23,7 +23,7 @@ var SpaceRocks = (function (spaceRocks) {
             var asteroid2 = spaceRocks.AsteroidFactory.buildSmall(position);
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
-        }
+        };
     }
 
     function _buildParticleSpawnBehavior() {
@@ -39,13 +39,30 @@ var SpaceRocks = (function (spaceRocks) {
             spaceRocks.EntityManager.addEntity(particle2, effectsGroup);
             spaceRocks.EntityManager.addEntity(particle3, effectsGroup);
             spaceRocks.EntityManager.addEntity(particle4, effectsGroup);
-        }
+        };
+    }
+
+    function _buildDespawnBehavior() {
+        return function (entity) {
+            spaceRocks.EntityManager.removeEntity(entity);
+        };
+    }
+
+    function _buildRespawnPlayer() {
+        return function () {
+            spaceRocks.Logic.registerEvent({
+                delay: 1000,
+                event: function () {
+                    spaceRocks.Logic.spawnPlayer();
+                }
+            });
+        };
     }
 
     function _buildIncrementScore(scoreValue) {
         return function (entity) {
             spaceRocks.Gui.incrementScore(scoreValue);
-        }
+        };
     }
 
     function _buildSelfDestruct(lifetime) {
@@ -55,7 +72,7 @@ var SpaceRocks = (function (spaceRocks) {
             if (life >= lifetime) {
                 entity.destroy();
             }
-        }
+        };
     }
 
     function _buildSpin(spinRate) {
@@ -70,7 +87,9 @@ var SpaceRocks = (function (spaceRocks) {
         buildParticleSpawnBehavior: _buildParticleSpawnBehavior,
         buildIncrementScore: _buildIncrementScore,
         buildSelfDestruct: _buildSelfDestruct,
-        buildSpin: _buildSpin
+        buildSpin: _buildSpin,
+        buildDespawnBehavior: _buildDespawnBehavior,
+        buildRespawnPlayer: _buildRespawnPlayer
     };
     return spaceRocks;
 })(SpaceRocks || {});
