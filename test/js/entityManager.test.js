@@ -49,10 +49,24 @@ describe('spacerocks entityManager', function () {
     it('should run function on the player', function () {
         var spy = sinon.spy();
         var expectedEntity = new SpaceRocks.Entity();
-        SpaceRocks.EntityManager.player(expectedEntity);
-        SpaceRocks.EntityManager.callEntities(spy);
+        entityManager.player(expectedEntity);
+        entityManager.callEntities(spy);
         expect(spy.called).to.equal(true);
         expect(spy.getCall(0).args[0]).to.equal(expectedEntity);
+    });
+
+    it('should clean dead player', function () {
+        var spy = sinon.spy();
+        var stubPlayer = sinon.stub(new SpaceRocks.Entity());
+
+        entityManager.player(stubPlayer);
+        stubPlayer.isAlive.returns(false);
+
+        entityManager.cleanDeadEntities();
+
+        var player = entityManager.player();
+        expect(player).to.not.equal(stubPlayer);
+        expect(player).to.deep.equal(new SpaceRocks.Entity(0, 0, SpaceRocks.Shapes.bullet()));
     });
 
     it('should clean dead entities', function () {

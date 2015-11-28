@@ -32,11 +32,21 @@ var SpaceRocks = (function (spaceRocks) {
                 entitiesCopy.push(singleEntity);
             }
         });
+        if (_player && !_player.isAlive()) {
+            _player = null;
+        }
         _entities = entitiesCopy;
+    }
+
+    function _nullEntity() {
+        return new SpaceRocks.Entity(0, 0, SpaceRocks.Shapes.bullet());
     }
 
     function _player(newPlayer) {
         if (!newPlayer) {
+            if (_player == null) {
+                return _nullEntity();
+            }
             return _player;
         }
         _player = newPlayer;

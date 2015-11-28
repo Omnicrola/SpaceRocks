@@ -90,7 +90,7 @@ var SpaceRocks = (function (spaceRocks) {
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
             asteroid1.position
-        }
+        };
     }
 
     function _buildSpawnSmallAsteroids() {
@@ -101,7 +101,7 @@ var SpaceRocks = (function (spaceRocks) {
             var asteroid2 = spaceRocks.AsteroidFactory.buildSmall(position);
             spaceRocks.EntityManager.addEntity(asteroid1, asteroidGroup);
             spaceRocks.EntityManager.addEntity(asteroid2, asteroidGroup);
-        }
+        };
     }
 
     function _buildParticleSpawnBehavior() {
@@ -117,19 +117,30 @@ var SpaceRocks = (function (spaceRocks) {
             spaceRocks.EntityManager.addEntity(particle2, effectsGroup);
             spaceRocks.EntityManager.addEntity(particle3, effectsGroup);
             spaceRocks.EntityManager.addEntity(particle4, effectsGroup);
-        }
+        };
     }
 
     function _buildDespawnBehavior() {
-        return function(entity){
+        return function (entity) {
             spaceRocks.EntityManager.removeEntity(entity);
-        }
+        };
+    }
+
+    function _buildRespawnPlayer() {
+        return function () {
+            spaceRocks.Logic.registerEvent({
+                delay: 1000,
+                event: function () {
+                    spaceRocks.Logic.spawnPlayer();
+                }
+            });
+        };
     }
 
     function _buildIncrementScore(scoreValue) {
         return function (entity) {
             spaceRocks.Gui.incrementScore(scoreValue);
-        }
+        };
     }
 
     function _buildSelfDestruct(lifetime) {
@@ -139,7 +150,7 @@ var SpaceRocks = (function (spaceRocks) {
             if (life >= lifetime) {
                 entity.destroy();
             }
-        }
+        };
     }
 
     function _buildSpin(spinRate) {
@@ -155,7 +166,8 @@ var SpaceRocks = (function (spaceRocks) {
         buildIncrementScore: _buildIncrementScore,
         buildSelfDestruct: _buildSelfDestruct,
         buildSpin: _buildSpin,
-        buildDespawnBehavior : _buildDespawnBehavior
+        buildDespawnBehavior: _buildDespawnBehavior,
+        buildRespawnPlayer: _buildRespawnPlayer
     };
     return spaceRocks;
 })(SpaceRocks || {});
@@ -397,11 +409,21 @@ var SpaceRocks = (function (spaceRocks) {
                 entitiesCopy.push(singleEntity);
             }
         });
+        if (_player && !_player.isAlive()) {
+            _player = null;
+        }
         _entities = entitiesCopy;
+    }
+
+    function _nullEntity() {
+        return new SpaceRocks.Entity(0, 0, SpaceRocks.Shapes.bullet());
     }
 
     function _player(newPlayer) {
         if (!newPlayer) {
+            if (_player == null) {
+                return _nullEntity();
+            }
             return _player;
         }
         _player = newPlayer;
@@ -575,7 +597,7 @@ var SpaceRocks = (function (spaceRocks) {
         spaceRocks.EntityManager.player(player);
     }
 
-    function _spawnAsteroids(){
+    function _spawnAsteroids() {
         var collisionGroup = spaceRocks.CollisionManager.ASTEROIDS_GROUP();
         for (var i = 0; i < 5; i++) {
             var asteroid = spaceRocks.AsteroidFactory.buildLarge();
@@ -584,12 +606,18 @@ var SpaceRocks = (function (spaceRocks) {
     }
 
     function _init() {
-        spaceRocks.LevelManager.addObserver(_spawnPlayer);
+        spaceRocks.LevelManager.addObserver(spaceRocks.Logic.spawnPlayer);
         spaceRocks.LevelManager.addObserver(_spawnAsteroids);
     }
 
+    function _registerEvent(options) {
+        window.setTimeout(options.event, options.delay);
+    }
+
     spaceRocks.Logic = {
-        init: _init
+        init: _init,
+        spawnPlayer: _spawnPlayer,
+        registerEvent: _registerEvent
     };
     return spaceRocks;
 })(SpaceRocks || {});

@@ -30,7 +30,7 @@ var SpaceRocks = (function (spaceRocks) {
 
     spaceRocks.Logic = {
         init: _init,
-        spawnPlayer : _spawnPlayer,
+        spawnPlayer: _spawnPlayer,
         registerEvent: _registerEvent
     };
     return spaceRocks;
