@@ -2,85 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/Config.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/Config.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/Delta.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/Delta.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/Time.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/Time.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/UpdateManager.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/UpdateManager.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gulpfile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/karma.conf.js" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\SpaceRocks.iml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\inspectionProfiles\Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\inspectionProfiles\profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\scopes\scope_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\.idea\webResources.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\Gruntfile.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\bin\audio\atarisquare.wav" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\bin\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\bin\site.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\bin\spacerocks.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\AsteroidFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\BehaviorFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\BulletFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\CollisionManager.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Entity.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\EntityManager.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Gui.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\InputManager.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\LevelManager.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Logic.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\ParticleFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Point.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Polygon.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Random.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Renderer.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\Shapes.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\SoundManager.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\TimeWrapper.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\main.delta.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\main.draw.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\main.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\js\main.update.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\lib\kibo.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\site.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\TestUtil.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\AsteroidFactory.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\BehaviorFactory.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\BulletFactory.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\CollisionManager.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Entity.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Gui.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\InputManager.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\LevelManager.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Logic.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\ParticleFactory.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Point.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Polygon.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Random.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Renderer.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\Shapes.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\SoundManager.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\TimeWrapper.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\entityManager.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\main.delta.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\main.draw.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\main.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\js\main.update.test.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\karma.conf.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/engine/Renderer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/Renderer.test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/engine/SubsystemManager.test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/TestSpies.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/TestVerification.js" />
+      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\engine\UpdateManager.test.js" afterPath="" />
+      <change type="MOVED" beforePath="C:\Projects\SpaceRocks\src\engine\UpdateManager.js" afterPath="$PROJECT_DIR$/src/engine/SubsystemManager.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SpaceRocks.iws" />
@@ -103,104 +31,64 @@
     <favorites_list name="SpaceRocks" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="SpaceEngine.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Delta.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/Delta.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SpaceEngine.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UpdateManager.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/UpdateManager.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="11" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UpdateManager.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/engine/UpdateManager.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="35" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Config.test.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/engine/Config.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.15332581">
-              <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Delta.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/engine/Delta.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Time.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/engine/Time.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="26" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.44650865">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="Renderer.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/engine/Renderer.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.22417583">
+                  <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Renderer.test.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test/engine/Renderer.test.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="35" column="32" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="TestVerification.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.20549451">
+                  <caret line="13" column="28" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="TestSpies.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test/TestSpies.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="6" column="22" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="22" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -233,11 +121,18 @@
         <option value="$PROJECT_DIR$/src/Delta.js" />
         <option value="$PROJECT_DIR$/src/UpdateManager.js" />
         <option value="$PROJECT_DIR$/test/UpdateManager.test.js" />
-        <option value="$PROJECT_DIR$/test/engine/UpdateManager.test.js" />
         <option value="$PROJECT_DIR$/test/engine/Time.test.js" />
         <option value="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
         <option value="$PROJECT_DIR$/test/engine/Delta.test.js" />
         <option value="$PROJECT_DIR$/test/engine/Config.test.js" />
+        <option value="$PROJECT_DIR$/test/engine/UpdateManager.test.js" />
+        <option value="$PROJECT_DIR$/src/engine/SubsystemManager.js" />
+        <option value="$PROJECT_DIR$/test/engine/SubsystemManager.test.js" />
+        <option value="$PROJECT_DIR$/test/engine/Renderer.js" />
+        <option value="$PROJECT_DIR$/test/TestSpies.js" />
+        <option value="$PROJECT_DIR$/test/engine/Renderer.test.js" />
+        <option value="$PROJECT_DIR$/test/TestVerification.js" />
+        <option value="$PROJECT_DIR$/src/engine/Renderer.js" />
       </list>
     </option>
   </component>
@@ -312,6 +207,20 @@
               <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceRocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceRocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="engine" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
@@ -350,6 +259,7 @@
     <property name="settings.editor.selected.configurable" value="editing.templates" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
+    <property name="ToolWindowMaven Projects.ShowToolbar" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -479,12 +389,12 @@
       <created>1448810826873</created>
       <option name="number" value="Default" />
       <updated>1448810826873</updated>
-      <workItem from="1448810828619" duration="6708000" />
+      <workItem from="1448810828619" duration="11108000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6708000" />
+    <option name="totallyTimeSpent" value="11108000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1934" height="1047" extended-state="0" />
@@ -502,7 +412,7 @@
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16319083" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -553,16 +463,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/UpdateManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="11" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -593,16 +493,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/engine/UpdateManager.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -625,8 +515,68 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/engine/Config.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15332581">
-          <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="37" selection-start-line="8" selection-start-column="37" selection-end-line="8" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/SubsystemManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/engine/SubsystemManager.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="52" selection-start-line="34" selection-start-column="52" selection-end-line="34" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/TestSpies.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/engine/Renderer.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="35" column="32" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.20549451">
+          <caret line="13" column="28" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/Renderer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22417583">
+          <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
