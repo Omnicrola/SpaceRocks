@@ -28,7 +28,7 @@ describe('SubsystemManager', function () {
     it('should render its subsystems', function () {
         var mockSubsystem1 = createMockSubsystem();
         var mockSubsystem2 = createMockSubsystem();
-        var mockRenderer = sinon.stub(new Renderer());
+        var mockRenderer = {};
 
         var subsystemManager = new SubsystemManager();
         subsystemManager.addSubsystem(mockSubsystem1);

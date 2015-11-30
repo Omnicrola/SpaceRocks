@@ -18,6 +18,9 @@ module.exports = function (config) {
             'karma-chai',
             'karma-sinon'
         ],
+        browserify: {
+            debug: true
+        },
         files: [
             'src/**/*.js',
             'test/**/*.js'
