@@ -11,18 +11,36 @@ module.exports = (function () {
         return spy;
     }
 
-    function createNamedStub(name){
+    function createNamedStub(name) {
         var stub = sinon.stub();
         stub.methodName = name;
         return stub;
+    }
+
+    function createStubOfObject(obj) {
+        var propName;
+        var objMethods = [];
+        for (propName in obj) {
+            if (typeof obj[propName] === 'function') {
+                objMethods.push(propName);
+            }
+        }
+        objMethods.forEach(function (methodName) {
+            obj[methodName] = createNamedStub(methodName);
+        });
+        return obj;
     }
 
     return {
         create: function (name) {
             return createNamedSpy(name);
         },
-        createStub : function(name){
-            return createNamedStub(name);
+        createStub: function (stubTarget) {
+            if (typeof stubTarget == 'string') {
+                return createNamedStub(stubTarget);
+            } else if (typeof stubTarget == 'object') {
+                return createStubOfObject(stubTarget);
+            }
         },
         createComplex: function (params) {
             if (params.length) {

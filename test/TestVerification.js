@@ -10,26 +10,38 @@ module.exports = (function () {
     function checkArgumentCount(actualCall, expectedArguments, sinonSpy) {
         var actualCount = actualCall.args.length;
         var expectedCount = expectedArguments.length;
-        if (actualCount != expectedCount) {
-            throw new Error(spyName(sinonSpy) + ' was called with incorrect number of arguments. Expected ' + expectedCount + ' but received ' + actualCall.length);
-        }
+        return actualCount == expectedCount;
     }
 
     function runVerification(sinonSpy, expectedArguments) {
         if (!sinonSpy.called) {
             throw new Error(spyName(sinonSpy) + ' was not called at all.');
         }
-        var actualCall = sinonSpy.firstCall;
-        checkArgumentCount(actualCall, expectedArguments, sinonSpy);
+        var allCalls = sinonSpy.getCalls();
+        var argumentStrings = [];
+        var callsThatMatch = allCalls.filter(function (actualCall) {
+            return checkArgumentCount(actualCall, expectedArguments, sinonSpy) &&
+                argumentsMatch(expectedArguments, actualCall, sinonSpy);
+        });
+        if (callsThatMatch.length == 0) {
+            var expectedArgs = '(' + expectedArguments.join(', ') + ')';
+            var actualArgs = allCalls.map(function (actualCall) {
+                return '(' + actualCall.args.join(', ') + ')'
+            }).join('\n');
+            throw new Error(spyName(sinonSpy) + ' was not called with expected arguments.\n' +
+                'Expected : ' + expectedArgs + '\n' +
+                'Actual calls :\n' + actualArgs);
+
+        }
+    }
+
+    function argumentsMatch(expectedArguments, actualCall, sinonSpy) {
         for (var i = 0; i < expectedArguments.length; i++) {
             if (actualCall.args[i] !== expectedArguments[i]) {
-                var expectedArgs = '(' + expectedArguments.join(',') + ')';
-                var actualArgs = '(' + actualCall.args.join(',') + ')';
-                throw new Error(spyName(sinonSpy) + ' was not called with expected arguments.\n' +
-                    'Expected : ' + expectedArgs + '\n' +
-                    'But was  :' + actualArgs);
+                return false;
             }
         }
+        return true;
     }
 
     function createSingleSpyVerifier(singleSpy) {
@@ -84,4 +96,5 @@ module.exports = (function () {
             throw new Error('Attempted to verify a non-named spy. \nPass in either a single spy or an array of spies. Spies must be created with the sinon wrapper spies.create(name).')
         }
     };
-})();
+})
+();
