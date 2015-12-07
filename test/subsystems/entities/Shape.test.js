@@ -28,4 +28,26 @@ describe('Shape', function () {
         verify(stubRenderer.drawLine).wasCalledWith(6, 2, 7, 1);
         verify(stubRenderer.drawLine).wasCalledWith(7, 1, 2, 3);
     });
+
+    it('should have a white color by default', function(){
+        var points = [new Point(0, 0), new Point(0, 0)];
+
+        var shape = new Shape(points);
+        assert.equal('#ffffff', shape.color);
+    });
+
+    it('should use designated color', function () {
+        var points = [new Point(0, 0), new Point(0, 0)];
+        var expectedColor = '#ff00ff';
+
+        var shape = new Shape(points);
+        shape.color = expectedColor;
+        shape.render(stubRenderer);
+
+        verify(stubRenderer.setColor).wasCalledWith(expectedColor);
+        verify([
+            stubRenderer.setColor,
+            stubRenderer.drawLine
+        ]).whereCalledInOrder();
+    });
 });

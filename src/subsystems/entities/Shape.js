@@ -5,9 +5,11 @@ module.exports = (function () {
 
     var shape = function (points) {
         this._points = points;
+        this.color = '#ffffff';
     };
 
     shape.prototype.render = function (renderer) {
+        renderer.setColor(this.color);
         var totalPoints = this._points.length;
         var p1, p2;
         for (var i = 0; i < totalPoints - 1; i++) {

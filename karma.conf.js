@@ -19,6 +19,7 @@ module.exports = function (config) {
             'karma-sinon'
         ],
         browserify: {
+            plugin: ['proxyquireify/plugin'],
             debug: true
         },
         files: [
