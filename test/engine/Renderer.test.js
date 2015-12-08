@@ -18,7 +18,7 @@ describe('Renderer', function () {
         assert.equal('#FFFFFF', mockCanvasContext.fillStyle);
     });
 
-    it('defaults font to 12px monospaced', function(){
+    it('defaults font to 12px monospaced', function () {
         assert.equal('12px monospace', mockCanvasContext.font);
     });
 
@@ -52,8 +52,6 @@ describe('Renderer', function () {
             mockCanvasContext.lineTo,
             mockCanvasContext.stroke
         ]).whereCalledInOrder();
-
-
     });
 
     it('can fill a rectangle', function () {
@@ -67,6 +65,19 @@ describe('Renderer', function () {
         renderer.fillRectangle(x, y, w, h);
 
         verify(mockCanvasContext.fillRect).wasCalledWith(x, y, w, h);
+        assert.equal(expectedColor, mockCanvasContext.fillStyle);
+    });
+
+    it('will fill screen with a color', function () {
+        var expectedColor = '#220203';
+        var expectedWidth = Math.random() * 100;
+        var expectedHeight = Math.random() * 100;
+
+        mockCanvasContext.width = expectedWidth;
+        mockCanvasContext.height = expectedHeight;
+
+        renderer.clearCanvas(expectedColor);
+        verify(mockCanvasContext.fillRect).wasCalledWith(0, 0, expectedWidth, expectedHeight);
         assert.equal(expectedColor, mockCanvasContext.fillStyle);
     });
 
