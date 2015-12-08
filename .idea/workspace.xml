@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/Entity.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/Entity.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/Point.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/Point.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/Point.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/Point.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/Shape.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/Shape.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/Shape.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/Shape.test.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/engine/SpaceEngine.js" afterPath="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" afterPath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/karma.conf.js" afterPath="$PROJECT_DIR$/karma.conf.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/TestSpies.js" afterPath="$PROJECT_DIR$/test/TestSpies.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/TestVerification.js" afterPath="$PROJECT_DIR$/test/TestVerification.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SpaceRocks.iws" />
@@ -36,11 +31,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf>
-          <file leaf-file-name="SpaceEngine.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="SpaceEngine.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+                <state vertical-scroll-proportion="0.08994709">
+                  <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
                   <folding>
                     <element signature="e#0#42#0" expanded="false" />
                   </folding>
@@ -48,11 +43,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SpaceEngine.test.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SpaceEngine.test.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.505291">
-                  <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="63" column="52" selection-start-line="63" selection-start-column="52" selection-end-line="63" selection-end-column="52" />
                   <folding />
                 </state>
               </provider>
@@ -74,21 +69,21 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="Entity.test.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Entity.test.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Entity.test.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
+                <state vertical-scroll-proportion="0.46031746">
                   <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Delta.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Delta.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/engine/Delta.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.58465606">
-                  <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
                   <folding>
                     <element signature="e#0#42#0" expanded="false" />
                   </folding>
@@ -148,8 +143,6 @@
         <option value="$PROJECT_DIR$/test/subsystems/entities/Entity.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
-        <option value="$PROJECT_DIR$/test/TestSpies.js" />
-        <option value="$PROJECT_DIR$/test/TestVerification.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Point.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Point.test.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Shape.test.js" />
@@ -162,8 +155,10 @@
         <option value="$PROJECT_DIR$/karma.conf.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Entity.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" />
-        <option value="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
+        <option value="$PROJECT_DIR$/test/TestSpies.js" />
         <option value="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
+        <option value="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
+        <option value="$PROJECT_DIR$/test/TestVerification.js" />
       </list>
     </option>
   </component>
@@ -500,16 +495,16 @@
       <option name="number" value="Default" />
       <updated>1448810826873</updated>
       <workItem from="1448810828619" duration="21861000" />
-      <workItem from="1449338292088" duration="19401000" />
+      <workItem from="1449338292088" duration="24393000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41262000" />
+    <option name="totallyTimeSpent" value="46254000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -518,7 +513,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33768353" sideWeight="0.4924357" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33768353" sideWeight="0.4924357" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32789558" sideWeight="0.5075643" order="11" side_tool="true" content_ui="tabs" />
@@ -640,6 +635,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="37" selection-start-line="8" selection-start-column="37" selection-end-line="8" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -704,16 +702,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.44155845">
           <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/TestSpies.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.72987014">
-          <caret line="28" column="9" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
@@ -802,14 +790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Entity.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Entity.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -820,30 +800,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/sinon/lib/sinon.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#42#0" expanded="false" />
-          </folding>
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/sinon/lib/sinon/stub.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.43915343">
-          <caret line="32" column="33" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.38359788">
+          <caret line="161" column="32" selection-start-line="161" selection-start-column="28" selection-end-line="161" selection-end-column="32" />
           <folding>
-            <element signature="e#0#42#0" expanded="false" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/engine/Delta.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.58465606">
-          <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/sinon/pkg/sinon.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.6455027">
+          <caret line="3381" column="25" selection-start-line="3381" selection-start-column="25" selection-end-line="3381" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/TestSpies.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44973546">
+          <caret line="34" column="70" selection-start-line="34" selection-start-column="70" selection-end-line="34" selection-end-column="70" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
@@ -852,9 +848,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.505291">
-          <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="63" column="52" selection-start-line="63" selection-start-column="52" selection-end-line="63" selection-end-column="52" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Entity.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46031746">
+          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37037036">
+          <caret line="94" column="48" selection-start-line="94" selection-start-column="48" selection-end-line="94" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08994709">
+          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

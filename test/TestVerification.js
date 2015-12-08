@@ -7,7 +7,7 @@ module.exports = (function () {
         return '"' + (spy.methodName || 'Anonymous') + '"';
     }
 
-    function checkArgumentCount(actualCall, expectedArguments, sinonSpy) {
+    function checkArgumentCount(actualCall, expectedArguments) {
         var actualCount = actualCall.args.length;
         var expectedCount = expectedArguments.length;
         return actualCount == expectedCount;
@@ -20,7 +20,7 @@ module.exports = (function () {
         var allCalls = sinonSpy.getCalls();
         var argumentStrings = [];
         var callsThatMatch = allCalls.filter(function (actualCall) {
-            return checkArgumentCount(actualCall, expectedArguments, sinonSpy) &&
+            return checkArgumentCount(actualCall, expectedArguments) &&
                 argumentsMatch(expectedArguments, actualCall, sinonSpy);
         });
         if (callsThatMatch.length == 0) {
@@ -35,7 +35,7 @@ module.exports = (function () {
         }
     }
 
-    function argumentsMatch(expectedArguments, actualCall, sinonSpy) {
+    function argumentsMatch(expectedArguments, actualCall) {
         for (var i = 0; i < expectedArguments.length; i++) {
             if (actualCall.args[i] !== expectedArguments[i]) {
                 return false;
@@ -81,6 +81,9 @@ module.exports = (function () {
                         throw new Error('Spies where called out of order. Expected ' + spyName(spyA) + ' before ' + spyName(spyB));
                     }
                 }
+            },
+            wasCalledWith: function () {
+                throw new Error('Cannot invoke "wasCalledWith" on an array of spies');
             }
         };
     }
@@ -88,9 +91,9 @@ module.exports = (function () {
     return function (verifierTarget) {
         if (!verifierTarget) {
             throw new Error('Cannot verify an undefined spy (did you reference a property that doesnt exist?)');
-        } else if (verifierTarget.methodName) {
+        } else if (verifierTarget.methodName !== undefined) {
             return createSingleSpyVerifier(verifierTarget);
-        } else if (verifierTarget.length) {
+        } else if (verifierTarget.length > 0) {
             return createMultiSpyVerifier(verifierTarget);
         } else {
             throw new Error('Attempted to verify a non-named spy. \nPass in either a single spy or an array of spies. Spies must be created with the sinon wrapper spies.create(name).')

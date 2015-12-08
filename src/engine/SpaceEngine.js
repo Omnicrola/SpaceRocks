@@ -8,12 +8,10 @@ var SubsystemManager = require('./SubsystemManager');
 
 module.exports = (function () {
     var engine = function () {
-        var time = new Time();
-        console.log(Time);
         this._delta = new Delta({
-            time: time,
+            time: new Time(),
             config: {
-                fps: 0
+                fps: 24
             }
         });
         this._subsystemManager = new SubsystemManager();

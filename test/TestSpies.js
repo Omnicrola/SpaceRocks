@@ -31,6 +31,42 @@ module.exports = (function () {
         return obj;
     }
 
+    function createStubOfClass(targetClass, name) {
+        var stubInstance = createStubOfObject(sinon.create(targetClass.prototype));
+        stubInstance.methodName = name;
+        return stubInstance;
+    }
+
+    function stubConstructor(name) {
+        var realStub = sinon.stub();
+        var ConstructorStub = function () {
+            return realStub.apply(realStub, arguments);
+        }
+        ConstructorStub.getCalls = function () {
+            return realStub.getCalls.apply(realStub);
+        }
+        ConstructorStub.returns = function () {
+            return realStub.returns.apply(realStub, arguments);
+        }
+        ConstructorStub.methodName = name;
+        Object.defineProperty(ConstructorStub, 'called', {
+            get: function () {
+                return realStub.called;
+            },
+            set: function () {
+            }
+        });
+        Object.defineProperty(ConstructorStub, 'firstCall', {
+            get: function () {
+                return realStub.firstCall;
+            },
+            set: function () {
+            }
+        })
+        return ConstructorStub;
+    }
+
+
     return {
         create: function (name) {
             return createNamedSpy(name);
@@ -41,6 +77,9 @@ module.exports = (function () {
             } else if (typeof stubTarget == 'object') {
                 return createStubOfObject(stubTarget);
             }
+        },
+        createStubInstance: function (stubTarget, name) {
+            return createStubOfClass(stubTarget, name);
         },
         createComplex: function (params) {
             if (params.length) {
@@ -58,6 +97,9 @@ module.exports = (function () {
             newStub.methodName = property;
             allStubs.push(newStub);
             return newStub;
+        },
+        stubConstructor : function(name){
+            return stubConstructor(name);
         },
         restoreAll: function () {
             allStubs.forEach(function (singleStub) {

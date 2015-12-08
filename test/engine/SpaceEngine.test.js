@@ -4,6 +4,7 @@
 var proxy = require('proxyquireify')(require);
 var SpaceEngine;
 var Delta = require('../../src/engine/Delta');
+var Time = require('../../src/engine/Time');
 var SubsystemManager = require('../../src/engine/SubsystemManager');
 var verify = require('../TestVerification');
 var spies = require('../TestSpies');
@@ -17,13 +18,13 @@ describe('engine will start', function () {
     var mockSubsystemModule;
     var mockTimeModule;
     beforeEach(function () {
-        mockDeltaModule = spies.createStub('DeltaModule');
-        mockSubsystemModule = spies.createStub('SubsystemManagerModule');
-        mockTimeModule = spies.createStub('TimeModule');
+        mockDeltaModule = spies.stubConstructor('DeltaModule');
+        mockSubsystemModule = spies.stubConstructor('SubsystemModule');
+        mockTimeModule = spies.stubConstructor('TimeModule');
 
-        stubDelta = spies.createStub(new Delta({time: '', config: {}}));
-        stubTime = spies.createStub('time');
-        stubSubsystem = spies.createStub(new SubsystemManager());
+        stubDelta = spies.createStubInstance(Delta, 'Delta');
+        stubTime = spies.createStubInstance(Time, 'Time');
+        stubSubsystem = spies.createStubInstance(SubsystemManager, 'SubsystemManager');
 
         mockDeltaModule.returns(stubDelta);
         mockTimeModule.returns(stubTime);
@@ -58,21 +59,15 @@ describe('engine will start', function () {
 
         spaceEngine.cycle();
         verify(stubSubsystem.update).wasCalledWith(expectedDelta);
-
     });
 
-    it('will initialize with configuration', function () {
-        console.log('-----');
-        mockTimeModule.returns(stubTime);
-        console.log(stubTime);
-        console.log(new mockTimeModule());
-        //var spaceEngine = new SpaceEngine();
-        //
-        //assert.isTrue(mockDeltaModule.called);
-        //var deltaArgs = mockDeltaModule.firstCall.args[0];
-        //verify(mockTimeModule).wasCalled();
-        //assert.equal(stubTime, deltaArgs.time);
-        //assert.equal(24, deltaArgs.config.fps);
+    it('will initialize correct objects from modules', function () {
+        var spaceEngine = new SpaceEngine();
+
+        var deltaArgs = mockDeltaModule.firstCall.args[0];
+        verify(mockTimeModule).wasCalled();
+        assert.equal(stubTime, deltaArgs.time);
+        assert.equal(24, deltaArgs.config.fps);
 
     });
 
