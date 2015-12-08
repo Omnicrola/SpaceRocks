@@ -8,6 +8,10 @@
   "devDependencies": {
     "browserify": "^12.0.1",
     "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-copy": "0.0.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
     "karma": "^0.13.0",
     "karma-browserify": "^4.4.1",
     "karma-chai": "^0.1.0",
@@ -18,6 +22,7 @@
     "karma-sinon": "^1.0.4",
     "mocha": "^2.2.1",
     "proxyquireify": "^3.0.0",
-    "sinon": "^1.14.1"
+    "sinon": "^1.14.1",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
