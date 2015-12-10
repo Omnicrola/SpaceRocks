@@ -20,7 +20,6 @@ module.exports = (function () {
     };
 
     function _getCanvas(canvasId) {
-        console.log(canvasId);
         var canvasElement = document.getElementById(canvasId);
         if (canvasElement) {
             return canvasElement.getContext('2d');

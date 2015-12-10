@@ -32,16 +32,12 @@ gulp.task('clean', function () {
 })
 
 gulp.task('make-js', function () {
-    gulp.src('src/engine/SpaceEngine.js')
+    gulp.src('src/exports.js')
         .pipe(browserify({
             insertGlobals : true,
             debug : true
         }))
-        .pipe(gulp.dest('bin'));
-    //return browserify('./src/engine/SpaceEngine.js')
-    //    .bundle()
-    //    .pipe(sourceStream('spacerocks.js'))
-    //    .pipe(gulp.dest('./bin/'));
+        .pipe(gulp.dest('bin/spacerocks.js'));
 });
 
 gulp.task('copy-index', function(){
