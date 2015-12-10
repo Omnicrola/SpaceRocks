@@ -12,6 +12,7 @@ var spies = require('../TestSpies');
 
 
 describe('engine will start', function () {
+    var setIntervalStub;
     var stubDelta;
     var stubTime;
     var stubSubsystem;
@@ -44,7 +45,12 @@ describe('engine will start', function () {
             './Renderer': mockRendererModule
         });
 
+        setIntervalStub = spies.replace(window, 'setInterval');
     });
+
+    afterEach(function () {
+        spies.restoreAll();
+    })
 
     function createSpaceEngineForTesting(canvasId) {
         canvasId = canvasId || 'my-test-canvas';
@@ -52,14 +58,15 @@ describe('engine will start', function () {
     }
 
     it('will add the cycle function as an interval', function () {
-        var setIntervalStub = spies.replace(window, 'setInterval');
         var fps24 = 1000 / 24;
 
         var spaceEngine = createSpaceEngineForTesting();
         assert.isFalse(setIntervalStub.called);
         spaceEngine.start();
         assert.isTrue(setIntervalStub.called);
-        verify(setIntervalStub).wasCalledWith(spaceEngine.cycle, fps24);
+
+        var cycle = setIntervalStub.firstCall.args[0];
+        assert.equal(typeof cycle, 'function');
     });
 
     it('cycle will pass delta to the subsystem manager', function () {
@@ -69,7 +76,7 @@ describe('engine will start', function () {
         var spaceEngine = createSpaceEngineForTesting();
         assert.isFalse(stubSubsystem.update.called);
 
-        spaceEngine.cycle();
+        callCycleFunction(spaceEngine);
         verify(stubSubsystem.update).wasCalledWith(expectedDelta);
     });
 
@@ -78,17 +85,19 @@ describe('engine will start', function () {
         var spaceEngine = createSpaceEngineForTesting();
         assert.isFalse(stubSubsystem.render.called);
 
-        spaceEngine.cycle();
+        callCycleFunction(spaceEngine);
         verify(stubSubsystem.render).wasCalledWith(stubRenderer);
     });
+
     it('should clear the screen each frame', function () {
         var spaceEngine = createSpaceEngineForTesting();
-        spaceEngine.cycle();
+        callCycleFunction(spaceEngine);
         verify(stubRenderer.clearCanvas).wasCalledWith('#000000');
     });
+
     it('should call render and update in the correct order', function () {
         var spaceEngine = createSpaceEngineForTesting();
-        spaceEngine.cycle();
+        callCycleFunction(spaceEngine);
         verify([
             stubSubsystem.update,
             stubRenderer.clearCanvas,
@@ -96,6 +105,7 @@ describe('engine will start', function () {
         ]).whereCalledInOrder();
 
     });
+
 
     it('will initialize Delta with a new Time', function () {
         var spaceEngine = createSpaceEngineForTesting();
@@ -124,11 +134,14 @@ describe('engine will start', function () {
             .returns(expectedContext);
 
         var spaceEngine = createSpaceEngineForTesting(expectedCanvasId);
-
-
         verify(mockRendererModule).wasCalledWith(expectedContext);
 
     }));
 
+    function callCycleFunction(spaceEngine) {
+        spaceEngine.start();
+        var cycle = setIntervalStub.firstCall.args[0];
+        cycle.call({});
+    }
 
 });

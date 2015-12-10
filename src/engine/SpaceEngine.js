@@ -30,15 +30,16 @@ module.exports = (function () {
     }
 
     engine.prototype.start = function () {
-        window.setInterval(this.cycle, 1000 / 24);
+        window.setInterval(cycle.bind(this), 1000 / 24);
     };
 
-    engine.prototype.cycle = function () {
+    function cycle() {
         var interval = this._delta.getInterval();
         this._subsystemManager.update(interval);
         this._renderer.clearCanvas('#000000');
         this._subsystemManager.render(this._renderer);
-    };
+
+    }
 
     return engine;
 })();

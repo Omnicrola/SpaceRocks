@@ -41,11 +41,10 @@ module.exports = (function () {
 
     renderer.prototype.clearCanvas = function (color) {
         this._canvasContext.fillStyle = color;
-        var w = this._canvasContext.width;
-        var h = this._canvasContext.height;
+        var w = this._canvasContext.canvas.width;
+        var h = this._canvasContext.canvas.height;
         this._canvasContext.fillRect(0, 0, w, h);
     }
-
 
     return renderer;
 })();

@@ -37,7 +37,7 @@ gulp.task('make-js', function () {
             insertGlobals : true,
             debug : true
         }))
-        .pipe(gulp.dest('bin/spacerocks.js'));
+        .pipe(gulp.dest('bin'));
 });
 
 gulp.task('copy-index', function(){

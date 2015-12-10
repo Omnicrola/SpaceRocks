@@ -73,8 +73,8 @@ describe('Renderer', function () {
         var expectedWidth = Math.random() * 100;
         var expectedHeight = Math.random() * 100;
 
-        mockCanvasContext.width = expectedWidth;
-        mockCanvasContext.height = expectedHeight;
+        mockCanvasContext.canvas.width = expectedWidth;
+        mockCanvasContext.canvas.height = expectedHeight;
 
         renderer.clearCanvas(expectedColor);
         verify(mockCanvasContext.fillRect).wasCalledWith(0, 0, expectedWidth, expectedHeight);
@@ -98,7 +98,7 @@ describe('Renderer', function () {
     });
 
     function createMockCanvasContext() {
-        return spies.createComplex([
+        var mockCanvas = spies.createComplex([
             'beginPath',
             'moveTo',
             'stroke',
@@ -106,5 +106,10 @@ describe('Renderer', function () {
             'lineTo',
             'fillText'
         ]);
+        mockCanvas.canvas = {
+            width: 0,
+            height: 0
+        };
+        return mockCanvas;
     }
 });
