@@ -20,7 +20,7 @@ gulp.task('tdd', function (done) {
     }, done).start();
 });
 
-var browserify = require('browserify');
+var browserify = require('gulp-browserify');
 var sourceStream = require('vinyl-source-stream');
 var clean = require('gulp-clean');
 
@@ -32,10 +32,16 @@ gulp.task('clean', function () {
 })
 
 gulp.task('make-js', function () {
-    return browserify('./src/engine/SpaceEngine.js')
-        .bundle()
-        .pipe(sourceStream('spacerocks.js'))
-        .pipe(gulp.dest('./bin/'));
+    gulp.src('src/engine/SpaceEngine.js')
+        .pipe(browserify({
+            insertGlobals : true,
+            debug : true
+        }))
+        .pipe(gulp.dest('bin'));
+    //return browserify('./src/engine/SpaceEngine.js')
+    //    .bundle()
+    //    .pipe(sourceStream('spacerocks.js'))
+    //    .pipe(gulp.dest('./bin/'));
 });
 
 gulp.task('copy-index', function(){
