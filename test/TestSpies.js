@@ -5,12 +5,6 @@ module.exports = (function () {
 
     var allStubs = [];
 
-    function createNamedSpy(name) {
-        var spy = sinon.spy();
-        spy.methodName = name;
-        return spy;
-    }
-
     function createNamedStub(name) {
         var stub = sinon.stub();
         stub.methodName = name;
@@ -37,39 +31,9 @@ module.exports = (function () {
         return stubInstance;
     }
 
-    function stubConstructor(name) {
-        var realStub = sinon.stub();
-        var ConstructorStub = function () {
-            return realStub.apply(realStub, arguments);
-        }
-        ConstructorStub.getCalls = function () {
-            return realStub.getCalls.apply(realStub);
-        }
-        ConstructorStub.returns = function () {
-            return realStub.returns.apply(realStub, arguments);
-        }
-        ConstructorStub.methodName = name;
-        Object.defineProperty(ConstructorStub, 'called', {
-            get: function () {
-                return realStub.called;
-            },
-            set: function () {
-            }
-        });
-        Object.defineProperty(ConstructorStub, 'firstCall', {
-            get: function () {
-                return realStub.firstCall;
-            },
-            set: function () {
-            }
-        })
-        return ConstructorStub;
-    }
-
-
     return {
         create: function (name) {
-            return createNamedSpy(name);
+            return createNamedStub(name);
         },
         createStub: function (stubTarget) {
             if (typeof stubTarget == 'string') {
@@ -84,8 +48,8 @@ module.exports = (function () {
         createComplex: function (params) {
             if (params.length) {
                 var mockObj = {};
-                params.forEach(function (spyName) {
-                    mockObj[spyName] = createNamedSpy(spyName);
+                params.forEach(function (stubName) {
+                    mockObj[stubName] = createNamedStub(stubName);
                 });
                 return mockObj;
             } else {

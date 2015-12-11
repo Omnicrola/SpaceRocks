@@ -63,7 +63,7 @@ module.exports = (function () {
                     throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.timesCalled + ', expected ' + times);
                 }
             },
-            calledWithNew: function () {
+            wasCalledWithNew: function () {
                 if (!singleSpy.calledWithNew()) {
                     throw new Error(spyName(singleSpy) + ' was not called with the "new" keyword');
                 }

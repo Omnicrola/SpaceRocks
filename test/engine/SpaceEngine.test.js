@@ -22,10 +22,10 @@ describe('engine will start', function () {
     var mockTimeModule;
     var mockRendererModule;
     beforeEach(function () {
-        mockDeltaModule = spies.stubConstructor('DeltaModule');
-        mockSubsystemModule = spies.stubConstructor('SubsystemModule');
-        mockTimeModule = spies.stubConstructor('TimeModule');
-        mockRendererModule = spies.stubConstructor('RendererModule');
+        mockDeltaModule = spies.createStub('DeltaModule');
+        mockSubsystemModule = spies.createStub('SubsystemModule');
+        mockTimeModule = spies.createStub('TimeModule');
+        mockRendererModule = spies.createStub('RendererModule');
 
         stubDelta = spies.createStubInstance(Delta, 'Delta');
         stubTime = spies.createStubInstance(Time, 'Time');
@@ -69,6 +69,7 @@ describe('engine will start', function () {
         assert.equal(typeof cycle, 'function');
     });
 
+
     it('cycle will pass delta to the subsystem manager', function () {
         var expectedDelta = Math.random();
         stubDelta.getInterval.returns(expectedDelta);
@@ -110,14 +111,20 @@ describe('engine will start', function () {
     it('will initialize Delta with a new Time', function () {
         var spaceEngine = createSpaceEngineForTesting();
 
-        verify(mockTimeModule).wasCalled();
-        verify(mockDeltaModule).wasCalled();
+        verify(mockTimeModule).wasCalledWithNew();
+        verify(mockDeltaModule).wasCalledWithNew();
 
         var deltaArgs = mockDeltaModule.firstCall.args[0];
         assert.equal(stubTime, deltaArgs.time);
         assert.equal(24, deltaArgs.config.fps);
 
     });
+
+    it('will correctly initialize the subsystem manager', function(){
+        var spaceEngine = createSpaceEngineForTesting();
+        verify(mockSubsystemModule).wasCalledWithNew();
+    });
+
     it('will initialize Renderer with canvas context', sinon.test(function () {
         var expectedCanvasId = 'expect this canvas';
         var contextStub = sinon.stub();
@@ -134,6 +141,7 @@ describe('engine will start', function () {
             .returns(expectedContext);
 
         var spaceEngine = createSpaceEngineForTesting(expectedCanvasId);
+        verify(mockRendererModule).wasCalledWithNew();
         verify(mockRendererModule).wasCalledWith(expectedContext);
 
     }));
