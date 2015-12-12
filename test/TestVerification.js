@@ -58,6 +58,16 @@ module.exports = (function () {
                     throw new Error(spyName(singleSpy) + ' was not called at all.');
                 }
             },
+            wasCalledOnce: function () {
+                if (!singleSpy.calledOnce) {
+                    throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.callCount + ' times instead of once.');
+                }
+            },
+            wasCalledTwice: function () {
+                if (!singleSpy.calledTwice) {
+                    throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.callCount + ' times instead of twice.');
+                }
+            },
             wasCalledExactly: function (times) {
                 if (singleSpy.timesCalled != times) {
                     throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.timesCalled + ', expected ' + times);

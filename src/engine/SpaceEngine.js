@@ -8,11 +8,11 @@ var SubsystemManager = require('./SubsystemManager');
 var Renderer = require('./Renderer');
 
 module.exports = (function () {
-    var engine = function (options) {
+    var engine = function (config) {
         this._delta = _createDelta();
         this._subsystemManager = new SubsystemManager();
-        this._renderer = new Renderer(_getCanvas(options.canvas));
-        _addSubsystems.call(this, options.subsystems);
+        this._renderer = new Renderer(_getCanvas(config.canvas));
+        _addSubsystems.call(this, config.subsystems);
     };
 
     function _createDelta() {
