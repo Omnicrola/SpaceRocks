@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/engine/SpaceEngine.js" afterPath="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" afterPath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/SpaceRocks.js" afterPath="$PROJECT_DIR$/src/game/SpaceRocks.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/game/SpaceRocks.test.js" afterPath="$PROJECT_DIR$/test/game/SpaceRocks.test.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/TestVerification.js" afterPath="$PROJECT_DIR$/test/TestVerification.js" />
     </list>
     <ignored path="SpaceRocks.iws" />
@@ -27,13 +27,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SpaceEngine.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
+      <file leaf-file-name="SpaceRocks.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/game/SpaceRocks.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7377892">
-              <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.30591258">
+              <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
               <folding>
-                <element signature="e#0#42#0" expanded="false" />
+                <element signature="e#0#41#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SpaceRocks.test.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/game/SpaceRocks.test.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#41#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -43,17 +55,17 @@
         <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="145" column="49" selection-start-line="145" selection-start-column="49" selection-end-line="145" selection-end-column="49" />
+              <caret line="64" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestVerification.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+      <file leaf-file-name="SpaceEngine.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="82" column="70" selection-start-line="82" selection-start-column="70" selection-end-line="82" selection-end-column="70" />
+              <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
               <folding>
                 <element signature="e#0#42#0" expanded="false" />
               </folding>
@@ -124,15 +136,15 @@
         <option value="$PROJECT_DIR$/src/subsystems/SubsystemBuilder.js" />
         <option value="$PROJECT_DIR$/test/subsystems/SubsystemBuilder.test.js" />
         <option value="$PROJECT_DIR$/test/TestSpies.js" />
-        <option value="$PROJECT_DIR$/src/game/SpaceRocks.js" />
-        <option value="$PROJECT_DIR$/test/game/SpaceRocks.test.js" />
         <option value="$PROJECT_DIR$/test/engine/GameInput.test.js" />
         <option value="$PROJECT_DIR$/src/engine/GameInput.js" />
         <option value="$PROJECT_DIR$/src/engine/GameAudio.js" />
         <option value="$PROJECT_DIR$/test/engine/GameAudio.test.js" />
-        <option value="$PROJECT_DIR$/test/TestVerification.js" />
         <option value="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
         <option value="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
+        <option value="$PROJECT_DIR$/test/TestVerification.js" />
+        <option value="$PROJECT_DIR$/test/game/SpaceRocks.test.js" />
+        <option value="$PROJECT_DIR$/src/game/SpaceRocks.js" />
       </list>
     </option>
   </component>
@@ -281,24 +293,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="engine" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SpaceRocks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SpaceRocks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -317,7 +311,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="engine" />
+              <option name="myItemId" value="game" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -510,12 +504,12 @@
       <option name="number" value="Default" />
       <updated>1448810826873</updated>
       <workItem from="1448810828619" duration="21861000" />
-      <workItem from="1449338292088" duration="52811000" />
+      <workItem from="1449338292088" duration="54331000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74672000" />
+    <option name="totallyTimeSpent" value="76192000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -936,40 +930,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/game/SpaceRocks.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game/SpaceRocks.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/engine/Renderer.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="20" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/engine/GameInput.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="56" selection-start-line="69" selection-start-column="56" selection-end-line="69" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1014,10 +980,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
+    <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="82" column="70" selection-start-line="82" selection-start-column="70" selection-end-line="82" selection-end-column="70" />
+          <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
@@ -1027,17 +993,47 @@
     <entry file="file://$PROJECT_DIR$/test/engine/SpaceEngine.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="145" column="49" selection-start-line="145" selection-start-column="49" selection-end-line="145" selection-end-column="49" />
+          <caret line="64" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/SpaceEngine.js">
+    <entry file="file://$PROJECT_DIR$/test/TestVerification.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7377892">
-          <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.3933162">
+          <caret line="73" column="62" selection-start-line="73" selection-start-column="62" selection-end-line="73" selection-end-column="62" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/engine/GameInput.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8303342">
+          <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/game/SpaceRocks.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/game/SpaceRocks.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30591258">
+          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>

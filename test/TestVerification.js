@@ -73,10 +73,10 @@ module.exports = (function () {
             wasCalledWithConfig: function (callIndex, expectedConfig) {
                 var singleCall = singleSpy.getCall(callIndex);
                 if (singleCall === undefined) {
-                    throw new Error('Expected ' + spyName + ' to have been called with config object, but was not called at all.');
+                    throw new Error('Expected ' + spyName(singleSpy) + ' to have been called with config object, but was not called at all.');
                 }
                 if (singleCall.args.length !== 1) {
-                    throw new Error('Expected ' + spyName + ' to have been called with a single configuration object. ' +
+                    throw new Error('Expected ' + spyName(singleSpy) + ' to have been called with a single configuration object. ' +
                         'Instead got ' + singleCall.args.length + ' arguments.');
                 }
                 var actualConfig = singleCall.args[0];
