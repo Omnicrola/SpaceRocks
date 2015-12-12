@@ -2,47 +2,57 @@
  * Created by omnic on 11/29/2015.
  */
 var proxy = require('proxyquireify')(require);
+var verify = require('../TestVerification');
+var spies = require('../TestSpies');
+
 var SpaceEngine;
 var Delta = require('../../src/engine/Delta');
 var Time = require('../../src/engine/Time');
 var Renderer = require('../../src/engine/Renderer');
 var SubsystemManager = require('../../src/engine/SubsystemManager');
-var verify = require('../TestVerification');
-var spies = require('../TestSpies');
+var GameInput = require('../../src/engine/GameInput');
 
 
 describe('engine will start', function () {
     var setIntervalStub;
+
     var stubDelta;
     var stubTime;
     var stubSubsystem;
     var stubRenderer;
+    var stubInput;
+
     var mockDeltaModule;
     var mockSubsystemModule;
     var mockTimeModule;
     var mockRendererModule;
+    var mockInputModule;
     beforeEach(function () {
         mockDeltaModule = spies.createStub('DeltaModule');
         mockSubsystemModule = spies.createStub('SubsystemModule');
         mockTimeModule = spies.createStub('TimeModule');
         mockRendererModule = spies.createStub('RendererModule');
+        mockInputModule = spies.createStub('InputModule');
 
         stubDelta = spies.createStubInstance(Delta, 'Delta');
         stubTime = spies.createStubInstance(Time, 'Time');
         stubSubsystem = spies.createStubInstance(SubsystemManager, 'SubsystemManager');
         stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
+        stubInput = spies.createStubInstance(GameInput, 'GameInput');
 
         mockDeltaModule.returns(stubDelta);
         mockTimeModule.returns(stubTime);
         mockSubsystemModule.returns(stubSubsystem);
         mockRendererModule.returns(stubRenderer);
+        mockInputModule.returns(stubInput);
 
         require('../../src/engine/SpaceEngine');
         SpaceEngine = proxy('../../src/engine/SpaceEngine', {
             './Delta': mockDeltaModule,
             './SubsystemManager': mockSubsystemModule,
             './Time': mockTimeModule,
-            './Renderer': mockRendererModule
+            './Renderer': mockRendererModule,
+            './GameInput': mockInputModule
         });
 
         setIntervalStub = spies.replace(window, 'setInterval');
@@ -66,7 +76,7 @@ describe('engine will start', function () {
     });
 
 
-    it('cycle will pass delta to the subsystem manager', function () {
+    it('cycle will call update on the subsystemManager', function () {
         var expectedDelta = Math.random();
         stubDelta.getInterval.returns(expectedDelta);
 
@@ -74,10 +84,16 @@ describe('engine will start', function () {
         assert.isFalse(stubSubsystem.update.called);
 
         callCycleFunction(spaceEngine);
-        verify(stubSubsystem.update).wasCalledWith(expectedDelta);
+
+        assert.isTrue(stubSubsystem.update.calledOnce);
+        var updateArgs = stubSubsystem.update.firstCall.args
+        assert.equal(expectedDelta, updateArgs[0]);
+
+        var container = updateArgs[1];
+        assert.equal(stubInput, container.input);
     });
 
-    it('cycle will pass Renderer to the subsystem manager', function () {
+    it('cycle will call render subsystem manager', function () {
 
         var spaceEngine = createSpaceEngineForTesting();
         assert.isFalse(stubSubsystem.render.called);
