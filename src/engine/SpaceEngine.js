@@ -9,15 +9,29 @@ var Renderer = require('./Renderer');
 
 module.exports = (function () {
     var engine = function (options) {
-        this._delta = new Delta({
+        this._delta = _createDelta();
+        this._subsystemManager = new SubsystemManager();
+        this._renderer = new Renderer(_getCanvas(options.canvas));
+        _addSubsystems.call(this, options.subsystems);
+    };
+
+    function _createDelta() {
+        return new Delta({
             time: new Time(),
             config: {
                 fps: 24
             }
         });
-        this._subsystemManager = new SubsystemManager();
-        this._renderer = new Renderer(_getCanvas(options.canvas));
-    };
+    }
+
+    function _addSubsystems(subsystems) {
+        var subsystemManager = this._subsystemManager;
+        if (subsystems) {
+            subsystems.forEach(function (singleSystem) {
+                subsystemManager.addSubsystem(singleSystem);
+            });
+        }
+    }
 
     function _getCanvas(canvasId) {
         var canvasElement = document.getElementById(canvasId);

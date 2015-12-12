@@ -52,10 +52,6 @@ describe('engine will start', function () {
         spies.restoreAll();
     })
 
-    function createSpaceEngineForTesting(canvasId) {
-        canvasId = canvasId || 'my-test-canvas';
-        return new SpaceEngine({canvas: canvasId});
-    }
 
     it('will add the cycle function as an interval', function () {
         var fps24 = 1000 / 24;
@@ -120,9 +116,25 @@ describe('engine will start', function () {
 
     });
 
-    it('will correctly initialize the subsystem manager', function(){
-        var spaceEngine = createSpaceEngineForTesting();
+    it('will correctly initialize the subsystem manager', function () {
+        var expectedSystem1 = {stuff: 'things'};
+        var expectedSystem2 = {other: 'stuff'};
+        var expectedSystem3 = {more: 'others'};
+
+        var options = {
+            subsystems: [
+                expectedSystem1,
+                expectedSystem2,
+                expectedSystem3,
+            ]
+        };
+
+        var spaceEngine = createSpaceEngineForTesting(options);
+
         verify(mockSubsystemModule).wasCalledWithNew();
+        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem1);
+        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem2);
+        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem3);
     });
 
     it('will initialize Renderer with canvas context', sinon.test(function () {
@@ -140,11 +152,22 @@ describe('engine will start', function () {
             .withArgs('2d')
             .returns(expectedContext);
 
-        var spaceEngine = createSpaceEngineForTesting(expectedCanvasId);
+        var spaceEngine = createSpaceEngineForTesting({canvas: expectedCanvasId});
         verify(mockRendererModule).wasCalledWithNew();
         verify(mockRendererModule).wasCalledWith(expectedContext);
 
     }));
+
+    function createSpaceEngineForTesting(extraOptions) {
+        extraOptions = extraOptions || {};
+        var options = {
+            canvas: 'my-canvas-id',
+        };
+        for (var attrname in extraOptions) {
+            options[attrname] = extraOptions[attrname];
+        }
+        return new SpaceEngine(options);
+    }
 
     function callCycleFunction(spaceEngine) {
         spaceEngine.start();
