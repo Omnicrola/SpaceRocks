@@ -12,6 +12,7 @@ var Renderer = require('../../src/engine/Renderer');
 var SubsystemManager = require('../../src/engine/SubsystemManager');
 var GameInput = require('../../src/engine/GameInput');
 var GameAudio = require('../../src/engine/GameAudio');
+var GameEventHandler = require('../../src/engine/GameEventHandler');
 
 
 describe('GameEngine', function () {
@@ -23,6 +24,8 @@ describe('GameEngine', function () {
     var stubRenderer;
     var stubInput;
     var stubAudio;
+    var stubEventHandler;
+
 
     var mockDeltaModule;
     var mockSubsystemModule;
@@ -30,6 +33,7 @@ describe('GameEngine', function () {
     var mockRendererModule;
     var mockInputModule;
     var mockAudioModule;
+    var mockEventHandlerModule;
 
     beforeEach(function () {
         mockDeltaModule = spies.createStub('DeltaModule');
@@ -38,6 +42,7 @@ describe('GameEngine', function () {
         mockRendererModule = spies.createStub('RendererModule');
         mockInputModule = spies.createStub('InputModule');
         mockAudioModule = spies.createStub('AudioModule');
+        mockEventHandlerModule = spies.createStub('EventHandlerModule');
 
         stubDelta = spies.createStubInstance(Delta, 'Delta');
         stubTime = spies.createStubInstance(Time, 'Time');
@@ -45,6 +50,7 @@ describe('GameEngine', function () {
         stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
         stubInput = spies.createStubInstance(GameInput, 'GameInput');
         stubAudio = spies.createStubInstance(GameAudio, 'GameAudio');
+        stubEventHandler = spies.createStubInstance(GameEventHandler, 'GameEventHandler');
 
         mockDeltaModule.returns(stubDelta);
         mockTimeModule.returns(stubTime);
@@ -52,6 +58,7 @@ describe('GameEngine', function () {
         mockRendererModule.returns(stubRenderer);
         mockInputModule.returns(stubInput);
         mockAudioModule.returns(stubAudio);
+        mockEventHandlerModule.returns(stubEventHandler);
 
         require('../../src/engine/SpaceEngine');
         SpaceEngine = proxy('../../src/engine/SpaceEngine', {
@@ -60,7 +67,8 @@ describe('GameEngine', function () {
             './Time': mockTimeModule,
             './Renderer': mockRendererModule,
             './GameInput': mockInputModule,
-            './GameAudio': mockAudioModule
+            './GameAudio': mockAudioModule,
+            './GameEventHandler': mockEventHandlerModule
         });
 
         setIntervalStub = spies.replace(window, 'setInterval');
@@ -87,25 +95,28 @@ describe('GameEngine', function () {
     it('cycle will call update on the subsystemManager', function () {
         var expectedDelta = Math.random();
         stubDelta.getInterval.returns(expectedDelta);
+        stubEventHandler.addEvent = spies.create('addEvent');
+        stubEventHandler.subscribe = spies.create('subscribe');
+        var expectedUpdateContainer = {
+            delta: expectedDelta,
+            input: stubInput,
+            audio: stubAudio,
+            events: {
+                emit: stubEventHandler.addEvent,
+                subscribe: stubEventHandler.subscribe
+            }
+        };
 
         var spaceEngine = createSpaceEngineForTesting();
-
         assert.isFalse(stubSubsystem.update.called);
 
         callCycleFunction(spaceEngine);
 
-        assert.isTrue(stubSubsystem.update.calledOnce);
-        var updateArgs = stubSubsystem.update.firstCall.args
-        assert.equal(expectedDelta, updateArgs[0]);
-
-        var container = updateArgs[1];
-        assert.equal(stubInput, container.input);
-        assert.equal(stubAudio, container.audio);
+        verify(stubSubsystem.update).wasCalledWithConfig(0, expectedUpdateContainer);
 
         verify(mockAudioModule).wasCalledWithNew();
-        verify(mockAudioModule).wasCalledOnce();
         verify(mockInputModule).wasCalledWithNew();
-        verify(mockInputModule).wasCalledOnce();
+        verify(mockEventHandlerModule).wasCalledWithNew();
 
     });
 
@@ -136,7 +147,12 @@ describe('GameEngine', function () {
 
 
     it('will initialize Delta with a new Time', function () {
-        var expectedConfig = {time: stubTime, config: {fps: 24}};
+        var expectedConfig = {
+            time: stubTime,
+            config: {
+                fps: 24
+            }
+        };
 
         var spaceEngine = createSpaceEngineForTesting();
 

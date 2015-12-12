@@ -8,6 +8,7 @@ var SubsystemManager = require('./SubsystemManager');
 var Renderer = require('./Renderer');
 var GameInput = require('./GameInput');
 var GameAudio = require('./GameAudio');
+var GameEventHandler = require('./GameEventHandler');
 
 module.exports = (function () {
     var engine = function (config) {
@@ -16,6 +17,7 @@ module.exports = (function () {
         this._input = new GameInput();
         this._audio = new GameAudio({basePath: config.audioPath});
         this._renderer = new Renderer(_getCanvas(config.canvas));
+        this._eventHandler = new GameEventHandler();
         _addSubsystems.call(this, config.subsystems);
     };
 
@@ -53,9 +55,14 @@ module.exports = (function () {
 
     function cycle() {
         var interval = this._delta.getInterval();
-        this._subsystemManager.update(interval, {
+        this._subsystemManager.update({
+            delta: interval,
             input: this._input,
-            audio: this._audio
+            audio: this._audio,
+            events: {
+                emit: this._eventHandler.addEvent,
+                subscribe: this._eventHandler.subscribe
+            }
         });
 
         this._renderer.clearCanvas('#000000');

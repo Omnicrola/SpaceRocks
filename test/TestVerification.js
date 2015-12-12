@@ -41,15 +41,26 @@ module.exports = (function () {
             var propName = expectedProperties[i];
             var expectedValue = expectedConfig[propName];
             var actualValue = actualConfig[propName];
+            if (expectedValue === undefined) {
+                throw new Error('Expectation error: "' + parentName + '.' + propName + '" was expected to be undefined.');
+            }
             if (typeof expectedValue == 'object') {
+                if (typeof actualValue !== 'object') {
+                    throwConfigError(parentName, propName, expectedValue, actualValue);
+                }
                 verifyConfigProperties(expectedValue, actualValue, parentName + '.' + propName);
             }
             else if (expectedValue !== actualValue) {
-                throw new Error('Configuration object was not correct. ' +
-                    '\nProperty "' + parentName + '.' + propName + '" should be "' + expectedValue +
-                    '"\nbut was "' + actualValue + '".');
+                throwConfigError(parentName, propName, expectedValue, actualValue);
             }
         }
+    }
+
+    function throwConfigError(parentName, propName, expectedValue, actualValue) {
+        throw new Error('Configuration object was not correct. ' +
+            '\nProperty "' + parentName + '.' + propName + '" should be "' + expectedValue +
+            '"\nbut was "' + actualValue + '".');
+
     }
 
     function argumentsMatch(expectedArguments, actualCall) {
