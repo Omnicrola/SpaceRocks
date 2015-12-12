@@ -14,7 +14,7 @@ module.exports = (function () {
         this._delta = _createDelta();
         this._subsystemManager = new SubsystemManager();
         this._input = new GameInput();
-        this._audio = new GameAudio();
+        this._audio = new GameAudio({basePath: config.audioPath});
         this._renderer = new Renderer(_getCanvas(config.canvas));
         _addSubsystems.call(this, config.subsystems);
     };

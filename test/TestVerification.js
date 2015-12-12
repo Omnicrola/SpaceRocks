@@ -35,6 +35,23 @@ module.exports = (function () {
         }
     }
 
+    function verifyConfigProperties(expectedConfig, actualConfig, parentName) {
+        var expectedProperties = Object.getOwnPropertyNames(expectedConfig);
+        for (var i = 0; i < expectedProperties.length; i++) {
+            var propName = expectedProperties[i];
+            var expectedValue = expectedConfig[propName];
+            var actualValue = actualConfig[propName];
+            if (typeof expectedValue == 'object') {
+                verifyConfigProperties(expectedValue, actualValue, parentName + '.' + propName);
+            }
+            else if (expectedValue !== actualValue) {
+                throw new Error('Configuration object was not correct. ' +
+                    '\nProperty "' + parentName + '.' + propName + '" should be "' + expectedValue +
+                    '"\nbut was "' + actualValue + '".');
+            }
+        }
+    }
+
     function argumentsMatch(expectedArguments, actualCall) {
         for (var i = 0; i < expectedArguments.length; i++) {
             if (actualCall.args[i] !== expectedArguments[i]) {
@@ -52,6 +69,18 @@ module.exports = (function () {
                     expectedArguments[i] = arguments[i];
                 }
                 runVerification(singleSpy, expectedArguments);
+            },
+            wasCalledWithConfig: function (callIndex, expectedConfig) {
+                var singleCall = singleSpy.getCall(callIndex);
+                if (singleCall === undefined) {
+                    throw new Error('Expected ' + spyName + ' to have been called with config object, but was not called at all.');
+                }
+                if (singleCall.args.length !== 1) {
+                    throw new Error('Expected ' + spyName + ' to have been called with a single configuration object. ' +
+                        'Instead got ' + singleCall.args.length + ' arguments.');
+                }
+                var actualConfig = singleCall.args[0];
+                verifyConfigProperties(expectedConfig, actualConfig,'');
             },
             wasCalled: function () {
                 if (!singleSpy.called) {

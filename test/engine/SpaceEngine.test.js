@@ -136,14 +136,14 @@ describe('GameEngine', function () {
 
 
     it('will initialize Delta with a new Time', function () {
+        var expectedConfig = {time: stubTime, config: {fps: 24}};
+
         var spaceEngine = createSpaceEngineForTesting();
 
         verify(mockTimeModule).wasCalledWithNew();
         verify(mockDeltaModule).wasCalledWithNew();
 
-        var deltaArgs = mockDeltaModule.firstCall.args[0];
-        assert.equal(stubTime, deltaArgs.time);
-        assert.equal(24, deltaArgs.config.fps);
+        verify(mockDeltaModule).wasCalledWithConfig(0, expectedConfig);
 
     });
 
@@ -188,6 +188,12 @@ describe('GameEngine', function () {
         verify(mockRendererModule).wasCalledWith(expectedContext);
 
     }));
+
+    it('will initialize audio system', function () {
+        var expectedPath = '/my/test/path/';
+        var spaceEngineForTesting = createSpaceEngineForTesting({audioPath: expectedPath});
+        verify(mockAudioModule).wasCalledWithConfig(0, {basePath: expectedPath});
+    });
 
     function createSpaceEngineForTesting(extraOptions) {
         extraOptions = extraOptions || {};
