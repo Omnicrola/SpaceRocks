@@ -11,6 +11,7 @@ var Time = require('../../src/engine/Time');
 var Renderer = require('../../src/engine/Renderer');
 var SubsystemManager = require('../../src/engine/SubsystemManager');
 var GameInput = require('../../src/engine/GameInput');
+var GameAudio = require('../../src/engine/GameAudio');
 
 
 describe('GameEngine', function () {
@@ -21,30 +22,36 @@ describe('GameEngine', function () {
     var stubSubsystem;
     var stubRenderer;
     var stubInput;
+    var stubAudio;
 
     var mockDeltaModule;
     var mockSubsystemModule;
     var mockTimeModule;
     var mockRendererModule;
     var mockInputModule;
+    var mockAudioModule;
+
     beforeEach(function () {
         mockDeltaModule = spies.createStub('DeltaModule');
         mockSubsystemModule = spies.createStub('SubsystemModule');
         mockTimeModule = spies.createStub('TimeModule');
         mockRendererModule = spies.createStub('RendererModule');
         mockInputModule = spies.createStub('InputModule');
+        mockAudioModule = spies.createStub('AudioModule');
 
         stubDelta = spies.createStubInstance(Delta, 'Delta');
         stubTime = spies.createStubInstance(Time, 'Time');
         stubSubsystem = spies.createStubInstance(SubsystemManager, 'SubsystemManager');
         stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
         stubInput = spies.createStubInstance(GameInput, 'GameInput');
+        stubAudio = spies.createStubInstance(GameAudio, 'GameAudio');
 
         mockDeltaModule.returns(stubDelta);
         mockTimeModule.returns(stubTime);
         mockSubsystemModule.returns(stubSubsystem);
         mockRendererModule.returns(stubRenderer);
         mockInputModule.returns(stubInput);
+        mockAudioModule.returns(stubAudio);
 
         require('../../src/engine/SpaceEngine');
         SpaceEngine = proxy('../../src/engine/SpaceEngine', {
@@ -52,7 +59,8 @@ describe('GameEngine', function () {
             './SubsystemManager': mockSubsystemModule,
             './Time': mockTimeModule,
             './Renderer': mockRendererModule,
-            './GameInput': mockInputModule
+            './GameInput': mockInputModule,
+            './GameAudio': mockAudioModule
         });
 
         setIntervalStub = spies.replace(window, 'setInterval');
@@ -81,6 +89,7 @@ describe('GameEngine', function () {
         stubDelta.getInterval.returns(expectedDelta);
 
         var spaceEngine = createSpaceEngineForTesting();
+
         assert.isFalse(stubSubsystem.update.called);
 
         callCycleFunction(spaceEngine);
@@ -91,10 +100,16 @@ describe('GameEngine', function () {
 
         var container = updateArgs[1];
         assert.equal(stubInput, container.input);
+        assert.equal(stubAudio, container.audio);
+
+        verify(mockAudioModule).wasCalledWithNew();
+        verify(mockAudioModule).wasCalledOnce();
+        verify(mockInputModule).wasCalledWithNew();
+        verify(mockInputModule).wasCalledOnce();
+
     });
 
-    it('cycle will call render subsystem manager', function () {
-
+    it('cycle will call render on subsystemManager', function () {
         var spaceEngine = createSpaceEngineForTesting();
         assert.isFalse(stubSubsystem.render.called);
 

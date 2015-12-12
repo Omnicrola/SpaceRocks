@@ -34,5 +34,5 @@ describe('GameAudio', function () {
         verify(stubAudio).wasCalledWithNew();
         verify(stubPlay).wasCalled();
     });
-    
+
 });

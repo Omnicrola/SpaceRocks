@@ -7,12 +7,14 @@ var Time = require('./Time');
 var SubsystemManager = require('./SubsystemManager');
 var Renderer = require('./Renderer');
 var GameInput = require('./GameInput');
+var GameAudio = require('./GameAudio');
 
 module.exports = (function () {
     var engine = function (config) {
         this._delta = _createDelta();
         this._subsystemManager = new SubsystemManager();
         this._input = new GameInput();
+        this._audio = new GameAudio();
         this._renderer = new Renderer(_getCanvas(config.canvas));
         _addSubsystems.call(this, config.subsystems);
     };
@@ -52,7 +54,8 @@ module.exports = (function () {
     function cycle() {
         var interval = this._delta.getInterval();
         this._subsystemManager.update(interval, {
-            input: this._input
+            input: this._input,
+            audio: this._audio
         });
 
         this._renderer.clearCanvas('#000000');
