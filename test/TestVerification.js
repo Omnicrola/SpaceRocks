@@ -80,11 +80,16 @@ module.exports = (function () {
                         'Instead got ' + singleCall.args.length + ' arguments.');
                 }
                 var actualConfig = singleCall.args[0];
-                verifyConfigProperties(expectedConfig, actualConfig,'');
+                verifyConfigProperties(expectedConfig, actualConfig, '');
             },
             wasCalled: function () {
                 if (!singleSpy.called) {
                     throw new Error(spyName(singleSpy) + ' was not called at all.');
+                }
+            },
+            wasNotCalled: function () {
+                if (singleSpy.called) {
+                    throw new Error(spyName(singleSpy) + ' should not have been called, but was called ' + singleSpy.callCount + ' times.');
                 }
             },
             wasCalledOnce: function () {

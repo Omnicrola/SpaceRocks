@@ -8,7 +8,7 @@ module.exports = (function () {
         new SpaceEngine({
             audioPath: '',
             canvas: canvasId
-        });
+        }).start();
     };
     return spacerocks;
 })();

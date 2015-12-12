@@ -33,4 +33,9 @@ describe('SpaceRocks', function () {
         verify(mockEngineModule).wasCalledWithNew();
         verify(mockEngineModule).wasCalledWithConfig(0, expectedConfig);
     });
+
+    it('will call start on  engine', function(){
+        var spaceRocks = new SpaceRocks('');
+        verify(stubEngine.start).wasCalled();
+    });
 });
