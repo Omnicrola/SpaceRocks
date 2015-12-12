@@ -13,7 +13,7 @@ var SubsystemManager = require('../../src/engine/SubsystemManager');
 var GameInput = require('../../src/engine/GameInput');
 
 
-describe('engine will start', function () {
+describe('GameEngine', function () {
     var setIntervalStub;
 
     var stubDelta;
