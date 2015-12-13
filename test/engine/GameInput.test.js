@@ -27,6 +27,22 @@ describe('GameInput', function () {
         assert.isFunction(addListenerSpy.secondCall.args[1]);
     });
 
+    it('should block default key actions', function(){
+        var gameInput = new GameInput();
+
+        var upEvent = createKeyEvent('keyup', randomKey());
+        var downEvent = createKeyEvent('keyup', randomKey());
+
+        getKeyUpFunction()(upEvent);
+        getKeyDownFunction()(downEvent);
+
+        verify(upEvent.preventDefault).wasCalled();
+        verify(downEvent.preventDefault).wasCalled();
+
+
+
+    });
+
     it('should record when keys are up', function () {
         var gameInput = new GameInput();
 
@@ -103,7 +119,8 @@ describe('GameInput', function () {
     function createKeyEvent(type, keycode) {
         return {
             type: type,
-            keyCode: keycode
+            keyCode: keycode,
+            preventDefault : spies.create('preventDefault')
         }
     }
 

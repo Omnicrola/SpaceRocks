@@ -95,15 +95,15 @@ describe('GameEngine', function () {
     it('cycle will call update on the subsystemManager', function () {
         var expectedDelta = Math.random();
         stubDelta.getInterval.returns(expectedDelta);
-        stubEventHandler.addEvent = spies.create('addEvent');
-        stubEventHandler.subscribe = spies.create('subscribe');
+        var expectedEmit = stubEventHandler.addEvent = spies.create('addEvent');
+        var expectedSubscribe = stubEventHandler.subscribe = spies.create('subscribe');
         var expectedUpdateContainer = {
             delta: expectedDelta,
             input: stubInput,
             audio: stubAudio,
             events: {
-                emit: stubEventHandler.addEvent,
-                subscribe: stubEventHandler.subscribe
+                emit: expectedEmit,
+                subscribe: expectedSubscribe
             }
         };
 

@@ -18,10 +18,12 @@ module.exports = (function () {
 
     function _keyUp(event) {
         this._keyStates[event.keyCode] = false;
+        event.preventDefault();
     }
 
     function _keyDown(event) {
         this._keyStates[event.keyCode] = true;
+        event.preventDefault();
     }
 
     inputWrapper.prototype.isPressed = function (keyCode) {
