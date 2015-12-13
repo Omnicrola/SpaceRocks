@@ -9,6 +9,7 @@ var Renderer = require('./Renderer');
 var GameInput = require('./GameInput');
 var GameAudio = require('./GameAudio');
 var GameEventHandler = require('./GameEventHandler');
+var GameEvent = require('./GameEvent');
 
 module.exports = (function () {
     var engine = function (config) {
@@ -19,6 +20,7 @@ module.exports = (function () {
         this._renderer = new Renderer(_getCanvas(config.canvas));
         this._eventHandler = new GameEventHandler();
         _addSubsystems.call(this, config.subsystems);
+        _finishLoading.call(this);
     };
 
     function _createDelta() {
@@ -33,10 +35,18 @@ module.exports = (function () {
     function _addSubsystems(subsystems) {
         var subsystemManager = this._subsystemManager;
         if (subsystems) {
+            var gameContainer = _createGameContainer.call(this, 1.0);
             subsystems.forEach(function (singleSystem) {
+                singleSystem.initialize(gameContainer);
                 subsystemManager.addSubsystem(singleSystem);
             });
         }
+    }
+
+    function _finishLoading() {
+        var startEvent = new GameEvent('engine-start', null);
+        this._eventHandler.addEvent(startEvent);
+        this._eventHandler.process();
     }
 
     function _getCanvas(canvasId) {
@@ -55,7 +65,16 @@ module.exports = (function () {
 
     function cycle() {
         var interval = this._delta.getInterval();
-        this._subsystemManager.update({
+        var gameContainer = _createGameContainer.call(this, interval);
+        this._subsystemManager.update(gameContainer);
+
+        this._renderer.clearCanvas('#000000');
+        this._subsystemManager.render(this._renderer);
+
+    }
+
+    function _createGameContainer(interval) {
+        return {
             delta: interval,
             input: this._input,
             audio: this._audio,
@@ -63,11 +82,7 @@ module.exports = (function () {
                 emit: this._eventHandler.addEvent,
                 subscribe: this._eventHandler.subscribe
             }
-        });
-
-        this._renderer.clearCanvas('#000000');
-        this._subsystemManager.render(this._renderer);
-
+        };
     }
 
     return engine;

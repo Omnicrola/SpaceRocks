@@ -82,6 +82,9 @@ module.exports = (function () {
                 runVerification(singleSpy, expectedArguments);
             },
             wasCalledWithConfig: function (callIndex, expectedConfig) {
+                if (typeof expectedConfig !== 'object') {
+                    throw new Error('Expected configuration is not an object. Was: ' + expectedConfig);
+                }
                 var singleCall = singleSpy.getCall(callIndex);
                 if (singleCall === undefined) {
                     throw new Error('Expected ' + spyName(singleSpy) + ' to have been called with config object, but was not called at all.');
@@ -92,6 +95,12 @@ module.exports = (function () {
                 }
                 var actualConfig = singleCall.args[0];
                 verifyConfigProperties(expectedConfig, actualConfig, '');
+            },
+            wasCalledAfter: function (otherSpy) {
+                var wasNotCalledAfter = !singleSpy.called || !singleSpy.calledAfter(otherSpy);
+                if (wasNotCalledAfter) {
+                    throw new Error(spyName(singleSpy) + ' was not called after ' + spyName(otherSpy));
+                }
             },
             wasCalled: function () {
                 if (!singleSpy.called) {

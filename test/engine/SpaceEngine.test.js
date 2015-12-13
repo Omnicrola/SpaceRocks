@@ -5,70 +5,63 @@ var proxy = require('proxyquireify')(require);
 var verify = require('../TestVerification');
 var spies = require('../TestSpies');
 
+var GameEvent = require('../../src/engine/GameEvent')
 var SpaceEngine;
-var Delta = require('../../src/engine/Delta');
-var Time = require('../../src/engine/Time');
-var Renderer = require('../../src/engine/Renderer');
-var SubsystemManager = require('../../src/engine/SubsystemManager');
-var GameInput = require('../../src/engine/GameInput');
-var GameAudio = require('../../src/engine/GameAudio');
-var GameEventHandler = require('../../src/engine/GameEventHandler');
+var actualModules = {
+    Delta: require('../../src/engine/Delta'),
+    Time: require('../../src/engine/Time'),
+    Renderer: require('../../src/engine/Renderer'),
+    SubsystemManager: require('../../src/engine/SubsystemManager'),
+    GameInput: require('../../src/engine/GameInput'),
+    GameAudio: require('../../src/engine/GameAudio'),
+    GameEventHandler: require('../../src/engine/GameEventHandler'),
+};
 
 
 describe('GameEngine', function () {
     var setIntervalStub;
 
-    var stubDelta;
-    var stubTime;
-    var stubSubsystem;
-    var stubRenderer;
-    var stubInput;
-    var stubAudio;
-    var stubEventHandler;
+    var expectedSubscribe;
+    var expectedEmit;
+    var expectedProcess;
 
+    var mockedModules = {
+        stubs: {}
+    };
 
-    var mockDeltaModule;
-    var mockSubsystemModule;
-    var mockTimeModule;
-    var mockRendererModule;
-    var mockInputModule;
-    var mockAudioModule;
-    var mockEventHandlerModule;
+    function mockModule(name) {
+        var mockModule = spies.createStub(name + 'Module');
+        mockedModules[name] = mockModule;
+        var moduleInstance = spies.createStubInstance(actualModules[name], name);
+        mockModule.returns(moduleInstance);
+        mockedModules.stubs[name] = moduleInstance;
+        return mockModule;
+    }
 
     beforeEach(function () {
-        mockDeltaModule = spies.createStub('DeltaModule');
-        mockSubsystemModule = spies.createStub('SubsystemModule');
-        mockTimeModule = spies.createStub('TimeModule');
-        mockRendererModule = spies.createStub('RendererModule');
-        mockInputModule = spies.createStub('InputModule');
-        mockAudioModule = spies.createStub('AudioModule');
-        mockEventHandlerModule = spies.createStub('EventHandlerModule');
+        var mockDelta = mockModule('Delta');
+        var mockTime = mockModule('Time');
+        var mockSubystemManager = mockModule('SubsystemManager');
+        var mockRenderer = mockModule('Renderer');
+        var mockGameInput = mockModule('GameInput');
+        var mockGameAudio = mockModule('GameAudio');
+        var mockEventHandler = mockModule('GameEventHandler');
 
-        stubDelta = spies.createStubInstance(Delta, 'Delta');
-        stubTime = spies.createStubInstance(Time, 'Time');
-        stubSubsystem = spies.createStubInstance(SubsystemManager, 'SubsystemManager');
-        stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
-        stubInput = spies.createStubInstance(GameInput, 'GameInput');
-        stubAudio = spies.createStubInstance(GameAudio, 'GameAudio');
-        stubEventHandler = spies.createStubInstance(GameEventHandler, 'GameEventHandler');
 
-        mockDeltaModule.returns(stubDelta);
-        mockTimeModule.returns(stubTime);
-        mockSubsystemModule.returns(stubSubsystem);
-        mockRendererModule.returns(stubRenderer);
-        mockInputModule.returns(stubInput);
-        mockAudioModule.returns(stubAudio);
-        mockEventHandlerModule.returns(stubEventHandler);
+        var stubEventHandler = mockedModules.stubs.GameEventHandler;
+        expectedSubscribe = stubEventHandler.subscribe = spies.create('subscribe');
+        expectedEmit = stubEventHandler.addEvent = spies.create('addEvent');
+        expectedProcess = stubEventHandler.process = spies.create('process');
 
         require('../../src/engine/SpaceEngine');
         SpaceEngine = proxy('../../src/engine/SpaceEngine', {
-            './Delta': mockDeltaModule,
-            './SubsystemManager': mockSubsystemModule,
-            './Time': mockTimeModule,
-            './Renderer': mockRendererModule,
-            './GameInput': mockInputModule,
-            './GameAudio': mockAudioModule,
-            './GameEventHandler': mockEventHandlerModule
+            './Delta': mockDelta,
+            './SubsystemManager': mockSubystemManager,
+            './Time': mockTime,
+            './Renderer': mockRenderer,
+            './GameInput': mockGameInput,
+            './GameAudio': mockGameAudio,
+            './GameEventHandler': mockEventHandler
         });
 
         setIntervalStub = spies.replace(window, 'setInterval');
@@ -91,56 +84,136 @@ describe('GameEngine', function () {
         assert.equal(typeof cycle, 'function');
     });
 
+    describe('Using the subsystem manager', function () {
+        var expectedUpdateContainer;
+        var expectedDelta;
+        var stubSubsystemManager;
 
-    it('cycle will call update on the subsystemManager', function () {
-        var expectedDelta = Math.random();
-        stubDelta.getInterval.returns(expectedDelta);
-        var expectedEmit = stubEventHandler.addEvent = spies.create('addEvent');
-        var expectedSubscribe = stubEventHandler.subscribe = spies.create('subscribe');
-        var expectedUpdateContainer = {
-            delta: expectedDelta,
-            input: stubInput,
-            audio: stubAudio,
-            events: {
-                emit: expectedEmit,
-                subscribe: expectedSubscribe
-            }
-        };
+        beforeEach(function () {
+            expectedDelta = Math.random();
+            mockedModules.stubs.Delta.getInterval.returns(expectedDelta);
+            stubSubsystemManager = mockedModules.stubs.SubsystemManager;
+            expectedUpdateContainer = {
+                delta: expectedDelta,
+                input: mockedModules.stubs.GameInput,
+                audio: mockedModules.stubs.GameAudio,
+                events: {
+                    emit: expectedEmit,
+                    subscribe: expectedSubscribe
+                }
+            };
+        });
 
-        var spaceEngine = createSpaceEngineForTesting();
-        assert.isFalse(stubSubsystem.update.called);
+        it('should initialize a subsystem before sending to subsystemManager', function () {
+            var mockSubsystem = createMockSubsystem('subsandwich');
+            var options = {
+                subsystems: [
+                    mockSubsystem,
+                ]
+            };
+            expectedUpdateContainer.delta = 1.0;
 
-        callCycleFunction(spaceEngine);
+            var spaceEngine = createSpaceEngineForTesting(options);
 
-        verify(stubSubsystem.update).wasCalledWithConfig(0, expectedUpdateContainer);
+            verify(mockSubsystem.update).wasNotCalled();
+            verify(mockSubsystem.render).wasNotCalled();
+            verify(mockSubsystem.initialize).wasCalledWithConfig(0, expectedUpdateContainer);
+            verify(stubSubsystemManager.addSubsystem).wasCalledAfter(mockSubsystem.initialize);
+        });
 
-        verify(mockAudioModule).wasCalledWithNew();
-        verify(mockInputModule).wasCalledWithNew();
-        verify(mockEventHandlerModule).wasCalledWithNew();
+        it('cycle will call update on the subsystemManager', function () {
+
+            var spaceEngine = createSpaceEngineForTesting();
+            assert.isFalse(stubSubsystemManager.update.called);
+
+            callCycleFunction(spaceEngine);
+
+            verify(stubSubsystemManager.update).wasCalledWithConfig(0, expectedUpdateContainer);
+
+            verify(mockedModules.GameAudio).wasCalledWithNew();
+            verify(mockedModules.GameInput).wasCalledWithNew();
+            verify(mockedModules.GameEventHandler).wasCalledWithNew();
+
+        });
+
+        it('cycle will call render on subsystemManager', function () {
+            var spaceEngine = createSpaceEngineForTesting();
+            assert.isFalse(stubSubsystemManager.render.called);
+
+            callCycleFunction(spaceEngine);
+            verify(stubSubsystemManager.render).wasCalledWith(mockedModules.stubs.Renderer);
+        });
+
+        it('will correctly initialize the subsystem manager', function () {
+            var expectedSystem1 = createMockSubsystem('stuff');
+            var expectedSystem2 = createMockSubsystem('other');
+            var expectedSystem3 = createMockSubsystem('things');
+
+            var options = {
+                subsystems: [
+                    expectedSystem1,
+                    expectedSystem2,
+                    expectedSystem3,
+                ]
+            };
+
+            var spaceEngine = createSpaceEngineForTesting(options);
+
+            verify(mockedModules.SubsystemManager).wasCalledWithNew();
+            verify(stubSubsystemManager.addSubsystem).wasCalledWith(expectedSystem1);
+            verify(stubSubsystemManager.addSubsystem).wasCalledWith(expectedSystem2);
+            verify(stubSubsystemManager.addSubsystem).wasCalledWith(expectedSystem3);
+
+        });
+
+        it('will emit an event after loading', function () {
+            var stubEventHandler = mockedModules.GameEventHandler;
+            var mockSubsystem1 = createMockSubsystem('stuffs');
+            var mockSubsystem2 = createMockSubsystem('stuffs');
+            var options = {
+                subsystems: [
+                    mockSubsystem1,
+                    mockSubsystem2
+                ]
+            };
+
+            var spaceEngine = createSpaceEngineForTesting(options);
+
+            verify(expectedEmit).wasCalledOnce();
+            verify(expectedProcess).wasCalledAfter(stubSubsystemManager.addSubsystem);
+            var actualEvent = expectedEmit.firstCall.args[0];
+
+            //assert.isTrue(actualEvent instanceof GameEvent);
+            assert.equal('engine-start', actualEvent.type);
+            assert.equal(null, actualEvent.data);
+        });
+
+        function createMockSubsystem(name) {
+            return {
+                name: name,
+                update: spies.create('update'),
+                render: spies.create('render'),
+                initialize: spies.create('initialize')
+            };
+        }
+
 
     });
 
-    it('cycle will call render on subsystemManager', function () {
-        var spaceEngine = createSpaceEngineForTesting();
-        assert.isFalse(stubSubsystem.render.called);
-
-        callCycleFunction(spaceEngine);
-        verify(stubSubsystem.render).wasCalledWith(stubRenderer);
-    });
 
     it('should clear the screen each frame', function () {
         var spaceEngine = createSpaceEngineForTesting();
         callCycleFunction(spaceEngine);
-        verify(stubRenderer.clearCanvas).wasCalledWith('#000000');
+        verify(mockedModules.stubs.Renderer.clearCanvas).wasCalledWith('#000000');
     });
 
     it('should call render and update in the correct order', function () {
         var spaceEngine = createSpaceEngineForTesting();
         callCycleFunction(spaceEngine);
         verify([
-            stubSubsystem.update,
-            stubRenderer.clearCanvas,
-            stubSubsystem.render
+            mockedModules.stubs.SubsystemManager.update,
+            mockedModules.stubs.Renderer.clearCanvas,
+            mockedModules.stubs.SubsystemManager.render
         ]).whereCalledInOrder();
 
     });
@@ -148,7 +221,7 @@ describe('GameEngine', function () {
 
     it('will initialize Delta with a new Time', function () {
         var expectedConfig = {
-            time: stubTime,
+            time: mockedModules.stubs.Time,
             config: {
                 fps: 24
             }
@@ -156,33 +229,13 @@ describe('GameEngine', function () {
 
         var spaceEngine = createSpaceEngineForTesting();
 
-        verify(mockTimeModule).wasCalledWithNew();
-        verify(mockDeltaModule).wasCalledWithNew();
+        verify(mockedModules.Time).wasCalledWithNew();
+        verify(mockedModules.Delta).wasCalledWithNew();
 
-        verify(mockDeltaModule).wasCalledWithConfig(0, expectedConfig);
+        verify(mockedModules.Delta).wasCalledWithConfig(0, expectedConfig);
 
     });
 
-    it('will correctly initialize the subsystem manager', function () {
-        var expectedSystem1 = {stuff: 'things'};
-        var expectedSystem2 = {other: 'stuff'};
-        var expectedSystem3 = {more: 'others'};
-
-        var options = {
-            subsystems: [
-                expectedSystem1,
-                expectedSystem2,
-                expectedSystem3,
-            ]
-        };
-
-        var spaceEngine = createSpaceEngineForTesting(options);
-
-        verify(mockSubsystemModule).wasCalledWithNew();
-        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem1);
-        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem2);
-        verify(stubSubsystem.addSubsystem).wasCalledWith(expectedSystem3);
-    });
 
     it('will initialize Renderer with canvas context', sinon.test(function () {
         var expectedCanvasId = 'expect this canvas';
@@ -200,15 +253,15 @@ describe('GameEngine', function () {
             .returns(expectedContext);
 
         var spaceEngine = createSpaceEngineForTesting({canvas: expectedCanvasId});
-        verify(mockRendererModule).wasCalledWithNew();
-        verify(mockRendererModule).wasCalledWith(expectedContext);
+        verify(mockedModules.Renderer).wasCalledWithNew();
+        verify(mockedModules.Renderer).wasCalledWith(expectedContext);
 
     }));
 
     it('will initialize audio system', function () {
         var expectedPath = '/my/test/path/';
         var spaceEngineForTesting = createSpaceEngineForTesting({audioPath: expectedPath});
-        verify(mockAudioModule).wasCalledWithConfig(0, {basePath: expectedPath});
+        verify(mockedModules.GameAudio).wasCalledWithConfig(0, {basePath: expectedPath});
     });
 
     function createSpaceEngineForTesting(extraOptions) {
