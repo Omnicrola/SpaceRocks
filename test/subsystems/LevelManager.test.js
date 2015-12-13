@@ -1,13 +1,13 @@
 /**
  * Created by Eric on 12/12/2015.
  */
-var verify = require('../../TestVerification');
-var spies = require('../../TestSpies');
-var interface = require('../../TestInterfaces');
-var mockGameContainer = require('../../mocks/GameContainer');
+var verify = require('../TestVerification');
+var spies = require('../TestSpies');
+var interface = require('../TestInterfaces');
+var mockGameContainer = require('../mocks/GameContainer');
 
-var LevelManager = require('../../../src/subsystems/levels/LevelManager');
-var GameEvent = require('../../../src/engine/GameEvent');
+var LevelManager = require('../../src/subsystems/LevelManager');
+var GameEvent = require('../../src/engine/GameEvent');
 
 describe('LevelManager', function () {
     var levelManager;

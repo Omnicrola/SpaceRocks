@@ -2,7 +2,7 @@
  * Created by Eric on 12/12/2015.
  */
 
-var GameEvent = require('../../engine/GameEvent');
+var GameEvent = require('../engine/GameEvent');
 
 module.exports = (function () {
     var levelmanager = function () {

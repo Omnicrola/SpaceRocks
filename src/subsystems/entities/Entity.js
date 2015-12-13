@@ -6,8 +6,9 @@ var Point = require('./Point');
 module.exports = (function () {
     var entity = function (shape) {
         this._shape = shape;
-        this.position = new Point(0,0);
-        this.velocity = new Point(0,0);
+        this.position = new Point(0, 0);
+        this.velocity = new Point(0, 0);
+        this.rotation = 0;
     };
 
     entity.prototype.render = function (renderer) {

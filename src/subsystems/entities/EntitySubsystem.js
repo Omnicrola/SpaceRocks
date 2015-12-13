@@ -5,15 +5,21 @@ module.exports = (function () {
     var entitySubsystem = function () {
         this._entities = [];
     };
+
     entitySubsystem.prototype.render = function (renderer) {
         this._entities.forEach(function (singleEntity) {
             singleEntity.render(renderer);
         });
     };
-    entitySubsystem.prototype.update = function (delta) {
+
+    entitySubsystem.prototype.update = function (gameContainer) {
         this._entities.forEach(function (singleEntity) {
-            singleEntity.update(delta);
+            singleEntity.update(gameContainer.delta);
         })
+    };
+
+    entitySubsystem.prototype.initialize = function (container) {
+
     };
 
     entitySubsystem.prototype.addEntity = function (newEntity) {
