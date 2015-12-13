@@ -11,11 +11,21 @@ module.exports = (function () {
     };
 
     playersubsystem.prototype.initialize = function (gameContainer) {
+        var self = this;
         gameContainer.events.subscribe('new-level', function (event) {
-            var player = _createPlayer();
-            this._entitySubsystem.addEntity(player);
-        }.bind(this));
+            _newLevel.call(self, gameContainer);
+        });
     };
+
+    function _newLevel(gameContainer) {
+        var oldPlayer = this._player;
+        var newPlayer = _createPlayer();
+        this._entitySubsystem.addEntity(newPlayer);
+        if (oldPlayer) {
+            this._entitySubsystem.removeEntity(oldPlayer);
+        }
+        this._player = newPlayer;
+    }
 
     playersubsystem.prototype.render = function () {
     };

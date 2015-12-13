@@ -22,8 +22,8 @@ describe('EntitySubsystem', function () {
     });
 
     it('should update entities', function () {
-        var stubEntity1 = sinon.stub(new Entity());
-        var stubEntity2 = sinon.stub(new Entity());
+        var stubEntity1 = spies.createStubInstance(Entity);
+        var stubEntity2 = spies.createStubInstance(Entity);
 
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
@@ -32,24 +32,37 @@ describe('EntitySubsystem', function () {
         mockContainer.delta = expectedDelta;
         entitySubsystem.update(mockContainer);
 
-        assert.equal(expectedDelta, stubEntity1.update.firstCall.args[0]);
-        assert.equal(expectedDelta, stubEntity2.update.firstCall.args[0]);
-
+        verify(stubEntity1.update).wasCalledWith(expectedDelta);
+        verify(stubEntity2.update).wasCalledWith(expectedDelta);
     });
 
+    it('should remove entities', function () {
+        var stubEntity = spies.createStubInstance(Entity);
+
+        entitySubsystem.addEntity(stubEntity);
+        entitySubsystem.removeEntity(stubEntity);
+
+        entitySubsystem.update(10);
+        entitySubsystem.render({});
+
+        verify(stubEntity.update).wasNotCalled();
+        verify(stubEntity.render).wasNotCalled();
+    });
+
+
     it('should render entities', function () {
-        var stubEntity1 = sinon.stub(new Entity());
-        var stubEntity2 = sinon.stub(new Entity());
+        var stubEntity1 = spies.createStubInstance(Entity);
+        var stubEntity2 = spies.createStubInstance(Entity);
 
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
 
-        var renderSpy = sinon.spy();
+        var renderSpy = spies.create('renderer');
         entitySubsystem.render(renderSpy);
 
-        assert.isFalse(renderSpy.called);
-        assert.equal(renderSpy, stubEntity1.render.firstCall.args[0]);
-        assert.equal(renderSpy, stubEntity2.render.firstCall.args[0]);
+        verify(renderSpy).wasNotCalled();
+        verify(stubEntity1.render).wasCalledWith(renderSpy);
+        verify(stubEntity2.render).wasCalledWith(renderSpy);
 
 
     });

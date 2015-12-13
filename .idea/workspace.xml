@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/engine/GameInput.js" afterPath="$PROJECT_DIR$/src/engine/GameInput.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/engine/GameInput.test.js" afterPath="$PROJECT_DIR$/test/engine/GameInput.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" afterPath="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" afterPath="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
     </list>
     <ignored path="SpaceRocks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,25 +28,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PlayerSubsystem.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PlayerSubsystem.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.42546245">
+              <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
               <folding>
                 <element signature="e#0#41#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Entity.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Entity.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
-              <folding>
-                <element signature="e#0#42#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -55,7 +44,7 @@
         <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
+              <caret line="70" column="66" selection-start-line="70" selection-start-column="66" selection-end-line="70" selection-end-column="66" />
               <folding>
                 <element signature="e#0#41#0" expanded="false" />
               </folding>
@@ -63,32 +52,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.153846">
-              <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameInput.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/GameInput.js">
+      <file leaf-file-name="EntitySubsystem.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
-              <folding />
+              <caret line="34" column="43" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#42#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameInput.test.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/engine/GameInput.test.js">
+      <file leaf-file-name="EntitySubsystem.test.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36996734">
-              <caret line="50" column="6" selection-start-line="50" selection-start-column="6" selection-end-line="50" selection-end-column="6" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#42#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -143,7 +126,6 @@
         <option value="$PROJECT_DIR$/test/subsystems/levels/LevelManager.test.js" />
         <option value="$PROJECT_DIR$/test/subsystems/LevelManager.test.js" />
         <option value="$PROJECT_DIR$/src/subsystems/LevelManager.js" />
-        <option value="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
         <option value="$PROJECT_DIR$/test/exports.test.js" />
         <option value="$PROJECT_DIR$/src/index.html" />
         <option value="$PROJECT_DIR$/src/exports.js" />
@@ -156,15 +138,16 @@
         <option value="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
         <option value="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
         <option value="$PROJECT_DIR$/src/engine/GameEventHandler.js" />
-        <option value="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Shape.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Shape.test.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Entity.js" />
-        <option value="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
-        <option value="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
         <option value="$PROJECT_DIR$/src/engine/GameInput.js" />
         <option value="$PROJECT_DIR$/test/engine/GameInput.test.js" />
+        <option value="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
+        <option value="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
+        <option value="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
+        <option value="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
       </list>
     </option>
   </component>
@@ -520,12 +503,12 @@
       <updated>1448810826873</updated>
       <workItem from="1448810828619" duration="21861000" />
       <workItem from="1449338292088" duration="75197000" />
-      <workItem from="1450042442476" duration="1965000" />
+      <workItem from="1450042442476" duration="2843000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99023000" />
+    <option name="totallyTimeSpent" value="99901000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -538,7 +521,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.3189018" sideWeight="0.77135414" order="2" side_tool="false" content_ui="tabs" x="1934" y="18" width="902" height="424" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.3189018" sideWeight="0.77135414" order="2" side_tool="false" content_ui="tabs" x="1935" y="601" width="902" height="424" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16302083" sideWeight="0.32312566" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -727,13 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4807198">
-          <caret line="32" column="44" selection-start-line="32" selection-start-column="44" selection-end-line="32" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SpaceRocks.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -763,13 +739,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Shape.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -781,16 +750,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="23" column="76" selection-start-line="23" selection-start-column="76" selection-end-line="23" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -819,16 +779,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.153846">
@@ -850,6 +800,46 @@
         <state vertical-scroll-proportion="0.36996734">
           <caret line="50" column="6" selection-start-line="50" selection-start-column="6" selection-end-line="50" selection-end-column="6" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="43" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="70" column="66" selection-start-line="70" selection-start-column="66" selection-end-line="70" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42546245">
+          <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -57,6 +57,19 @@ describe('PlayerSubsystem', function () {
             checkPoint(new Point(0, 0), actualEntity.velocity);
             assert.equal(0, actualEntity.rotation);
             checkShape(expectedPlayerShape, actualEntity._shape);
+        });
+
+        it('should remove previous player entity', function(){
+            var event = new GameEvent('new-level', {});
+            newLevelSubscriber(event);
+            newLevelSubscriber(event);
+
+            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
+            var firstPlayer = mockEntitySubsystem.addEntity.firstCall.args[0];
+            var secondPlayer = mockEntitySubsystem.addEntity.secondCall.args[0];
+
+            verify(mockEntitySubsystem.removeEntity).wasCalledOnce();
+            verify(mockEntitySubsystem.removeEntity).wasCalledWith(firstPlayer);
 
         });
     });

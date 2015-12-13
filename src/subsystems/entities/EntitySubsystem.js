@@ -30,5 +30,10 @@ module.exports = (function () {
         Debug.log('Entity added. Total: ' + this._entities.length);
     };
 
+    entitySubsystem.prototype.removeEntity = function(entityToRemove){
+        var position = this._entities.indexOf(entityToRemove);
+        this._entities.splice(position, 1);
+    }
+
     return entitySubsystem;
 })();
