@@ -1,6 +1,9 @@
 /**
  * Created by omnic on 11/29/2015.
  */
+
+var Debug = require('../../Debug');
+
 module.exports = (function () {
     var entitySubsystem = function () {
         this._entities = [];
@@ -24,6 +27,7 @@ module.exports = (function () {
 
     entitySubsystem.prototype.addEntity = function (newEntity) {
         this._entities.push(newEntity);
+        Debug.log('Entity added. Total: ' + this._entities.length);
     };
 
     return entitySubsystem;

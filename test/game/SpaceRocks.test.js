@@ -64,7 +64,7 @@ describe('SpaceRocks', function () {
         verify(mockedModules.LevelManager).wasCalledWithNew();
         verify(mockedModules.PlayerSubsystem).wasCalledWithNew();
         verify(mockedModules.EntitySubsystem).wasCalledWithNew();
- 
+
         verify(mockedModules.PlayerSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
     });
 

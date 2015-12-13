@@ -46,7 +46,6 @@ module.exports = (function () {
     function _finishLoading() {
         var startEvent = new GameEvent('engine-start', null);
         this._eventHandler.addEvent(startEvent);
-        this._eventHandler.process();
     }
 
     function _getCanvas(canvasId) {
@@ -66,8 +65,9 @@ module.exports = (function () {
     function cycle() {
         var interval = this._delta.getInterval();
         var gameContainer = _createGameContainer.call(this, interval);
-        this._subsystemManager.update(gameContainer);
 
+        this._eventHandler.process();
+        this._subsystemManager.update(gameContainer);
         this._renderer.clearCanvas('#000000');
         this._subsystemManager.render(this._renderer);
 

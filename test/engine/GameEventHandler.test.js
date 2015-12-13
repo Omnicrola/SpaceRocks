@@ -74,6 +74,27 @@ describe('GameEventHandler', function () {
         verify(wrongSubscriberSpy).wasNotCalled();
     });
 
+    it('should allow events to be added while processing', function () {
+        var gameEvent1 = new GameEvent('type1', 'no data');
+        var gameEvent2 = new GameEvent('type2', 'no data');
+
+        var gameEventHandler = new GameEventHandler();
+
+        var subscriber1 = function () {
+            gameEventHandler.addEvent(gameEvent2);
+        };
+        var subscriber2 = spies.create('subscriber2');
+
+        gameEventHandler.addEvent(gameEvent1);
+        gameEventHandler.subscribe('type1', subscriber1);
+        gameEventHandler.subscribe('type2', subscriber2);
+
+        gameEventHandler.process();
+        verify(subscriber2).wasNotCalled();
+        gameEventHandler.process();
+        verify(subscriber2).wasCalledOnce();
+    });
+
     function invokeOutOfContext(method, params) {
         method.apply({}, params);
     }

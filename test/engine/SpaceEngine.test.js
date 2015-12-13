@@ -180,10 +180,9 @@ describe('GameEngine', function () {
             var spaceEngine = createSpaceEngineForTesting(options);
 
             verify(expectedEmit).wasCalledOnce();
-            verify(expectedProcess).wasCalledAfter(stubSubsystemManager.addSubsystem);
+            verify(expectedProcess).wasNotCalled();
             var actualEvent = expectedEmit.firstCall.args[0];
 
-            //assert.isTrue(actualEvent instanceof GameEvent);
             assert.equal('engine-start', actualEvent.type);
             assert.equal(null, actualEvent.data);
         });
@@ -211,6 +210,7 @@ describe('GameEngine', function () {
         var spaceEngine = createSpaceEngineForTesting();
         callCycleFunction(spaceEngine);
         verify([
+            mockedModules.stubs.GameEventHandler.process,
             mockedModules.stubs.SubsystemManager.update,
             mockedModules.stubs.Renderer.clearCanvas,
             mockedModules.stubs.SubsystemManager.render

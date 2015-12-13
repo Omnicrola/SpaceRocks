@@ -27,7 +27,7 @@ describe('GameInput', function () {
         assert.isFunction(addListenerSpy.secondCall.args[1]);
     });
 
-    it('should block default key actions', function(){
+    it('should block default key actions', function () {
         var gameInput = new GameInput();
 
         var upEvent = createKeyEvent('keyup', randomKey());
@@ -38,7 +38,6 @@ describe('GameInput', function () {
 
         verify(upEvent.preventDefault).wasCalled();
         verify(downEvent.preventDefault).wasCalled();
-
 
 
     });
@@ -54,10 +53,10 @@ describe('GameInput', function () {
         sendKeyDownEvents([key1, key2, key3, key4]);
         sendKeyUpEvents([key1, key2, key3]);
 
-        assert.isFalse(gameInput.isPressed(key1));
-        assert.isFalse(gameInput.isPressed(key2));
-        assert.isFalse(gameInput.isPressed(key3));
-        assert.isTrue(gameInput.isPressed(key4));
+        assert.isFalse(gameInput.isPressed(key1), key1 + ' should not be pressed');
+        assert.isFalse(gameInput.isPressed(key2), key2 + ' should not be pressed');
+        assert.isFalse(gameInput.isPressed(key3), key3 + ' should not be pressed');
+        assert.isTrue(gameInput.isPressed(key4), key4 + ' should be pressed');
 
     });
 
@@ -120,7 +119,7 @@ describe('GameInput', function () {
         return {
             type: type,
             keyCode: keycode,
-            preventDefault : spies.create('preventDefault')
+            preventDefault: spies.create('preventDefault')
         }
     }
 
