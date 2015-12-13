@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\src\subsystems\entities\Player.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Projects\SpaceRocks\test\subsystems\entities\Player.test.js" afterPath="" />
-      <change type="MOVED" beforePath="C:\Projects\SpaceRocks\src\subsystems\levels\LevelManager.js" afterPath="$PROJECT_DIR$/src/subsystems/LevelManager.js" />
-      <change type="MOVED" beforePath="C:\Projects\SpaceRocks\test\subsystems\levels\LevelManager.test.js" afterPath="$PROJECT_DIR$/test/subsystems/LevelManager.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/Entity.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/Entity.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" afterPath="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" afterPath="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
     </list>
     <ignored path="SpaceRocks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PlayerSubsystem.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PlayerSubsystem.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.562982">
+              <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
               <folding>
                 <element signature="e#0#41#0" expanded="false" />
               </folding>
@@ -47,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PlayerSubsystem.test.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PlayerSubsystem.test.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6066838">
-              <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="68" column="9" selection-start-line="63" selection-start-column="25" selection-end-line="68" selection-end-column="9" />
               <folding>
                 <element signature="e#0#41#0" expanded="false" />
               </folding>
@@ -127,10 +118,10 @@
         <option value="$PROJECT_DIR$/src/subsystems/LevelManager.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/EntitySubsystem.test.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
-        <option value="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
         <option value="$PROJECT_DIR$/test/subsystems/entities/Entity.test.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Entity.js" />
         <option value="$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js" />
+        <option value="$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js" />
       </list>
     </option>
   </component>
@@ -567,12 +558,12 @@
       <option name="number" value="Default" />
       <updated>1448810826873</updated>
       <workItem from="1448810828619" duration="21861000" />
-      <workItem from="1449338292088" duration="70310000" />
+      <workItem from="1449338292088" duration="70684000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92171000" />
+    <option name="totallyTimeSpent" value="92545000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -641,16 +632,6 @@
           <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Shape.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37317073">
-          <caret line="11" column="38" selection-start-line="11" selection-start-column="38" selection-end-line="11" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1051,6 +1032,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Entity.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8303342">
+          <caret line="29" column="26" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Shape.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37532133">
+          <caret line="11" column="38" selection-start-line="11" selection-start-column="38" selection-end-line="11" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#40#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Entity.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.34961438">
@@ -1061,28 +1060,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
+    <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+          <caret line="68" column="9" selection-start-line="63" selection-start-column="25" selection-end-line="68" selection-end-column="9" />
           <folding>
             <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/subsystems/entities/Entity.test.js">
+    <entry file="file://$PROJECT_DIR$/src/subsystems/PlayerSubsystem.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8303342">
-          <caret line="29" column="26" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/subsystems/PlayerSubsystem.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6066838">
-          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.562982">
+          <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
           <folding>
             <element signature="e#0#41#0" expanded="false" />
           </folding>

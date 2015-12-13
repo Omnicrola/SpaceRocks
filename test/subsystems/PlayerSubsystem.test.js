@@ -10,17 +10,20 @@ var GameEvent = require('../../src/engine/GameEvent');
 var PlayerSubsystem = require('../../src/subsystems/PlayerSubsystem');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var Entity = require('../../src/subsystems/entities/Entity');
+var Shape = require('../../src/subsystems/entities/Shape');
 var Point = require('../../src/subsystems/entities/Point');
 
 describe('PlayerSubsystem', function () {
     var playerSubsystem;
     var mockContainer;
     var mockEntitySubsystem;
+    var expectedPlayerShape;
 
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem, 'EntitySubsystem');
         playerSubsystem = new PlayerSubsystem(mockEntitySubsystem);
         mockContainer = containerGenerator.create();
+        expectedPlayerShape = createPlayerShape();
     });
 
     it('should implement subsystem interface', function () {
@@ -50,10 +53,19 @@ describe('PlayerSubsystem', function () {
             verify(mockEntitySubsystem.addEntity).wasCalledOnce();
             var actualEntity = mockEntitySubsystem.addEntity.firstCall.args[0];
             assert.isTrue(actualEntity instanceof Entity);
-            assert.deepEqual(new Point(0,0), actualEntity.position);
-            assert.deepEqual(new Point(0,0), actualEntity.velocity);
+            assert.deepEqual(new Point(0, 0), actualEntity.position);
+            assert.deepEqual(new Point(0, 0), actualEntity.velocity);
             assert.equal(0, actualEntity.rotation);
+            assert.deepEqual(expectedPlayerShape, actualEntity._shape);
 
         });
     });
+    function createPlayerShape() {
+        return new Shape([
+            new Point(-5, -5),
+            new Point(0, -5),
+            new Point(5, -5),
+            new Point(0, 0),
+        ]);
+    }
 });
