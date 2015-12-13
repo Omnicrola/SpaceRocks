@@ -7,7 +7,9 @@ var spies = require('../TestSpies');
 
 describe('GameInput', function () {
     var addListenerSpy;
+    var blockedKeys;
     beforeEach(function () {
+        blockedKeys = [37, 38, 39, 40, 32];
         addListenerSpy = spies.replace(document, 'addEventListener');
     });
 
@@ -30,17 +32,53 @@ describe('GameInput', function () {
     it('should block default key actions', function () {
         var gameInput = new GameInput();
 
-        var upEvent = createKeyEvent('keyup', randomKey());
-        var downEvent = createKeyEvent('keyup', randomKey());
+        blockedKeys.forEach(function (keyCode) {
+            checkKeyIsBlocked(keyCode);
+        });
+    });
 
-        getKeyUpFunction()(upEvent);
+    function checkKeyIsBlocked(keyCode) {
+        var upEvent = createKeyEvent('keyup', keyCode);
+        var downEvent = createKeyEvent('keydown', keyCode);
+
         getKeyDownFunction()(downEvent);
+        getKeyUpFunction()(upEvent);
 
         verify(upEvent.preventDefault).wasCalled();
         verify(downEvent.preventDefault).wasCalled();
+    }
+
+    it('should not block unnecessary keys', function () {
+        var gameInput = new GameInput();
+
+        var keysNotBlocked = generateKeycodesForUnblockedKeys();
+        keysNotBlocked.forEach(function (keyCode) {
+            checkKeyIsNotBlocked(keyCode);
+        });
 
 
     });
+
+    function generateKeycodesForUnblockedKeys() {
+        var keysNotBlocked = [];
+        for (var i = 1; i <= 255; i++) {
+            if (blockedKeys.indexOf(i) === -1) {
+                keysNotBlocked.push(i);
+            }
+        }
+        return keysNotBlocked;
+    }
+
+    function checkKeyIsNotBlocked(keyCode) {
+        var upEvent = createKeyEvent('keyup', keyCode);
+        var downEvent = createKeyEvent('keydown', keyCode);
+
+        getKeyDownFunction()(downEvent);
+        getKeyUpFunction()(upEvent);
+
+        assert.isFalse(upEvent.preventDefault.called, 'Keycode ' + keyCode + ' should not be blocked.');
+        assert.isFalse(downEvent.preventDefault.called, 'Keycode ' + keyCode + ' should not be blocked.');
+    }
 
     it('should record when keys are up', function () {
         var gameInput = new GameInput();

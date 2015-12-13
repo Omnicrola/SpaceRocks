@@ -18,12 +18,18 @@ module.exports = (function () {
 
     function _keyUp(event) {
         this._keyStates[event.keyCode] = false;
-        event.preventDefault();
+        supressGameKeys(event);
     }
 
     function _keyDown(event) {
         this._keyStates[event.keyCode] = true;
-        event.preventDefault();
+        supressGameKeys(event);
+    }
+
+    function supressGameKeys(event){
+        if (blockedKeys.indexOf(event.keyCode) !== -1) {
+            event.preventDefault();
+        }
     }
 
     inputWrapper.prototype.isPressed = function (keyCode) {
@@ -47,6 +53,7 @@ module.exports = (function () {
             value: 32
         }
     });
+    var blockedKeys = [37, 38, 39, 40, 32];
 
     return inputWrapper;
 })();
