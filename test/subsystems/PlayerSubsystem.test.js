@@ -53,13 +53,26 @@ describe('PlayerSubsystem', function () {
             verify(mockEntitySubsystem.addEntity).wasCalledOnce();
             var actualEntity = mockEntitySubsystem.addEntity.firstCall.args[0];
             assert.isTrue(actualEntity instanceof Entity);
-            assert.deepEqual(new Point(0, 0), actualEntity.position);
-            assert.deepEqual(new Point(0, 0), actualEntity.velocity);
+            checkPoint(new Point(200, 200), actualEntity.position);
+            checkPoint(new Point(0, 0), actualEntity.velocity);
             assert.equal(0, actualEntity.rotation);
-            assert.deepEqual(expectedPlayerShape, actualEntity._shape);
+            checkShape(expectedPlayerShape, actualEntity._shape);
 
         });
     });
+    function checkShape(expectedShape, actualShape) {
+        assert.isTrue(actualShape instanceof Shape);
+        assert.equal(expectedShape._points.length, actualShape._points.length, 'Should have same number of points');
+        for (var i = 0; i < expectedShape._points.length; i++) {
+            checkPoint(expectedShape._points[i], actualShape._points[i]);
+        }
+    }
+
+    function checkPoint(expectedPoint, actualPoint) {
+        assert.equal(expectedPoint.x, actualPoint.x);
+        assert.equal(expectedPoint.y, actualPoint.y);
+    }
+
     function createPlayerShape() {
         return new Shape([
             new Point(-5, -5),

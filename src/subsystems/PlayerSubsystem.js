@@ -30,7 +30,9 @@ module.exports = (function () {
             new Point(5, -5),
             new Point(0, 0),
         ]);
-        return new Entity(playerShape);
+        var player = new Entity(playerShape);
+        player.position = new Point(200, 200);
+        return player;
     }
 
     return playersubsystem;

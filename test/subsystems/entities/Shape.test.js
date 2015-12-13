@@ -21,15 +21,16 @@ describe('Shape', function () {
             new Point(6, 2),
             new Point(7, 1),
         ];
+        var offset = new Point(100, 200);
         var shape = new Shape(points);
 
-        shape.render(stubRenderer);
-        verify(stubRenderer.drawLine).wasCalledWith(2, 3, 6, 2);
-        verify(stubRenderer.drawLine).wasCalledWith(6, 2, 7, 1);
-        verify(stubRenderer.drawLine).wasCalledWith(7, 1, 2, 3);
+        shape.render(stubRenderer, offset);
+        verify(stubRenderer.drawLine).wasCalledWith(102, 203, 106, 202);
+        verify(stubRenderer.drawLine).wasCalledWith(106, 202, 107, 201);
+        verify(stubRenderer.drawLine).wasCalledWith(107, 201, 102, 203);
     });
 
-    it('should have a white color by default', function(){
+    it('should have a white color by default', function () {
         var points = [new Point(0, 0), new Point(0, 0)];
 
         var shape = new Shape(points);
@@ -42,7 +43,7 @@ describe('Shape', function () {
 
         var shape = new Shape(points);
         shape.color = expectedColor;
-        shape.render(stubRenderer);
+        shape.render(stubRenderer, new Point(0, 0));
 
         verify(stubRenderer.setColor).wasCalledWith(expectedColor);
         verify([
