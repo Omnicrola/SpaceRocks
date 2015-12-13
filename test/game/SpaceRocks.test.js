@@ -6,19 +6,38 @@ var verify = require('../TestVerification');
 var spies = require('../TestSpies');
 
 var SpaceRocks = require('../../src/game/SpaceRocks');
-var SpaceEngine = require('../../src/engine/SpaceEngine');
-
+var actualModules = {
+    SpaceEngine: require('../../src/engine/SpaceEngine'),
+    LevelManager: require('../../src/subsystems/LevelManager'),
+    PlayerSubsystem: require('../../src/subsystems/PlayerSubsystem'),
+    EntitySubsystem: require('../../src/subsystems/entities/EntitySubsystem'),
+};
 
 describe('SpaceRocks', function () {
-    var mockEngineModule;
-    var stubEngine;
+    var mockedModules = {
+        stubs: {}
+    };
+
+    function mockModule(name) {
+        var mockModule = spies.createStub(name + 'Module');
+        mockedModules[name] = mockModule;
+        var moduleInstance = spies.createStubInstance(actualModules[name], name);
+        mockModule.returns(moduleInstance);
+        mockedModules.stubs[name] = moduleInstance;
+        return mockModule;
+    }
+
     beforeEach(function () {
-        mockEngineModule = spies.createStub('SpaceEngineModule');
-        stubEngine = spies.createStubInstance(SpaceEngine, 'SpaceEngine');
-        mockEngineModule.returns(stubEngine);
+        var levelManager = mockModule('LevelManager');
+        var playerSubsystem = mockModule('PlayerSubsystem');
+        var entitySubsystem = mockModule('EntitySubsystem');
+        var spaceEngine = mockModule('SpaceEngine');
 
         SpaceRocks = proxy('../../src/game/SpaceRocks', {
-            '../engine/SpaceEngine': mockEngineModule,
+            '../engine/SpaceEngine': spaceEngine,
+            '../subsystems/LevelManager': levelManager,
+            '../subsystems/PlayerSubsystem': playerSubsystem,
+            '../subsystems/entities/EntitySubsystem': entitySubsystem,
         });
 
     });
@@ -27,15 +46,30 @@ describe('SpaceRocks', function () {
         var expectedCanvasId = 'my-test-id';
         var expectedConfig = {
             audioPath: '',
-            canvas: expectedCanvasId
+            canvas: expectedCanvasId,
+            subsystems: [
+                mockedModules.stubs.LevelManager,
+                mockedModules.stubs.PlayerSubsystem,
+                mockedModules.stubs.EntitySubsystem,
+            ]
         };
         var spaceRocks = new SpaceRocks(expectedCanvasId);
-        verify(mockEngineModule).wasCalledWithNew();
-        verify(mockEngineModule).wasCalledWithConfig(0, expectedConfig);
+        verify(mockedModules.SpaceEngine).wasCalledWithNew();
+        verify(mockedModules.SpaceEngine).wasCalledWithConfig(0, expectedConfig);
     });
 
-    it('will call start on  engine', function(){
+    it('will initialize subsystems correctly', function () {
+        var spaceRocks = new SpaceRocks('mycanvas');
+
+        verify(mockedModules.LevelManager).wasCalledWithNew();
+        verify(mockedModules.PlayerSubsystem).wasCalledWithNew();
+        verify(mockedModules.EntitySubsystem).wasCalledWithNew();
+ 
+        verify(mockedModules.PlayerSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
+    });
+
+    it('will call start on  engine', function () {
         var spaceRocks = new SpaceRocks('');
-        verify(stubEngine.start).wasCalled();
+        verify(mockedModules.stubs.SpaceEngine.start).wasCalled();
     });
 });

@@ -10,7 +10,7 @@ module.exports = (function () {
         this.addEvent = _addEvent.bind(this);
     };
 
-    function _addEvent (event) {
+    function _addEvent(event) {
         this._pendingEvents.push(event);
     };
 
@@ -24,9 +24,12 @@ module.exports = (function () {
     function _process() {
         var self = this;
         self._pendingEvents.forEach(function (event) {
-            self._subscribers[event.type].forEach(function (subscriber) {
-                subscriber(event);
-            });
+            var subscribers = self._subscribers[event.type];
+            if (subscribers) {
+                subscribers.forEach(function (subscriber) {
+                    subscriber(event);
+                });
+            }
         });
         self._pendingEvents = [];
     };

@@ -25,8 +25,8 @@ module.exports = (function () {
         });
         if (callsThatMatch.length == 0) {
             var expectedArgs = '(' + expectedArguments.join(', ') + ')';
-            var actualArgs = allCalls.map(function (actualCall) {
-                return '(' + actualCall.args.join(', ') + ')'
+            var actualArgs = allCalls.map(function (actualCall, i) {
+                return i + ': (' + actualCall.args.join(', ') + ')'
             }).join('\n');
             throw new Error(spyName(sinonSpy) + ' was not called with expected arguments.\n' +
                 'Expected : ' + expectedArgs + '\n' +

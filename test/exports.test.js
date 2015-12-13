@@ -5,20 +5,20 @@
 var proxy = require('proxyquireify')(require);
 
 describe('Global Exports', function () {
-    it('should expose GameEngine globally', sinon.test(function () {
+    it('should expose SpaceRocks globally', sinon.test(function () {
         var expectedModule = {module: 'spaaaaaaaace'};
 
-        delete window.SpaceEngine;
-        assert.isUndefined(window.SpaceEngine);
+        delete window.SpaceRocks;
+        assert.isUndefined(window.SpaceRocks);
 
         var gameExports = proxy('../src/exports', {
-            './engine/SpaceEngine': expectedModule
+            './game/SpaceRocks': expectedModule
         });
 
-        require('../src/exports');
+        //require('../src/exports');
 
-        assert.isDefined(window.SpaceEngine);
-        assert.equal(expectedModule, window.SpaceEngine);
+        assert.isDefined(window.SpaceRocks);
+        assert.equal(expectedModule, window.SpaceRocks);
 
     }));
 });
