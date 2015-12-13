@@ -7,6 +7,7 @@ var interface = require('../TestInterfaces');
 var containerGenerator = require('../mocks/GameContainer');
 
 var GameEvent = require('../../src/engine/GameEvent');
+var GameInput = require('../../src/engine/GameInput');
 var PlayerSubsystem = require('../../src/subsystems/PlayerSubsystem');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var Entity = require('../../src/subsystems/entities/Entity');
@@ -18,60 +19,130 @@ describe('PlayerSubsystem', function () {
     var mockContainer;
     var mockEntitySubsystem;
     var expectedPlayerShape;
+    var newLevelSubscriber;
+
+    var ROTATION_SPEED = 0.01;
+    var THRUST_INCREMENT = 0.01;
 
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem, 'EntitySubsystem');
         playerSubsystem = new PlayerSubsystem(mockEntitySubsystem);
         mockContainer = containerGenerator.create();
         expectedPlayerShape = createPlayerShape();
+
+        playerSubsystem.initialize(mockContainer);
+        newLevelSubscriber = mockContainer.events.subscribe.firstCall.args[1];
     });
 
     it('should implement subsystem interface', function () {
         interface.assert.subsystems(playerSubsystem);
     });
 
+    describe('handling input', function () {
+        var playerEntity;
+        var gameContainerForKeys;
+
+        beforeEach(function () {
+            newLevelSubscriber(new GameEvent('new-level'));
+            playerEntity = mockEntitySubsystem.addEntity.firstCall.args[0];
+            gameContainerForKeys = containerGenerator.create();
+        });
+
+        it('should rotate left', function () {
+            assert.equal(0, playerEntity.rotation);
+
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(gameContainerForKeys.input.LEFT)
+                .returns(true);
+            playerSubsystem.update(gameContainerForKeys);
+
+            assert.equal(ROTATION_SPEED, playerEntity.rotation);
+            assert.equal(0, playerEntity.velocity.x);
+            assert.equal(0, playerEntity.velocity.y);
+
+        });
+
+        it('should rotate right', function () {
+            assert.equal(0, playerEntity.rotation);
+
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(gameContainerForKeys.input.RIGHT)
+                .returns(true);
+            playerSubsystem.update(gameContainerForKeys);
+
+            assert.equal(ROTATION_SPEED * -1, playerEntity.rotation);
+            assert.equal(0, playerEntity.velocity.x);
+            assert.equal(0, playerEntity.velocity.y);
+
+        });
+
+        it('should thrust forward', function () {
+            assert.equal(0, playerEntity.rotation);
+
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(gameContainerForKeys.input.UP)
+                .returns(true);
+            playerSubsystem.update(gameContainerForKeys);
+
+            assert.equal(0, playerEntity.rotation);
+            assert.equal(0, playerEntity.velocity.x);
+            assert.equal(THRUST_INCREMENT * -1, playerEntity.velocity.y);
+
+        });
+
+        it('should thrust backward', function () {
+            assert.equal(0, playerEntity.rotation);
+
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(gameContainerForKeys.input.DOWN)
+                .returns(true);
+            playerSubsystem.update(gameContainerForKeys);
+
+            assert.equal(0, playerEntity.rotation);
+            assert.equal(0, playerEntity.velocity.x);
+            assert.equal(THRUST_INCREMENT, playerEntity.velocity.y);
+
+        });
+    });
+
     it('should subscribe to "new-level" events', function () {
-        playerSubsystem.initialize(mockContainer);
 
         var subscribeSpy = mockContainer.events.subscribe;
         verify(subscribeSpy).wasCalledOnce();
         assert.equal('new-level', subscribeSpy.firstCall.args[0]);
     });
 
-    describe('reacting to "new-level" events', function () {
-        var newLevelSubscriber;
-        beforeEach(function () {
-            playerSubsystem.initialize(mockContainer);
-            newLevelSubscriber = mockContainer.events.subscribe.firstCall.args[1];
-        });
 
-        it('should respawn the player', function () {
-            verify(mockEntitySubsystem.addEntity).wasNotCalled();
-            var event = new GameEvent('new-level', {});
+    it('should respawn the player', function () {
+        verify(mockEntitySubsystem.addEntity).wasNotCalled();
+        var event = new GameEvent('new-level', {});
 
-            newLevelSubscriber(event);
-            verify(mockEntitySubsystem.addEntity).wasCalledOnce();
-            var actualEntity = mockEntitySubsystem.addEntity.firstCall.args[0];
-            assert.isTrue(actualEntity instanceof Entity);
-            checkPoint(new Point(200, 200), actualEntity.position);
-            checkPoint(new Point(0, 0), actualEntity.velocity);
-            assert.equal(0, actualEntity.rotation);
-            checkShape(expectedPlayerShape, actualEntity._shape);
-        });
+        newLevelSubscriber(event);
+        verify(mockEntitySubsystem.addEntity).wasCalledOnce();
+        var actualEntity = mockEntitySubsystem.addEntity.firstCall.args[0];
+        assert.isTrue(actualEntity instanceof Entity);
+        checkPoint(new Point(200, 200), actualEntity.position);
+        checkPoint(new Point(0, 0), actualEntity.velocity);
+        assert.equal(0, actualEntity.rotation);
+        checkShape(expectedPlayerShape, actualEntity._shape);
+    });
 
-        it('should remove previous player entity', function(){
-            var event = new GameEvent('new-level', {});
-            newLevelSubscriber(event);
-            newLevelSubscriber(event);
+    it('should remove previous player entity', function () {
+        var event = new GameEvent('new-level', {});
+        newLevelSubscriber(event);
+        newLevelSubscriber(event);
 
-            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
-            var firstPlayer = mockEntitySubsystem.addEntity.firstCall.args[0];
-            var secondPlayer = mockEntitySubsystem.addEntity.secondCall.args[0];
+        verify(mockEntitySubsystem.addEntity).wasCalledTwice();
+        var firstPlayer = mockEntitySubsystem.addEntity.firstCall.args[0];
+        var secondPlayer = mockEntitySubsystem.addEntity.secondCall.args[0];
 
-            verify(mockEntitySubsystem.removeEntity).wasCalledOnce();
-            verify(mockEntitySubsystem.removeEntity).wasCalledWith(firstPlayer);
+        verify(mockEntitySubsystem.removeEntity).wasCalledOnce();
+        verify(mockEntitySubsystem.removeEntity).wasCalledWith(firstPlayer);
 
-        });
     });
     function checkShape(expectedShape, actualShape) {
         assert.isTrue(actualShape instanceof Shape);

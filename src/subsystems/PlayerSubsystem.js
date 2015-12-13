@@ -4,20 +4,23 @@
 var Entity = require('./entities/Entity');
 var Shape = require('./entities/Shape');
 var Point = require('./entities/Point');
+var Debug = require('../Debug');
 
 module.exports = (function () {
+
+    var ROTATION_SPEED = 0.01;
+    var ACCELLERATION = 0.01;
+
     var playersubsystem = function (entitySubsystem) {
         this._entitySubsystem = entitySubsystem;
     };
 
     playersubsystem.prototype.initialize = function (gameContainer) {
         var self = this;
-        gameContainer.events.subscribe('new-level', function (event) {
-            _newLevel.call(self, gameContainer);
-        });
+        gameContainer.events.subscribe('new-level', _newLevel.bind(self));
     };
 
-    function _newLevel(gameContainer) {
+    function _newLevel() {
         var oldPlayer = this._player;
         var newPlayer = _createPlayer();
         this._entitySubsystem.addEntity(newPlayer);
@@ -30,7 +33,28 @@ module.exports = (function () {
     playersubsystem.prototype.render = function () {
     };
 
-    playersubsystem.prototype.update = function () {
+    playersubsystem.prototype.update = function (gameContainer) {
+        var input = gameContainer.input;
+        if (input.isPressed(input.LEFT)) {
+            this._player.rotation += ROTATION_SPEED;
+            Debug.log('Input > turn left');
+        }
+        if (input.isPressed(input.RIGHT)) {
+            this._player.rotation -= ROTATION_SPEED;
+            Debug.log('Input > turn right');
+        }
+        if (input.isPressed(input.UP)) {
+            var velocity = this._player.velocity;
+            var newY = velocity.y + (ACCELLERATION * -1);
+            this._player.velocity = velocity.translate({x: velocity.x, y: newY});
+            Debug.log('Input > accellerate');
+        }
+        if (input.isPressed(input.DOWN)) {
+            var velocity = this._player.velocity;
+            var newY = velocity.y + ACCELLERATION;
+            this._player.velocity = velocity.translate({x: velocity.x, y: newY});
+            Debug.log('Input > decellerate');
+        }
     };
 
     function _createPlayer() {
