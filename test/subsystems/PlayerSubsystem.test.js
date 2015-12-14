@@ -96,6 +96,12 @@ describe('PlayerSubsystem', function () {
             assert.equal(expectedVX, playerEntity.velocity.x);
             assert.equal(expectedVY, playerEntity.velocity.y);
 
+            verify(gameContainerForKeys.events.emit).wasCalledOnce();
+            var thrustEvent = gameContainerForKeys.events.emit.firstCall.args[0];
+            assert.equal('player-thrust', thrustEvent.type);
+            assert.equal(expectedVX, thrustEvent.data.x);
+            assert.equal(expectedVY, thrustEvent.data.y);
+
         });
 
         it('should thrust backward based on rotation', function () {
@@ -116,7 +122,16 @@ describe('PlayerSubsystem', function () {
             assert.equal(expectedVX, playerEntity.velocity.x);
             assert.equal(expectedVY, playerEntity.velocity.y);
 
+            verify(gameContainerForKeys.events.emit).wasCalledOnce();
+            var thrustEvent = gameContainerForKeys.events.emit.firstCall.args[0];
+            assert.equal('player-thrust', thrustEvent.type);
+            assert.equal(expectedVX, thrustEvent.data.x);
+            assert.equal(expectedVY, thrustEvent.data.y);
         });
+
+
+
+
     });
 
     it('should subscribe to "new-level" events', function () {

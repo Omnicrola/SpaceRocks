@@ -123,8 +123,8 @@ module.exports = (function () {
                 }
             },
             wasCalledExactly: function (times) {
-                if (singleSpy.timesCalled != times) {
-                    throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.timesCalled + ', expected ' + times);
+                if (singleSpy.callCount != times) {
+                    throw new Error(spyName(singleSpy) + ' was called ' + singleSpy.callCount + ', expected ' + times);
                 }
             },
             wasCalledWithNew: function () {

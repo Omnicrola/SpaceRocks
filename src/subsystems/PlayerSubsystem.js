@@ -4,6 +4,7 @@
 var Entity = require('./entities/Entity');
 var Shape = require('./entities/Shape');
 var Point = require('./entities/Point');
+var GameEvent = require('../engine/GameEvent');
 var Debug = require('../Debug');
 
 module.exports = (function () {
@@ -46,13 +47,15 @@ module.exports = (function () {
         if (input.isPressed(input.UP)) {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
-            this._player.velocity = velocity.translate(thrust);
+            var newVelocity = this._player.velocity = velocity.translate(thrust);
+            gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
         }
         if (input.isPressed(input.DOWN)) {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
             thrust = new Point(velocity.x - thrust.x, velocity.y - thrust.y);
-            this._player.velocity = thrust;
+            var newVelocity = this._player.velocity = thrust;
+            gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
         }
     };
 

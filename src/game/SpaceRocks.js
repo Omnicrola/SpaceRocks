@@ -9,7 +9,7 @@ var EntitySubsystem = require('../subsystems/entities/EntitySubsystem');
 
 module.exports = (function () {
     var spacerocks = function (canvasId) {
-    var subsystems = _createSubsystems();
+        var subsystems = _createSubsystems();
         new SpaceEngine({
             audioPath: '',
             canvas: canvasId,
@@ -17,9 +17,9 @@ module.exports = (function () {
         }).start();
     };
 
-    function _createSubsystems(){
-        var levelManager = new LevelManager();
+    function _createSubsystems() {
         var entitySubsystem = new EntitySubsystem();
+        var levelManager = new LevelManager(entitySubsystem);
         var playerSubsystem = new PlayerSubsystem(entitySubsystem);
         return [
             levelManager,
