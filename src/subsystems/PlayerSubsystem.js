@@ -8,7 +8,7 @@ var Debug = require('../Debug');
 
 module.exports = (function () {
 
-    var ROTATION_SPEED = 0.01;
+    var ROTATION_SPEED = 5.0;
     var ACCELLERATION = 0.125;
 
     var playersubsystem = function (entitySubsystem) {
@@ -36,31 +36,37 @@ module.exports = (function () {
     playersubsystem.prototype.update = function (gameContainer) {
         var input = gameContainer.input;
         if (input.isPressed(input.LEFT)) {
-            this._player.rotation += ROTATION_SPEED;
+            this._player.rotation -= ROTATION_SPEED;
             Debug.log('Input > turn left');
         }
         if (input.isPressed(input.RIGHT)) {
-            this._player.rotation -= ROTATION_SPEED;
+            this._player.rotation += ROTATION_SPEED;
             Debug.log('Input > turn right');
         }
         if (input.isPressed(input.UP)) {
             var velocity = this._player.velocity;
-            this._player.velocity = velocity.translate({x: velocity.x, y: ACCELLERATION * -1});
-            Debug.log('Input > accellerate ');
+            var thrust = _calculateThrust(this._player.rotation);
+            this._player.velocity = velocity.translate(thrust);
         }
         if (input.isPressed(input.DOWN)) {
             var velocity = this._player.velocity;
-            this._player.velocity = velocity.translate({x: velocity.x, y: ACCELLERATION});
-            Debug.log('Input > decellerate ' );
+            var thrust = _calculateThrust(this._player.rotation);
+            thrust = new Point(velocity.x - thrust.x, velocity.y - thrust.y);
+            this._player.velocity = thrust;
         }
     };
+
+    function _calculateThrust(rotation) {
+        var accelVector = new Point(0, ACCELLERATION);
+        return accelVector.rotate(rotation);
+    }
 
     function _createPlayer() {
         var playerShape = new Shape([
             new Point(-5, -5),
             new Point(0, -5),
             new Point(5, -5),
-            new Point(0, 0),
+            new Point(0, 5),
         ]);
         var player = new Entity(playerShape);
         player.position = new Point(200, 200);

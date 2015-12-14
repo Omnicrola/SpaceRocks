@@ -21,7 +21,7 @@ describe('PlayerSubsystem', function () {
     var expectedPlayerShape;
     var newLevelSubscriber;
 
-    var ROTATION_SPEED = 0.01;
+    var ROTATION_SPEED = 5.0;
     var THRUST_INCREMENT = 0.125;
 
     beforeEach(function () {
@@ -57,7 +57,7 @@ describe('PlayerSubsystem', function () {
                 .returns(true);
             playerSubsystem.update(gameContainerForKeys);
 
-            assert.equal(ROTATION_SPEED, playerEntity.rotation);
+            assert.equal(ROTATION_SPEED*-1, playerEntity.rotation);
             assert.equal(0, playerEntity.velocity.x);
             assert.equal(0, playerEntity.velocity.y);
 
@@ -72,39 +72,49 @@ describe('PlayerSubsystem', function () {
                 .returns(true);
             playerSubsystem.update(gameContainerForKeys);
 
-            assert.equal(ROTATION_SPEED * -1, playerEntity.rotation);
+            assert.equal(ROTATION_SPEED, playerEntity.rotation);
             assert.equal(0, playerEntity.velocity.x);
             assert.equal(0, playerEntity.velocity.y);
 
         });
 
-        it('should thrust forward', function () {
+        it('should thrust forward based on rotation', function () {
             assert.equal(0, playerEntity.rotation);
 
+            var expectedVX = -0.04753292659165062;
+            var expectedVY = 0.1156097785208187;
+            var expectedRotation = 22.35;
+            playerEntity.rotation = expectedRotation;
             gameContainerForKeys.input
                 .isPressed
                 .withArgs(gameContainerForKeys.input.UP)
                 .returns(true);
+
             playerSubsystem.update(gameContainerForKeys);
 
-            assert.equal(0, playerEntity.rotation);
-            assert.equal(0, playerEntity.velocity.x);
-            assert.equal(THRUST_INCREMENT * -1, playerEntity.velocity.y);
+            assert.equal(expectedRotation, playerEntity.rotation);
+            assert.equal(expectedVX, playerEntity.velocity.x);
+            assert.equal(expectedVY, playerEntity.velocity.y);
 
         });
 
-        it('should thrust backward', function () {
+        it('should thrust backward based on rotation', function () {
             assert.equal(0, playerEntity.rotation);
 
+            var expectedVX = 0.09335879324904192;
+            var expectedVY = -0.08312121102993293;
+            var expectedRotation = 48.32;
+            playerEntity.rotation = expectedRotation;
             gameContainerForKeys.input
                 .isPressed
                 .withArgs(gameContainerForKeys.input.DOWN)
                 .returns(true);
+
             playerSubsystem.update(gameContainerForKeys);
 
-            assert.equal(0, playerEntity.rotation);
-            assert.equal(0, playerEntity.velocity.x);
-            assert.equal(THRUST_INCREMENT, playerEntity.velocity.y);
+            assert.equal(expectedRotation, playerEntity.rotation);
+            assert.equal(expectedVX, playerEntity.velocity.x);
+            assert.equal(expectedVY, playerEntity.velocity.y);
 
         });
     });
@@ -162,7 +172,7 @@ describe('PlayerSubsystem', function () {
             new Point(-5, -5),
             new Point(0, -5),
             new Point(5, -5),
-            new Point(0, 0),
+            new Point(0, 5),
         ]);
     }
 });

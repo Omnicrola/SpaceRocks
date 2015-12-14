@@ -37,5 +37,9 @@ module.exports = (function () {
         return new Point(x, y);
     };
 
+    Point.prototype.toString = function () {
+        return 'Point(' + this.x + ', ' + this.y + ')';
+    }
+
     return Point;
 })();
