@@ -9,7 +9,7 @@ var Debug = require('../Debug');
 module.exports = (function () {
 
     var ROTATION_SPEED = 0.01;
-    var ACCELLERATION = 0.01;
+    var ACCELLERATION = 0.125;
 
     var playersubsystem = function (entitySubsystem) {
         this._entitySubsystem = entitySubsystem;
@@ -45,15 +45,13 @@ module.exports = (function () {
         }
         if (input.isPressed(input.UP)) {
             var velocity = this._player.velocity;
-            var newY = velocity.y + (ACCELLERATION * -1);
-            this._player.velocity = velocity.translate({x: velocity.x, y: newY});
-            Debug.log('Input > accellerate');
+            this._player.velocity = velocity.translate({x: velocity.x, y: ACCELLERATION * -1});
+            Debug.log('Input > accellerate ');
         }
         if (input.isPressed(input.DOWN)) {
             var velocity = this._player.velocity;
-            var newY = velocity.y + ACCELLERATION;
-            this._player.velocity = velocity.translate({x: velocity.x, y: newY});
-            Debug.log('Input > decellerate');
+            this._player.velocity = velocity.translate({x: velocity.x, y: ACCELLERATION});
+            Debug.log('Input > decellerate ' );
         }
     };
 

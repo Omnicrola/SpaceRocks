@@ -18,15 +18,40 @@ describe('Entity', function () {
         entity = new Entity(stubShape);
     });
 
-    it('should render its shape', function () {
-        var stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
-        entity.render(stubRenderer);
-        verify(stubShape.render).wasCalledWith(stubRenderer, entity.position);
-    });
-
-    it('should have an initial position and velocity', function () {
+    it('should have an initial values', function () {
         assert.deepEqual(new Point(0, 0), entity.position);
         assert.deepEqual(new Point(0, 0), entity.velocity);
         assert.deepEqual(0, entity.rotation);
     });
+
+    it('should render its shape', function () {
+        var stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
+        var expectedRotation = Math.random();
+        var expectedPosition = new Point(Math.random(), Math.random());
+
+        entity.rotation = expectedRotation;
+        entity.position = expectedPosition;
+
+        entity.render(stubRenderer);
+        verify(stubShape.render).wasCalledWith(stubRenderer, entity.position, expectedRotation);
+    });
+
+    it('should update position based on velocity and delta', function () {
+        var initialPosition = new Point(Math.random(), Math.random());
+        var initialVelocity = new Point(Math.random(), Math.random());
+        var delta = Math.random();
+        var expectedPosition = new Point(
+            initialPosition.x + (initialVelocity.x * delta),
+            initialPosition.y + (initialVelocity.y * delta)
+        );
+
+        entity.position = initialPosition;
+        entity.velocity = initialVelocity;
+
+        entity.update(delta);
+        assert.equal(expectedPosition.x, entity.position.x);
+        assert.equal(expectedPosition.y, entity.position.y);
+
+    });
+
 });

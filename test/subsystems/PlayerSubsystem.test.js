@@ -22,7 +22,7 @@ describe('PlayerSubsystem', function () {
     var newLevelSubscriber;
 
     var ROTATION_SPEED = 0.01;
-    var THRUST_INCREMENT = 0.01;
+    var THRUST_INCREMENT = 0.125;
 
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem, 'EntitySubsystem');
