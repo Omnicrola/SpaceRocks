@@ -22,6 +22,7 @@ describe('Entity', function () {
         assert.deepEqual(new Point(0, 0), entity.position);
         assert.deepEqual(new Point(0, 0), entity.velocity);
         assert.deepEqual(0, entity.rotation);
+        assert.isTrue(entity.isAlive);
     });
 
     it('should render its shape', function () {
@@ -52,6 +53,24 @@ describe('Entity', function () {
         assert.equal(expectedPosition.x, entity.position.x);
         assert.equal(expectedPosition.y, entity.position.y);
 
+    });
+
+    it('should call behaviors on update', function () {
+        var behavior1 = spies.create('Behavior');
+        var behavior2 = spies.create('Behavior');
+        var expectedDelta = Math.random();
+
+        entity.addBehavior(behavior1);
+        entity.addBehavior(behavior2);
+
+        verify(behavior1).wasNotCalled();
+        verify(behavior2).wasNotCalled();
+
+        entity.update(expectedDelta);
+        verify(behavior1).wasCalledOnce();
+        verify(behavior2).wasCalledOnce();
+        verify(behavior1).wasCalledWith(expectedDelta, entity);
+        verify(behavior2).wasCalledWith(expectedDelta, entity);
     });
 
 });
