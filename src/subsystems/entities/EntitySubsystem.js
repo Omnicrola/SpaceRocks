@@ -16,6 +16,9 @@ module.exports = (function () {
     };
 
     entitySubsystem.prototype.update = function (gameContainer) {
+        this._entities = this._entities.filter(function (singleEntity) {
+            return singleEntity.isAlive;
+        });
         this._entities.forEach(function (singleEntity) {
             singleEntity.update(gameContainer.delta);
         })
@@ -30,7 +33,7 @@ module.exports = (function () {
         Debug.log('Entity added. Total: ' + this._entities.length);
     };
 
-    entitySubsystem.prototype.removeEntity = function(entityToRemove){
+    entitySubsystem.prototype.removeEntity = function (entityToRemove) {
         var position = this._entities.indexOf(entityToRemove);
         this._entities.splice(position, 1);
     }

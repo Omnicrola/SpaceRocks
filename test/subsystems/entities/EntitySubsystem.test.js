@@ -22,8 +22,8 @@ describe('EntitySubsystem', function () {
     });
 
     it('should update entities', function () {
-        var stubEntity1 = spies.createStubInstance(Entity);
-        var stubEntity2 = spies.createStubInstance(Entity);
+        var stubEntity1 = createStubEntity();
+        var stubEntity2 = createStubEntity();
 
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
@@ -37,7 +37,7 @@ describe('EntitySubsystem', function () {
     });
 
     it('should remove entities', function () {
-        var stubEntity = spies.createStubInstance(Entity);
+        var stubEntity = createStubEntity();
 
         entitySubsystem.addEntity(stubEntity);
         entitySubsystem.removeEntity(stubEntity);
@@ -49,10 +49,29 @@ describe('EntitySubsystem', function () {
         verify(stubEntity.render).wasNotCalled();
     });
 
+    it('should remove dead entities', function () {
+        var stubEntity1 = createStubEntity();
+        var stubEntity2 = createStubEntity();
+
+        entitySubsystem.addEntity(stubEntity1);
+        entitySubsystem.addEntity(stubEntity2);
+
+        stubEntity1.isAlive = false;
+        stubEntity2.isAlive = true;
+
+        entitySubsystem.update(1);
+        entitySubsystem.render({});
+
+        verify(stubEntity1.update).wasNotCalled();
+        verify(stubEntity1.render).wasNotCalled();
+        verify(stubEntity2.update).wasCalledOnce();
+        verify(stubEntity2.render).wasCalledOnce();
+    });
+
 
     it('should render entities', function () {
-        var stubEntity1 = spies.createStubInstance(Entity);
-        var stubEntity2 = spies.createStubInstance(Entity);
+        var stubEntity1 = createStubEntity();
+        var stubEntity2 = createStubEntity();
 
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
@@ -66,4 +85,11 @@ describe('EntitySubsystem', function () {
 
 
     });
+
+    function createStubEntity() {
+        var entity = spies.createStubInstance(Entity);
+        entity.isAlive = true;
+        return entity;
+    }
+
 });
