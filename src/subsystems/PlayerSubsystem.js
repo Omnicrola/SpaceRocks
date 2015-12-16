@@ -11,6 +11,7 @@ module.exports = (function () {
 
     var ROTATION_SPEED = 5.0;
     var ACCELLERATION = 0.125;
+    var BULLET_VELOCITY = 5.0;
 
     var playersubsystem = function (entitySubsystem) {
         this._entitySubsystem = entitySubsystem;
@@ -35,6 +36,20 @@ module.exports = (function () {
     };
 
     playersubsystem.prototype.update = function (gameContainer) {
+        _handleMovement.call(this, gameContainer);
+        var input = gameContainer.input;
+        if (input.isPressed(input.SPACEBAR)) {
+            var bullet = new Entity(new Shape([
+                new Point(0, 0),
+                new Point(1, 0)
+            ]));
+            bullet.position = this._player.position;
+            bullet.velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
+            this._entitySubsystem.addEntity(bullet);
+        }
+    };
+
+    function _handleMovement(gameContainer) {
         var input = gameContainer.input;
         if (input.isPressed(input.LEFT)) {
             this._player.rotation -= ROTATION_SPEED;
@@ -57,7 +72,7 @@ module.exports = (function () {
             var newVelocity = this._player.velocity = thrust;
             gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
         }
-    };
+    }
 
     function _calculateThrust(rotation) {
         var accelVector = new Point(0, ACCELLERATION);

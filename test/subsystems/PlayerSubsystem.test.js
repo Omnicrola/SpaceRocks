@@ -23,6 +23,7 @@ describe('PlayerSubsystem', function () {
 
     var ROTATION_SPEED = 5.0;
     var THRUST_INCREMENT = 0.125;
+    var BULLET_VELOCITY = 5;
 
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem, 'EntitySubsystem');
@@ -57,7 +58,7 @@ describe('PlayerSubsystem', function () {
                 .returns(true);
             playerSubsystem.update(gameContainerForKeys);
 
-            assert.equal(ROTATION_SPEED*-1, playerEntity.rotation);
+            assert.equal(ROTATION_SPEED * -1, playerEntity.rotation);
             assert.equal(0, playerEntity.velocity.x);
             assert.equal(0, playerEntity.velocity.y);
 
@@ -129,8 +130,36 @@ describe('PlayerSubsystem', function () {
             assert.equal(expectedVY, thrustEvent.data.y);
         });
 
+        it('should fire a bullet when spacebar is pressed', function () {
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(gameContainerForKeys.input.SPACEBAR)
+                .returns(true);
+            var expectedPosition = new Point(23.33, 192.53);
+            var playerRotation = 22.134;
+            playerEntity.rotation = playerRotation;
+            playerEntity.position = expectedPosition;
 
+            playerSubsystem.update(gameContainerForKeys);
 
+            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
+            var actualEntity = mockEntitySubsystem.addEntity.secondCall.args[0];
+            var expectedVelocity = new Point(0,BULLET_VELOCITY).rotate(playerRotation);
+
+            checkBullet(expectedVelocity, expectedPosition, actualEntity);
+        });
+
+        function checkBullet(expectedVelocity, expectedPosition, actualEntity) {
+            assert.isTrue(actualEntity instanceof Entity);
+            checkPoint(expectedPosition, actualEntity.position);
+            checkPoint(expectedVelocity, actualEntity.velocity);
+            assert.isTrue(actualEntity._shape instanceof Shape);
+
+            var points = actualEntity._shape._points;
+            assert.equal(2, points.length);
+            checkPoint(new Point(0, 0), points[0]);
+            checkPoint(new Point(1, 0), points[1]);
+        }
 
     });
 
