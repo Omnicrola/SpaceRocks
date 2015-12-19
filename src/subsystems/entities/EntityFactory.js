@@ -5,6 +5,7 @@
 var Entity = require('./Entity');
 var Shape = require('./Shape');
 var Point = require('./Point');
+var Debug = require('../../Debug');
 
 module.exports = (function () {
 

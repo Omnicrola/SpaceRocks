@@ -7,6 +7,7 @@ var interface = require('../../TestInterfaces');
 var containerGenerator = require('../../mocks/GameContainer');
 
 var Entity = require('../../../src/subsystems/entities/Entity');
+var Point = require('../../../src/subsystems/entities/Point');
 var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
 
 describe('EntitySubsystem', function () {
@@ -42,11 +43,61 @@ describe('EntitySubsystem', function () {
         entitySubsystem.addEntity(stubEntity);
         entitySubsystem.removeEntity(stubEntity);
 
-        entitySubsystem.update(10);
+        entitySubsystem.update(mockContainer);
         entitySubsystem.render({});
 
         verify(stubEntity.update).wasNotCalled();
         verify(stubEntity.render).wasNotCalled();
+    });
+
+    describe('wrapping entity positions', function () {
+        var width;
+        var height;
+        var stubEntity;
+        beforeEach(function () {
+            width = 1000;
+            height = 1000;
+            mockContainer.display.width = width;
+            mockContainer.display.height = height;
+
+            stubEntity = createStubEntity();
+        });
+
+        it('should move to max if X is below zero', function () {
+            var expectedPosition = new Point(-1, 100);
+            stubEntity.position = expectedPosition;
+
+            entitySubsystem.addEntity(stubEntity);
+            entitySubsystem.update(mockContainer);
+            checkPoint(new Point(width, 100), stubEntity.position);
+        });
+
+        it('should move to 0 if X is above screen width', function () {
+            var expectedPosition = new Point(width + 1, 100);
+            stubEntity.position = expectedPosition;
+
+            entitySubsystem.addEntity(stubEntity);
+            entitySubsystem.update(mockContainer);
+            checkPoint(new Point(0, 100), stubEntity.position);
+        });
+
+        it('should move to max if Y is below zero', function () {
+            var expectedPosition = new Point(1, -1);
+            stubEntity.position = expectedPosition;
+
+            entitySubsystem.addEntity(stubEntity);
+            entitySubsystem.update(mockContainer);
+            checkPoint(new Point(1, height), stubEntity.position);
+        });
+
+        it('should move to 0 if Y is above screen height', function () {
+            var expectedPosition = new Point(1, height + 1);
+            stubEntity.position = expectedPosition;
+
+            entitySubsystem.addEntity(stubEntity);
+            entitySubsystem.update(mockContainer);
+            checkPoint(new Point(1, 0), stubEntity.position);
+        });
     });
 
     it('should remove dead entities', function () {
@@ -59,7 +110,7 @@ describe('EntitySubsystem', function () {
         stubEntity1.isAlive = false;
         stubEntity2.isAlive = true;
 
-        entitySubsystem.update(1);
+        entitySubsystem.update(mockContainer);
         entitySubsystem.render({});
 
         verify(stubEntity1.update).wasNotCalled();
@@ -87,9 +138,15 @@ describe('EntitySubsystem', function () {
     });
 
     function createStubEntity() {
-        var entity = spies.createStubInstance(Entity);
+        var entity = spies.createStub(new Entity());
         entity.isAlive = true;
+        entity.position = new Point(0, 0);
         return entity;
     }
 
+    function checkPoint(expectedPoint, actualPoint) {
+        assert.isTrue(actualPoint instanceof Point, 'Not an instance of Point')
+        assert.equal(expectedPoint.x, actualPoint.x, 'X values do not match');
+        assert.equal(expectedPoint.y, actualPoint.y, 'Y values do not match');
+    }
 });

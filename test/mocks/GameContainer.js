@@ -11,6 +11,10 @@ module.exports = {
             delta: 1.0,
             input: spies.createStub(new GameInput(), 'GameInput'),
             audio: spies.createStubInstance(GameAudio, 'GameAudio'),
+            display: {
+                width: 100,
+                height: 100
+            },
             events: {
                 emit: spies.create('emit'),
                 subscribe: spies.create('subscribe')

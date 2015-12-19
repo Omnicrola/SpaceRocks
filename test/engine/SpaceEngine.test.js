@@ -21,9 +21,14 @@ var actualModules = {
 describe('GameEngine', function () {
     var setIntervalStub;
 
+    var expectedCanvasId;
+    var expectedContext;
+    var getElementStub;
     var expectedSubscribe;
     var expectedEmit;
     var expectedProcess;
+    var expectedWidth;
+    var expectedHeight;
 
     var mockedModules = {
         stubs: {}
@@ -39,6 +44,7 @@ describe('GameEngine', function () {
     }
 
     beforeEach(function () {
+        setupCanvas();
         var mockDelta = mockModule('Delta');
         var mockTime = mockModule('Time');
         var mockSubystemManager = mockModule('SubsystemManager');
@@ -67,8 +73,28 @@ describe('GameEngine', function () {
         setIntervalStub = spies.replace(window, 'setInterval');
     });
 
+    function setupCanvas() {
+        expectedCanvasId = 'my-super-canvas';
+        expectedWidth = Math.random() * 100;
+        expectedHeight = Math.random() * 100;
+        expectedContext = {
+            width: expectedWidth,
+            height: expectedHeight
+        };
+        var contextStub = sinon.stub();
+        getElementStub = sinon.stub(document, 'getElementById')
+            .withArgs(expectedCanvasId)
+            .returns({
+                getContext: contextStub
+            });
+        contextStub
+            .withArgs('2d')
+            .returns(expectedContext);
+    }
+
     afterEach(function () {
         spies.restoreAll();
+        document.getElementById.restore();
     })
 
 
@@ -97,6 +123,10 @@ describe('GameEngine', function () {
                 delta: expectedDelta,
                 input: mockedModules.stubs.GameInput,
                 audio: mockedModules.stubs.GameAudio,
+                display: {
+                    width: expectedWidth,
+                    height: expectedHeight
+                },
                 events: {
                     emit: expectedEmit,
                     subscribe: expectedSubscribe
@@ -195,8 +225,6 @@ describe('GameEngine', function () {
                 initialize: spies.create('initialize')
             };
         }
-
-
     });
 
 
@@ -238,25 +266,13 @@ describe('GameEngine', function () {
 
 
     it('will initialize Renderer with canvas context', sinon.test(function () {
-        var expectedCanvasId = 'expect this canvas';
-        var contextStub = sinon.stub();
-        var expectedContext = {foo: Math.random()};
-
-        this.stub(document, 'getElementById')
-            .withArgs(expectedCanvasId)
-            .returns({
-                getContext: contextStub
-            });
-
-        contextStub
-            .withArgs('2d')
-            .returns(expectedContext);
 
         var spaceEngine = createSpaceEngineForTesting({canvas: expectedCanvasId});
         verify(mockedModules.Renderer).wasCalledWithNew();
         verify(mockedModules.Renderer).wasCalledWith(expectedContext);
 
     }));
+
 
     it('will initialize audio system', function () {
         var expectedPath = '/my/test/path/';
@@ -267,7 +283,7 @@ describe('GameEngine', function () {
     function createSpaceEngineForTesting(extraOptions) {
         extraOptions = extraOptions || {};
         var options = {
-            canvas: 'my-canvas-id',
+            canvas: expectedCanvasId,
         };
         for (var attrname in extraOptions) {
             options[attrname] = extraOptions[attrname];

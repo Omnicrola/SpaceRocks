@@ -17,7 +17,8 @@ module.exports = (function () {
         this._subsystemManager = new SubsystemManager();
         this._input = new GameInput();
         this._audio = new GameAudio({basePath: config.audioPath});
-        this._renderer = new Renderer(_getCanvas(config.canvas));
+        this._canvas = _getCanvas(config.canvas);
+        this._renderer = new Renderer(this._canvas);
         this._eventHandler = new GameEventHandler();
         _addSubsystems.call(this, config.subsystems);
         _finishLoading.call(this);
@@ -54,7 +55,7 @@ module.exports = (function () {
             return canvasElement.getContext('2d');
         }
         else {
-            return null;
+            return {width: 0, height: 0};
         }
     }
 
@@ -74,10 +75,16 @@ module.exports = (function () {
     }
 
     function _createGameContainer(interval) {
+        var width = this._canvas.width;
+        var height = this._canvas.height;
         return {
             delta: interval,
             input: this._input,
             audio: this._audio,
+            display: {
+                width: width,
+                height: height
+            },
             events: {
                 emit: this._eventHandler.addEvent,
                 subscribe: this._eventHandler.subscribe

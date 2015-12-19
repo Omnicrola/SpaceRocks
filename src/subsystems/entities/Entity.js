@@ -2,6 +2,7 @@
  * Created by omnic on 11/29/2015.
  */
 var Point = require('./Point');
+var Debug = require('../../Debug');
 
 module.exports = (function () {
     var entity = function (shape) {

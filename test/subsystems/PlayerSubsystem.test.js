@@ -29,7 +29,10 @@ describe('PlayerSubsystem', function () {
 
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem, 'EntitySubsystem');
-        mockEntityFactory = spies.createStub(EntityFactory, 'EntityFactory');
+        mockEntityFactory = {
+            buildPlayer: spies.create('createPlayer'),
+            buildBullet: spies.create('buildBullet')
+        };
         PlayerSubsystem = proxy('../../src/subsystems/PlayerSubsystem', {
             './entities/EntityFactory': mockEntityFactory
         });
@@ -190,6 +193,7 @@ describe('PlayerSubsystem', function () {
     });
 
     it('should remove previous player entity', function () {
+        console.log(mockEntityFactory.buildPlayer);
         var event = new GameEvent('new-level', {});
 
         var firstPlayer = spies.createStubInstance(Entity);

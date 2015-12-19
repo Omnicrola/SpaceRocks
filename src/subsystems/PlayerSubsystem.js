@@ -50,11 +50,9 @@ module.exports = (function () {
         var input = gameContainer.input;
         if (input.isPressed(GameInput.LEFT)) {
             this._player.rotation -= ROTATION_SPEED;
-            Debug.log('Input > turn left');
         }
         if (input.isPressed(GameInput.RIGHT)) {
             this._player.rotation += ROTATION_SPEED;
-            Debug.log('Input > turn right');
         }
         if (input.isPressed(GameInput.UP)) {
             var velocity = this._player.velocity;
