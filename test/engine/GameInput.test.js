@@ -114,7 +114,7 @@ describe('GameInput', function () {
     });
 
     it('should have constants defined for game related keys', function () {
-        var gameInput = new GameInput();
+        var gameInput = GameInput;
 
         verifyReadonlyProperty(gameInput, 'LEFT', 37);
         verifyReadonlyProperty(gameInput, 'UP', 38);
@@ -169,7 +169,10 @@ describe('GameInput', function () {
         }
         object[propName] = Math.random();
         if (object[propName] !== expectedValue) {
-            throw new Error('Objects property "' + propName + '" should be read-only, but was not');
+            throw new Error('Objects property "' + propName + '" should be read-only, but was not.');
+        }
+        if(!object.propertyIsEnumerable(propName)){
+            throw new Error('Objects property "' + propName + '" should be enumerable, but is not.');
         }
     }
 });

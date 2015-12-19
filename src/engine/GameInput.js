@@ -26,7 +26,7 @@ module.exports = (function () {
         supressGameKeys(event);
     }
 
-    function supressGameKeys(event){
+    function supressGameKeys(event) {
         if (blockedKeys.indexOf(event.keyCode) !== -1) {
             event.preventDefault();
         }
@@ -36,21 +36,26 @@ module.exports = (function () {
         return this._keyStates[keyCode];
     }
 
-    Object.defineProperties(inputWrapper.prototype, {
+    Object.defineProperties(inputWrapper, {
         'LEFT': {
-            value: 37
+            value: 37,
+            enumerable: true
         },
         'UP': {
-            value: 38
+            value: 38,
+            enumerable: true
         },
         'RIGHT': {
-            value: 39
+            value: 39,
+            enumerable: true
         },
         'DOWN': {
-            value: 40
+            value: 40,
+            enumerable: true
         },
         'SPACEBAR': {
-            value: 32
+            value: 32,
+            enumerable: true
         }
     });
     var blockedKeys = [37, 38, 39, 40, 32];

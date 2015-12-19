@@ -57,9 +57,24 @@ module.exports = (function () {
         return asteroid;
     }
 
-    return {
-        buildBullet: _buildBullet,
-        buildPlayer: _buildPlayer,
-        buildAsteroid: _buildAsteroid
-    };
+    var entityFactory = {};
+    Object.defineProperties(entityFactory, {
+        buildBullet: {
+            value: _buildBullet,
+            writeable: false,
+            enumerable: true
+        },
+        buildPlayer: {
+            value: _buildPlayer,
+            writeable: false,
+            enumerable: true
+        },
+        buildAsteroid: {
+            value: _buildAsteroid,
+            writeable: false,
+            enumerable: true
+        }
+    });
+    return entityFactory
+
 })();

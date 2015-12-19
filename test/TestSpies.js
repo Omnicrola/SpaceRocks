@@ -14,15 +14,16 @@ module.exports = (function () {
     function createStubOfObject(obj) {
         var propName;
         var objMethods = [];
+        var stub = {};
         for (propName in obj) {
             if (typeof obj[propName] === 'function') {
                 objMethods.push(propName);
             }
         }
         objMethods.forEach(function (methodName) {
-            obj[methodName] = createNamedStub(methodName);
+            stub[methodName] = createNamedStub(methodName);
         });
-        return obj;
+        return stub;
     }
 
     function createStubOfClass(targetClass, name) {

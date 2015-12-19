@@ -1,10 +1,10 @@
 /**
  * Created by Eric on 12/12/2015.
  */
-var Entity = require('./entities/Entity');
-var Shape = require('./entities/Shape');
+var EntityFactory = require('./entities/EntityFactory');
 var Point = require('./entities/Point');
 var GameEvent = require('../engine/GameEvent');
+var GameInput = require('../engine/GameInput');
 var Debug = require('../Debug');
 
 module.exports = (function () {
@@ -38,34 +38,31 @@ module.exports = (function () {
     playersubsystem.prototype.update = function (gameContainer) {
         _handleMovement.call(this, gameContainer);
         var input = gameContainer.input;
-        if (input.isPressed(input.SPACEBAR)) {
-            var bullet = new Entity(new Shape([
-                new Point(0, 0),
-                new Point(1, 0)
-            ]));
-            bullet.position = this._player.position;
-            bullet.velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
+        if (input.isPressed(GameInput.SPACEBAR)) {
+            var position = this._player.position;
+            var velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
+            var bullet = EntityFactory.buildBullet(position, velocity);
             this._entitySubsystem.addEntity(bullet);
         }
     };
 
     function _handleMovement(gameContainer) {
         var input = gameContainer.input;
-        if (input.isPressed(input.LEFT)) {
+        if (input.isPressed(GameInput.LEFT)) {
             this._player.rotation -= ROTATION_SPEED;
             Debug.log('Input > turn left');
         }
-        if (input.isPressed(input.RIGHT)) {
+        if (input.isPressed(GameInput.RIGHT)) {
             this._player.rotation += ROTATION_SPEED;
             Debug.log('Input > turn right');
         }
-        if (input.isPressed(input.UP)) {
+        if (input.isPressed(GameInput.UP)) {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
             var newVelocity = this._player.velocity = velocity.translate(thrust);
             gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
         }
-        if (input.isPressed(input.DOWN)) {
+        if (input.isPressed(GameInput.DOWN)) {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
             thrust = new Point(velocity.x - thrust.x, velocity.y - thrust.y);
@@ -80,15 +77,7 @@ module.exports = (function () {
     }
 
     function _createPlayer() {
-        var playerShape = new Shape([
-            new Point(-5, -5),
-            new Point(0, -5),
-            new Point(5, -5),
-            new Point(0, 5),
-        ]);
-        var player = new Entity(playerShape);
-        player.position = new Point(200, 200);
-        return player;
+        return EntityFactory.buildPlayer(new Point(320, 240));
     }
 
     return playersubsystem;
