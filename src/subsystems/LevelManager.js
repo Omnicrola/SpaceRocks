@@ -3,6 +3,7 @@
  */
 
 var GameEvent = require('../engine/GameEvent');
+var EntityFactory = require('./entities/EntityFactory');
 var Entity = require('./entities/Entity');
 var Shape = require('./entities/Shape');
 var Point = require('./entities/Point');
@@ -22,31 +23,16 @@ module.exports = (function () {
         subscribe('entity-destroyed', function (event) {
             gameContainer.events.emit(_newLevelEvent.call(this));
         }.bind(this));
-        subscribe('new-level', _loadNewLevel.bind(this));
+        subscribe('new-level', function (event) {
+            _loadNewLevel.call(this, gameContainer);
+        }.bind(this));
     };
 
-    function _loadNewLevel() {
+    function _loadNewLevel(gameContainer) {
         for (var i = 0; i < 5; i++) {
-            this._entitySubsystem.addEntity(_createAsteroid());
+            var asteroid = EntityFactory.buildAsteroid(gameContainer.display);
+            this._entitySubsystem.addEntity(asteroid);
         }
-    }
-
-    function _createAsteroid() {
-        var entity = new Entity(new Shape([
-            new Point(-20, 60),
-            new Point(50, 20),
-            new Point(40, -30),
-            new Point(-10, -40),
-            new Point(-50, -10),
-            new Point(-40, 50)
-        ]));
-        entity.position = new Point(rand(640), rand(480));
-        entity.velocity = new Point(rand(1) - 0.5, rand(1) - 0.5);
-        return entity;
-    }
-
-    function rand(max) {
-        return Math.random() * max;
     }
 
     function _newLevelEvent() {

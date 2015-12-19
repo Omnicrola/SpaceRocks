@@ -49,11 +49,12 @@ module.exports = (function () {
         var x = Math.random() * config.width;
         var y = Math.random() * config.height;
         asteroid.position = new Point(x, y);
-        var vX = (Math.random() * 2) - 2;
-        var vY = (Math.random() * 2) - 2;
+        var vX = (Math.random() * 2) - 1;
+        var vY = (Math.random() * 2) - 1;
         asteroid.velocity = new Point(vX, vY);
+        var rotationRate = (Math.random() * 2) - 1;
         asteroid.addBehavior(function (delta, entity) {
-            entity.rotation += 2;
+            entity.rotation += rotationRate;
         });
         return asteroid;
     }

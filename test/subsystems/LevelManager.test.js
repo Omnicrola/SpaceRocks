@@ -1,6 +1,7 @@
 /**
  * Created by Eric on 12/12/2015.
  */
+var proxy = require('proxyquireify')(require);
 var verify = require('../TestVerification');
 var spies = require('../TestSpies');
 var interface = require('../TestInterfaces');
@@ -14,10 +15,18 @@ describe('LevelManager', function () {
     var levelManager;
     var gameContainer;
     var mockEntitySubsystem;
+    var mockEntityFactory;
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem);
+        mockEntityFactory = {
+            buildAsteroid: spies.create('buildAsteroid')
+        };
+        LevelManager = proxy('../../src/subsystems/LevelManager', {
+            './entities/EntityFactory': mockEntityFactory
+        });
         levelManager = new LevelManager(mockEntitySubsystem);
         gameContainer = mockGameContainer.create();
+
     });
 
     it('should implement Subsystem interface', function () {
@@ -61,47 +70,57 @@ describe('LevelManager', function () {
     describe('reacting to "new-level" event', function () {
         var newLevelSubscriber;
         var newLevelEvent = new Event('new-level', null);
+        var expectedWidth;
+        var expectedHeight;
         beforeEach(function () {
+            expectedWidth = Math.random() * 100;
+            expectedHeight = Math.random() * 100;
+            gameContainer.display = {
+                width: expectedWidth,
+                height: expectedHeight
+            }
             levelManager.initialize(gameContainer);
             newLevelSubscriber = gameContainer.events.subscribe.thirdCall.args[1];
         });
 
         it('should spawn asteroids', function () {
             verify(mockEntitySubsystem.addEntity).wasNotCalled();
+            var expectedAsteroid1 = {foo: Math.random()};
+            var expectedAsteroid2 = {foo: Math.random()};
+            var expectedAsteroid3 = {foo: Math.random()};
+            var expectedAsteroid4 = {foo: Math.random()};
+            var expectedAsteroid5 = {foo: Math.random()};
+            mockEntityFactory.buildAsteroid.onCall(0).returns(expectedAsteroid1);
+            mockEntityFactory.buildAsteroid.onCall(1).returns(expectedAsteroid2);
+            mockEntityFactory.buildAsteroid.onCall(2).returns(expectedAsteroid3);
+            mockEntityFactory.buildAsteroid.onCall(3).returns(expectedAsteroid4);
+            mockEntityFactory.buildAsteroid.onCall(4).returns(expectedAsteroid5);
+
 
             newLevelSubscriber(newLevelEvent);
 
-            var addEntitySpy = mockEntitySubsystem.addEntity;
-            verify(addEntitySpy).wasCalledExactly(5);
-            checkAsteroid(addEntitySpy.getCall(0));
-            checkAsteroid(addEntitySpy.getCall(1));
-            checkAsteroid(addEntitySpy.getCall(2));
-            checkAsteroid(addEntitySpy.getCall(3));
-            checkAsteroid(addEntitySpy.getCall(4));
+            verify(mockEntitySubsystem.addEntity).wasCalledExactly(5);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid1);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid2);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid3);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid4);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid5);
+
+            verify(mockEntityFactory.buildAsteroid).wasCalledExactly(5);
+            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(0));
+            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(1));
+            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(2));
+            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(3));
+            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(4));
         });
 
-        function checkAsteroid(call) {
-            var entity = call.args[0];
-            var shape = entity._shape;
-
-            assert.closeTo(entity.position.x, 320, 320);
-            assert.closeTo(entity.position.y, 240, 240);
-            assert.closeTo(entity.velocity.x, 0, 0.5);
-            assert.closeTo(entity.velocity.y, 0, 0.5);
-
-            assert.equal(6, shape._points.length);
-            checkPoint(-20, 60, shape._points[0]);
-            checkPoint(50, 20, shape._points[1]);
-            checkPoint(40, -30, shape._points[2]);
-            checkPoint(-10, -40, shape._points[3]);
-            checkPoint(-50, -10, shape._points[4]);
-            checkPoint(-40, 50, shape._points[5]);
+        function checkFactoryConfig(actualCall) {
+            var actualConfig = actualCall.args[0];
+            expect(actualConfig).to.be.ok;
+            expect(actualConfig.width).to.equal(expectedWidth);
+            expect(actualConfig.height).to.equal(expectedHeight);
         }
 
-        function checkPoint(expectedX, expectedY, actualPoint) {
-            assert.equal(expectedX, actualPoint.x);
-            assert.equal(expectedY, actualPoint.y);
-        }
     });
 
     describe('reacting to "entity-destroyed" events', function () {

@@ -78,8 +78,10 @@ describe('GameEngine', function () {
         expectedWidth = Math.random() * 100;
         expectedHeight = Math.random() * 100;
         expectedContext = {
-            width: expectedWidth,
-            height: expectedHeight
+            canvas: {
+                width: expectedWidth,
+                height: expectedHeight
+            }
         };
         var contextStub = sinon.stub();
         getElementStub = sinon.stub(document, 'getElementById')

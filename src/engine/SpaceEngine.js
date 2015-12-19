@@ -53,8 +53,7 @@ module.exports = (function () {
         var canvasElement = document.getElementById(canvasId);
         if (canvasElement) {
             return canvasElement.getContext('2d');
-        }
-        else {
+        } else {
             return {width: 0, height: 0};
         }
     }
@@ -66,7 +65,6 @@ module.exports = (function () {
     function cycle() {
         var interval = this._delta.getInterval();
         var gameContainer = _createGameContainer.call(this, interval);
-
         this._eventHandler.process();
         this._subsystemManager.update(gameContainer);
         this._renderer.clearCanvas('#000000');
@@ -75,8 +73,8 @@ module.exports = (function () {
     }
 
     function _createGameContainer(interval) {
-        var width = this._canvas.width;
-        var height = this._canvas.height;
+        var width = this._canvas.canvas.width;
+        var height = this._canvas.canvas.height;
         return {
             delta: interval,
             input: this._input,

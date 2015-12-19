@@ -116,7 +116,7 @@ describe('EntityFactory', function () {
             rotationBehavior(1.0, asteroid);
 
             var newRotation = asteroid.rotation;
-            assert.equal(2, newRotation - startingRotation);
+            expect(newRotation - startingRotation).to.be.within(-2, 2);
 
         });
     });
