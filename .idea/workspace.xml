@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="432a0aa3-f838-4a03-849d-430fcc5f5d18" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/entities/EntityFactory.js" afterPath="$PROJECT_DIR$/src/subsystems/entities/EntityFactory.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/entities/EntityFactory.test.js" afterPath="$PROJECT_DIR$/test/subsystems/entities/EntityFactory.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/subsystems/LevelManager.js" afterPath="$PROJECT_DIR$/src/subsystems/LevelManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/subsystems/LevelManager.test.js" afterPath="$PROJECT_DIR$/test/subsystems/LevelManager.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/engine/SpaceEngine.js" afterPath="$PROJECT_DIR$/src/engine/SpaceEngine.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" afterPath="$PROJECT_DIR$/test/engine/SpaceEngine.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/engine/SubsystemManager.js" afterPath="$PROJECT_DIR$/src/engine/SubsystemManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <ignored path="SpaceRocks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,14 +25,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="EntitySubsystem.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="EntitySubsystem.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.37956205">
+            <state vertical-scroll-proportion="0.0">
               <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
               <folding>
                 <element signature="e#0#42#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider editor-type-id="markdown-preview-editor">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.04450262">
+              <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -89,7 +95,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/engine/GameEvent.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/Player.js" />
         <option value="$PROJECT_DIR$/test/engine/GameEvent.js" />
         <option value="$PROJECT_DIR$/gulpfile.js" />
@@ -140,6 +145,7 @@
         <option value="$PROJECT_DIR$/test/subsystems/entities/EntityFactory.test.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/EntityFactory.js" />
         <option value="$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -569,12 +575,12 @@
       <workItem from="1448810828619" duration="21861000" />
       <workItem from="1449338292088" duration="75197000" />
       <workItem from="1450042442476" duration="7698000" />
-      <workItem from="1450057542029" duration="35276000" />
+      <workItem from="1450057542029" duration="35638000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140032000" />
+    <option name="totallyTimeSpent" value="140394000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -627,16 +633,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Shape.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/subsystems/entities/Entity.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1046,11 +1042,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/subsystems/entities/EntitySubsystem.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37956205">
+        <state vertical-scroll-proportion="0.0">
           <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="markdown-preview-editor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.04450262">
+          <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
