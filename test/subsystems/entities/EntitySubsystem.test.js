@@ -138,7 +138,7 @@ describe('EntitySubsystem', function () {
     });
 
     function createStubEntity() {
-        var entity = spies.createStub(new Entity());
+        var entity = spies.createStubInstance(Entity);
         entity.isAlive = true;
         entity.position = new Point(0, 0);
         return entity;

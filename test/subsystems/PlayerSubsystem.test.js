@@ -53,7 +53,7 @@ describe('PlayerSubsystem', function () {
 
         beforeEach(function () {
             gameContainerForKeys = containerGenerator.create();
-            playerEntity = new Entity();
+            playerEntity = new Entity({});
             mockEntityFactory.buildPlayer.returns(playerEntity);
             newLevelSubscriber(new GameEvent('new-level'));
         });

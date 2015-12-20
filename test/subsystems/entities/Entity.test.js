@@ -25,16 +25,25 @@ describe('Entity', function () {
         assert.isTrue(entity.isAlive);
     });
 
-    it('should render its shape', function () {
-        var stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
+    it('should pass rotation to the shape', function(){
+        var fakeShape = {};
         var expectedRotation = Math.random();
-        var expectedPosition = new Point(Math.random(), Math.random());
+        entity = new Entity(fakeShape);
+        expect(fakeShape.rotation).to.equal(0);
 
         entity.rotation = expectedRotation;
+        expect(fakeShape.rotation).to.equal(expectedRotation);
+
+    });
+
+    it('should render its shape', function () {
+        var stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
+        var expectedPosition = new Point(Math.random(), Math.random());
+
         entity.position = expectedPosition;
 
         entity.render(stubRenderer);
-        verify(stubShape.render).wasCalledWith(stubRenderer, entity.position, expectedRotation);
+        verify(stubShape.render).wasCalledWith(stubRenderer, entity.position);
     });
 
     it('should update position based on velocity and delta', function () {
