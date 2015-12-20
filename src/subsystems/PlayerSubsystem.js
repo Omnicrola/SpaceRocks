@@ -2,6 +2,7 @@
  * Created by Eric on 12/12/2015.
  */
 var EntityFactory = require('./entities/EntityFactory');
+var CollisionManager = require('./entities/CollisionManager');
 var Point = require('./entities/Point');
 var GameEvent = require('../engine/GameEvent');
 var GameInput = require('../engine/GameInput');
@@ -25,7 +26,7 @@ module.exports = (function () {
     function _newLevel() {
         var oldPlayer = this._player;
         var newPlayer = _createPlayer();
-        this._entitySubsystem.addEntity(newPlayer);
+        this._entitySubsystem.addEntity(newPlayer, CollisionManager.PLAYER);
         if (oldPlayer) {
             this._entitySubsystem.removeEntity(oldPlayer);
         }
@@ -42,7 +43,7 @@ module.exports = (function () {
             var position = this._player.position;
             var velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
             var bullet = EntityFactory.buildBullet(position, velocity);
-            this._entitySubsystem.addEntity(bullet);
+            this._entitySubsystem.addEntity(bullet, CollisionManager.BULLETS);
         }
     };
 

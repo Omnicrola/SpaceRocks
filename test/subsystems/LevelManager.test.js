@@ -8,6 +8,7 @@ var interface = require('../TestInterfaces');
 var mockGameContainer = require('../mocks/GameContainer');
 
 var LevelManager = require('../../src/subsystems/LevelManager');
+var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var GameEvent = require('../../src/engine/GameEvent');
 
@@ -100,11 +101,11 @@ describe('LevelManager', function () {
             newLevelSubscriber(newLevelEvent);
 
             verify(mockEntitySubsystem.addEntity).wasCalledExactly(5);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid1);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid2);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid3);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid4);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid5);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid1, CollisionManager.ASTEROID);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid2, CollisionManager.ASTEROID);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid3, CollisionManager.ASTEROID);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid4, CollisionManager.ASTEROID);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid5, CollisionManager.ASTEROID);
 
             verify(mockEntityFactory.buildAsteroid).wasCalledExactly(5);
             checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(0));

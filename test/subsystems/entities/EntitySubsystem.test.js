@@ -46,13 +46,14 @@ describe('EntitySubsystem', function () {
         verify(stubEntity2.update).wasCalledWith(expectedDelta);
     });
 
-    it('should add entities to CollisionManager ', function(){
+    it('should add entities to CollisionManager ', function () {
         var stubEntity = createStubEntity();
-        entitySubsystem.addEntity(stubEntity);
-        verify(stubCollisionManager.add).wasCalledWith(stubEntity);
+        var expectedGroup = Math.random();
+        entitySubsystem.addEntity(stubEntity, expectedGroup);
+        verify(stubCollisionManager.add).wasCalledWith(stubEntity, expectedGroup);
     });
 
-    it('should call update on CollisionManager', function(){
+    it('should call update on CollisionManager', function () {
         entitySubsystem.update(mockContainer);
         verify(stubCollisionManager.update).wasCalledWith();
     });

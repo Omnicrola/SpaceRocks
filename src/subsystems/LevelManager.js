@@ -3,6 +3,7 @@
  */
 
 var GameEvent = require('../engine/GameEvent');
+var CollisionManager = require('./entities/CollisionManager');
 var EntityFactory = require('./entities/EntityFactory');
 var Entity = require('./entities/Entity');
 var Shape = require('./entities/Shape');
@@ -31,7 +32,7 @@ module.exports = (function () {
     function _loadNewLevel(gameContainer) {
         for (var i = 0; i < 5; i++) {
             var asteroid = EntityFactory.buildAsteroid(gameContainer.display);
-            this._entitySubsystem.addEntity(asteroid);
+            this._entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
         }
     }
 

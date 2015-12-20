@@ -10,6 +10,7 @@ var containerGenerator = require('../mocks/GameContainer');
 var GameEvent = require('../../src/engine/GameEvent');
 var GameInput = require('../../src/engine/GameInput');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
+var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
 var Point = require('../../src/subsystems/entities/Point');
 var EntityFactory = require('../../src/subsystems/entities/EntityFactory');
 var Entity = require('../../src/subsystems/entities/Entity');
@@ -162,8 +163,7 @@ describe('PlayerSubsystem', function () {
             checkPoint(expectedVelocity, mockEntityFactory.buildBullet.firstCall.args[1]);
 
             verify(mockEntitySubsystem.addEntity).wasCalledTwice();
-            var actualEntity = mockEntitySubsystem.addEntity.secondCall.args[0];
-            assert.equal(expectedEntity, actualEntity);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.BULLETS);
         });
 
     });
@@ -185,7 +185,7 @@ describe('PlayerSubsystem', function () {
 
         newLevelSubscriber(event);
         verify(mockEntitySubsystem.addEntity).wasCalledOnce();
-        verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity);
+        verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.PLAYER);
 
         verify(mockEntityFactory.buildPlayer).wasCalledOnce();
         checkPoint(expectedPosition, mockEntityFactory.buildPlayer.firstCall.args[0]);

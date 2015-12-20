@@ -116,11 +116,11 @@ describe('GameInput', function () {
     it('should have constants defined for game related keys', function () {
         var gameInput = GameInput;
 
-        verifyReadonlyProperty(gameInput, 'LEFT', 37);
-        verifyReadonlyProperty(gameInput, 'UP', 38);
-        verifyReadonlyProperty(gameInput, 'RIGHT', 39);
-        verifyReadonlyProperty(gameInput, 'DOWN', 40);
-        verifyReadonlyProperty(gameInput, 'SPACEBAR', 32);
+        verify.readOnlyProperty(gameInput, 'LEFT', 37);
+        verify.readOnlyProperty(gameInput, 'UP', 38);
+        verify.readOnlyProperty(gameInput, 'RIGHT', 39);
+        verify.readOnlyProperty(gameInput, 'DOWN', 40);
+        verify.readOnlyProperty(gameInput, 'SPACEBAR', 32);
 
 
     });
@@ -161,18 +161,5 @@ describe('GameInput', function () {
         }
     }
 
-    function verifyReadonlyProperty(object, propName, expectedValue) {
-        if (object[propName] !== expectedValue) {
-            throw new Error('Expected object to have a property named "' +
-                propName + '" with a value of "' +
-                expectedValue + '" but got "' + object[propName]);
-        }
-        object[propName] = Math.random();
-        if (object[propName] !== expectedValue) {
-            throw new Error('Objects property "' + propName + '" should be read-only, but was not.');
-        }
-        if(!object.propertyIsEnumerable(propName)){
-            throw new Error('Objects property "' + propName + '" should be enumerable, but is not.');
-        }
-    }
+
 });

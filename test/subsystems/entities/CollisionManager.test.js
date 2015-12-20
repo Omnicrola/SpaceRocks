@@ -24,11 +24,11 @@ describe('CollisionManager', function () {
         stubEntity2.isAlive = true;
 
         collisionManager = new CollisionManager();
-        collisionManager.add(stubEntity1);
-        collisionManager.add(stubEntity2);
+        collisionManager.add(stubEntity1, CollisionManager.ASTEROID);
+        collisionManager.add(stubEntity2, CollisionManager.PLAYER);
     });
 
-    it('should not change alive flag if entities do not intersect', function () {
+    it('should not destroy entities if they do not intersect', function () {
         stubShape1.intersects.returns(false);
         stubShape2.intersects.returns(false);
 
@@ -37,9 +37,21 @@ describe('CollisionManager', function () {
         expect(stubEntity2.isAlive).to.be.true;
     });
 
-    it('should not collide an entity with itself', function(){
+    it('should not test entities in the same group against each other', function(){
         collisionManager = new CollisionManager();
-        collisionManager.add(stubEntity1);
+        collisionManager.add(stubEntity1, CollisionManager.ASTEROID);
+        collisionManager.add(stubEntity2, CollisionManager.ASTEROID);
+
+        collisionManager.update();
+        verify(stubShape1.intersects).wasNotCalled();
+        verify(stubShape2.intersects).wasNotCalled();
+        assert.isTrue(stubEntity1.isAlive);
+        assert.isTrue(stubEntity2.isAlive);
+    });
+
+    it('should not collide an entity with itself', function () {
+        collisionManager = new CollisionManager();
+        collisionManager.add(stubEntity1, CollisionManager.PLAYER);
         stubShape1.intersects.returns(true);
 
         collisionManager.update();
@@ -72,6 +84,13 @@ describe('CollisionManager', function () {
         collisionManager.update();
         verify(stubShape1.intersects).wasNotCalled();
         verify(stubShape2.intersects).wasNotCalled();
+    });
+
+    it('has static values', function () {
+        verify.readOnlyProperty(CollisionManager, 'PLAYER', 1);
+        verify.readOnlyProperty(CollisionManager, 'ASTEROID', 2);
+        verify.readOnlyProperty(CollisionManager, 'BULLETS', 3);
+        verify.readOnlyProperty(CollisionManager, 'FX', 99);
     });
 
 });

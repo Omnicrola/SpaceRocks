@@ -152,7 +152,8 @@ module.exports = (function () {
         };
     }
 
-    return function (verifierTarget) {
+
+    var verify = function (verifierTarget) {
         if (!verifierTarget) {
             throw new Error('Cannot verify an undefined spy (did you reference a property that doesnt exist?)');
         } else if (verifierTarget.methodName !== undefined) {
@@ -163,5 +164,21 @@ module.exports = (function () {
             throw new Error('Attempted to verify a non-named spy. \nPass in either a single spy or an array of spies. Spies must be created with the sinon wrapper spies.create(name).')
         }
     };
+    verify.readOnlyProperty = function (object, propName, expectedValue) {
+        if (object[propName] !== expectedValue) {
+            throw new Error('Expected object to have a property named "' +
+                propName + '" with a value of "' +
+                expectedValue + '" but got "' + object[propName]);
+        }
+        object[propName] = Math.random();
+        if (object[propName] !== expectedValue) {
+            throw new Error('Objects property "' + propName + '" should be read-only, but was not.');
+        }
+        if (!object.propertyIsEnumerable(propName)) {
+            throw new Error('Objects property "' + propName + '" should be enumerable, but is not.');
+        }
+
+    };
+    return verify;
 })
 ();
