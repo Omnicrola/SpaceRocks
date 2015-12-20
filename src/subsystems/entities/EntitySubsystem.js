@@ -23,7 +23,7 @@ module.exports = (function () {
         this._entities = this._entities.filter(function (singleEntity) {
             if (!singleEntity.isAlive)
             {
-                console.log('Removing entity: ' + singleEntity.id);
+                Debug.log('Removing entity: ' + singleEntity.id);
             }
             return singleEntity.isAlive;
         });
@@ -57,7 +57,7 @@ module.exports = (function () {
     var nextId = 1;
     entitySubsystem.prototype.addEntity = function (newEntity) {
         newEntity.id = nextId++;
-        console.log('add entity: ' + newEntity.id);
+        Debug.log('add entity: ' + newEntity.id);
         this._entities.push(newEntity);
         this._collisionManager.add(newEntity);
     };
