@@ -3,13 +3,18 @@
  */
 module.exports = (function () {
 
-    var shape = function (points) {
+    var Shape = function (points) {
         this._points = points;
         this.color = '#ffffff';
+        this.rotation = 0;
     };
 
-    shape.prototype.contains = function (pointToCheck) {
-        var points = this._points;
+    Shape.prototype.getPoints = function () {
+
+    }
+
+    Shape.prototype.contains = function (pointToCheck) {
+        var points = _rotatePoints.call(this);
         var totalPoints = this._points.length;
         var x = pointToCheck.x;
         var y = pointToCheck.y;
@@ -33,9 +38,23 @@ module.exports = (function () {
         return isContained;
     }
 
-    shape.prototype.render = function (renderer, offset, rotation) {
+    Shape.prototype.intersects = function (otherShape) {
+        if (!(otherShape instanceof Shape)) {
+            return false;
+        }
+        var intersects = false;
+        var self = this;
+        _rotatePoints.call(otherShape).forEach(function(otherPoint){
+            if(self.contains(otherPoint)){
+                intersects = true;
+            }
+        });
+        return intersects;
+    }
+
+    Shape.prototype.render = function (renderer, offset) {
         renderer.setColor(this.color);
-        var rotatedPoints = _rotatePoints.call(this, rotation);
+        var rotatedPoints = _rotatePoints.call(this);
         var totalPoints = rotatedPoints.length;
         var p1, p2;
         for (var i = 0; i < totalPoints - 1; i++) {
@@ -57,12 +76,13 @@ module.exports = (function () {
             p2.y + offset.y);
     }
 
-    function _rotatePoints(rotation) {
+    function _rotatePoints() {
         var points = this._points;
+        var rotation = this.rotation;
         return points.map(function (point) {
             return point.rotate(rotation);
         });
     }
 
-    return shape;
+    return Shape;
 })();

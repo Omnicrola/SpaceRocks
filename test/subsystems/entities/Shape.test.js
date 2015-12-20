@@ -31,16 +31,14 @@ describe('Shape', function () {
     });
 
     it('should render points with rotation', function () {
-        var points = [
+        var offset = new Point(100, 200);
+        var shape = new Shape([
             new Point(2, 3),
             new Point(6, 2),
             new Point(7, 1),
-        ];
-        var offset = new Point(100, 200);
-        var shape = new Shape(points);
-
-        var rotation = 34.5;
-        shape.render(stubRenderer, offset, rotation);
+        ]);
+        shape.rotation = 34.5;
+        shape.render(stubRenderer, offset);
 
         verify(stubRenderer.drawLine).wasCalledWith(99.94903366646953, 203.60519103971572, 103.81194465788244, 205.04668979879304);
         verify(stubRenderer.drawLine).wasCalledWith(103.81194465788244, 205.04668979879304, 105.20247708342927, 204.78896984709584);
@@ -68,10 +66,8 @@ describe('Shape', function () {
             stubRenderer.drawLine
         ]).whereCalledInOrder();
     });
-
-    describe('contains point', function () {
+    describe('intersects another Shape', function () {
         var rectanglePoly;
-        var convexPolygon;
         beforeEach(function () {
             rectanglePoly = new Shape([
                 new Point(-1, -1),
@@ -79,6 +75,69 @@ describe('Shape', function () {
                 new Point(1, 1),
                 new Point(1, -1)
             ]);
+        });
+
+        it('must be a Shape', function () {
+            assert.isFalse(rectanglePoly.intersects(null));
+            assert.isFalse(rectanglePoly.intersects(undefined));
+            assert.isFalse(rectanglePoly.intersects({
+                _points: [
+                    new Point(0, 0),
+                    new Point(1, 0),
+                    new Point(0, 1)
+                ]
+            }));
+        });
+
+        it('should intersect another Shape that has a point contained in it', function () {
+            var otherShape = new Shape([
+                new Point(0.5, 0.5),
+                new Point(10, 0),
+                new Point(0, 10)
+            ]);
+            assert.isTrue(rectanglePoly.intersects(otherShape));
+            assert.isTrue(otherShape.intersects(rectanglePoly));
+        });
+
+        it('should not intersect another Shape that has no points contained in it', function () {
+            var otherShape = new Shape([
+                new Point(10, 10),
+                new Point(10, 0),
+                new Point(0, 10)
+            ]);
+            assert.isFalse(rectanglePoly.intersects(otherShape));
+            assert.isFalse(otherShape.intersects(rectanglePoly));
+        });
+
+        it('should intersect a rotated shape', function () {
+            var otherShape = new Shape([
+                new Point(1.1, 0),
+                new Point(2.1, 0),
+                new Point(1.1, 1)
+            ]);
+            otherShape.rotation = 45;
+            assert.isTrue(rectanglePoly.intersects(otherShape));
+            assert.isTrue(otherShape.intersects(rectanglePoly));
+        });
+    });
+    describe('contains point', function () {
+        var rectanglePoly;
+        var convexPolygon;
+        var rotatedPoly;
+        beforeEach(function () {
+            rectanglePoly = new Shape([
+                new Point(-1, -1),
+                new Point(-1, 1),
+                new Point(1, 1),
+                new Point(1, -1)
+            ]);
+            rotatedPoly= new Shape([
+                new Point(-1, -1),
+                new Point(-1, 1),
+                new Point(1, 1),
+                new Point(1, -1)
+            ]);
+            rotatedPoly.rotation = 30;
             convexPolygon = new Shape([
                 new Point(0, 0),
                 new Point(0, 3),
@@ -112,6 +171,12 @@ describe('Shape', function () {
             assert.isFalse(rectanglePoly.contains(new Point(-1, 1.001)));
             assert.isFalse(rectanglePoly.contains(new Point(0, 1.001)));
             assert.isFalse(rectanglePoly.contains(new Point(0, -1.001)));
+        });
+
+        it('should take rotation into account', function () {
+            assert.isFalse(rotatedPoly.contains(new Point(0.999, 0.999)));
+            assert.isFalse(rotatedPoly.contains(new Point(-0.999, -0.999)));
+
         });
 
         it('should contain points in a convex shape', function () {
