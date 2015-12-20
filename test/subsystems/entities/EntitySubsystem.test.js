@@ -1,6 +1,7 @@
 /**
  * Created by omnic on 11/29/2015.
  */
+var proxy = require('proxyquireify')(require);
 var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
 var interface = require('../../TestInterfaces');
@@ -9,11 +10,19 @@ var containerGenerator = require('../../mocks/GameContainer');
 var Entity = require('../../../src/subsystems/entities/Entity');
 var Point = require('../../../src/subsystems/entities/Point');
 var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
+var CollisionManager = require('../../../src/subsystems/entities/CollisionManager');
 
 describe('EntitySubsystem', function () {
     var entitySubsystem;
     var mockContainer;
+    var stubCollisionManager;
     beforeEach(function () {
+        var mockCollisionManagerModule = spies.create('CollisionManager');
+        stubCollisionManager = spies.createStub(new CollisionManager());
+        mockCollisionManagerModule.returns(stubCollisionManager);
+        EntitySubsystem = proxy('../../../src/subsystems/entities/EntitySubsystem', {
+            './CollisionManager': mockCollisionManagerModule
+        });
         entitySubsystem = new EntitySubsystem();
         mockContainer = containerGenerator.create();
     });
@@ -35,6 +44,17 @@ describe('EntitySubsystem', function () {
 
         verify(stubEntity1.update).wasCalledWith(expectedDelta);
         verify(stubEntity2.update).wasCalledWith(expectedDelta);
+    });
+
+    it('should add entities to CollisionManager ', function(){
+        var stubEntity = createStubEntity();
+        entitySubsystem.addEntity(stubEntity);
+        verify(stubCollisionManager.add).wasCalledWith(stubEntity);
+    });
+
+    it('should call update on CollisionManager', function(){
+        entitySubsystem.update(mockContainer);
+        verify(stubCollisionManager.update).wasCalledWith();
     });
 
     it('should remove entities', function () {
@@ -145,7 +165,6 @@ describe('EntitySubsystem', function () {
     }
 
     function checkPoint(expectedPoint, actualPoint) {
-        assert.isTrue(actualPoint instanceof Point, 'Not an instance of Point')
         assert.equal(expectedPoint.x, actualPoint.x, 'X values do not match');
         assert.equal(expectedPoint.y, actualPoint.y, 'Y values do not match');
     }

@@ -3,11 +3,13 @@
  */
 
 var Point = require('./Point');
+var CollisionManager = require('./CollisionManager');
 var Debug = require('../../Debug');
 
 module.exports = (function () {
     var entitySubsystem = function () {
         this._entities = [];
+        this._collisionManager = new CollisionManager();
     };
 
     entitySubsystem.prototype.render = function (renderer) {
@@ -17,7 +19,12 @@ module.exports = (function () {
     };
 
     entitySubsystem.prototype.update = function (gameContainer) {
+        this._collisionManager.update();
         this._entities = this._entities.filter(function (singleEntity) {
+            if (!singleEntity.isAlive)
+            {
+                console.log('Removing entity: ' + singleEntity.id);
+            }
             return singleEntity.isAlive;
         });
         this._entities.forEach(function (singleEntity) {
@@ -47,8 +54,12 @@ module.exports = (function () {
 
     };
 
+    var nextId = 1;
     entitySubsystem.prototype.addEntity = function (newEntity) {
+        newEntity.id = nextId++;
+        console.log('add entity: ' + newEntity.id);
         this._entities.push(newEntity);
+        this._collisionManager.add(newEntity);
     };
 
     entitySubsystem.prototype.removeEntity = function (entityToRemove) {

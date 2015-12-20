@@ -12,14 +12,21 @@ module.exports = (function () {
         this.position = new Point(0, 0);
         this.velocity = new Point(0, 0);
         var self = this;
-        Object.defineProperty(self, 'rotation', {
-            enumerble: true,
-            writeable: true,
-            get: function () {
-                return self._shape.rotation;
+        Object.defineProperties(self, {
+            rotation: {
+                enumerble: true,
+                writeable: true,
+                get: function () {
+                    return self._shape.rotation;
+                },
+                set: function (value) {
+                    self._shape.rotation = value;
+                }
             },
-            set: function (value) {
-                self._shape.rotation = value;
+            shape: {
+                value: shape,
+                writeable: false,
+                enumerable: false
             }
         });
         this.rotation = 0;
@@ -48,4 +55,5 @@ module.exports = (function () {
     }
 
     return entity;
-})();
+})
+();

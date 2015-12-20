@@ -25,7 +25,7 @@ describe('Entity', function () {
         assert.isTrue(entity.isAlive);
     });
 
-    it('should pass rotation to the shape', function(){
+    it('should pass rotation to the shape', function () {
         var fakeShape = {};
         var expectedRotation = Math.random();
         entity = new Entity(fakeShape);
@@ -33,7 +33,12 @@ describe('Entity', function () {
 
         entity.rotation = expectedRotation;
         expect(fakeShape.rotation).to.equal(expectedRotation);
+    });
 
+    it('should have a read-only shape', function () {
+        expect(entity.shape).to.equal(stubShape);
+        entity.shape = {};
+        expect(entity.shape).to.equal(stubShape);
     });
 
     it('should render its shape', function () {
