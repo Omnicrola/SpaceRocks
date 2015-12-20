@@ -15,7 +15,7 @@ describe('Shape', function () {
         stubRenderer = spies.createStub(new Renderer(sinon.spy()));
     });
 
-    it('should render points', function () {
+    it('should render points with offset', function () {
         var points = [
             new Point(2, 3),
             new Point(6, 2),
@@ -23,14 +23,16 @@ describe('Shape', function () {
         ];
         var offset = new Point(100, 200);
         var shape = new Shape(points);
+        shape.rotation = 0;
+        shape.position = offset;
 
-        shape.render(stubRenderer, offset, 0);
+        shape.render(stubRenderer);
         verify(stubRenderer.drawLine).wasCalledWith(102, 203, 106, 202);
         verify(stubRenderer.drawLine).wasCalledWith(106, 202, 107, 201);
         verify(stubRenderer.drawLine).wasCalledWith(107, 201, 102, 203);
     });
 
-    it('should render points with rotation', function () {
+    it('should render points with rotation and offset', function () {
         var offset = new Point(100, 200);
         var shape = new Shape([
             new Point(2, 3),
@@ -38,7 +40,8 @@ describe('Shape', function () {
             new Point(7, 1),
         ]);
         shape.rotation = 34.5;
-        shape.render(stubRenderer, offset);
+        shape.position = offset;
+        shape.render(stubRenderer);
 
         verify(stubRenderer.drawLine).wasCalledWith(99.94903366646953, 203.60519103971572, 103.81194465788244, 205.04668979879304);
         verify(stubRenderer.drawLine).wasCalledWith(103.81194465788244, 205.04668979879304, 105.20247708342927, 204.78896984709584);
@@ -66,6 +69,46 @@ describe('Shape', function () {
             stubRenderer.drawLine
         ]).whereCalledInOrder();
     });
+
+    describe('getPoints', function () {
+        var rectanglePoly;
+        beforeEach(function () {
+            rectanglePoly = new Shape([
+                new Point(-1, -1),
+                new Point(-1, 1),
+                new Point(1, 1),
+                new Point(1, -1)
+            ]);
+        });
+
+        it('should transate and rotate', function () {
+            rectanglePoly.position = new Point(25, 25);
+            rectanglePoly.rotation = 22.5;
+            var points = rectanglePoly.getPoints();
+            assert.isTrue(points instanceof Array);
+            expect(points.length).to.equal(4);
+
+            verify.point(new Point(24.4588038998538, 23.693437035123623), points[0]);
+            verify.point(new Point(23.693437035123623, 25.5411961001462), points[1]);
+            verify.point(new Point(25.5411961001462, 26.306562964876377), points[2]);
+            verify.point(new Point(26.306562964876377, 24.4588038998538), points[3]);
+        });
+
+        it('should transate and rotate negatively', function () {
+            rectanglePoly.position = new Point(-15, 25);
+            rectanglePoly.rotation = -52.25;
+            var points = rectanglePoly.getPoints();
+            assert.isTrue(points instanceof Array);
+            expect(points.length).to.equal(4);
+
+            verify.point(new Point(-16.402906853778294, 25.178472293709394), points[0]);
+            verify.point(new Point(-14.821527706290606, 26.402906853778294), points[1]);
+            verify.point(new Point(-13.597093146221708, 24.821527706290606), points[2]);
+            verify.point(new Point(-15.178472293709394, 23.597093146221706), points[3]);
+        });
+    });
+
+
     describe('intersects another Shape', function () {
         var rectanglePoly;
         beforeEach(function () {
@@ -90,36 +133,33 @@ describe('Shape', function () {
         });
 
         it('should intersect another Shape that has a point contained in it', function () {
-            var otherShape = new Shape([
+            var points = [
                 new Point(0.5, 0.5),
                 new Point(10, 0),
                 new Point(0, 10)
-            ]);
+            ];
+            var otherShape = spies.createStub(new Shape());
+            otherShape.getPoints.returns(points);
+
             assert.isTrue(rectanglePoly.intersects(otherShape));
-            assert.isTrue(otherShape.intersects(rectanglePoly));
+            verify(otherShape.getPoints).wasCalledOnce();
         });
 
         it('should not intersect another Shape that has no points contained in it', function () {
-            var otherShape = new Shape([
+            var points = [
                 new Point(10, 10),
                 new Point(10, 0),
                 new Point(0, 10)
-            ]);
-            assert.isFalse(rectanglePoly.intersects(otherShape));
-            assert.isFalse(otherShape.intersects(rectanglePoly));
-        });
+            ];
 
-        it('should intersect a rotated shape', function () {
-            var otherShape = new Shape([
-                new Point(1.1, 0),
-                new Point(2.1, 0),
-                new Point(1.1, 1)
-            ]);
-            otherShape.rotation = 45;
-            assert.isTrue(rectanglePoly.intersects(otherShape));
-            assert.isTrue(otherShape.intersects(rectanglePoly));
+            var otherShape = spies.createStub(new Shape());
+            otherShape.getPoints.returns(points);
+
+            assert.isFalse(rectanglePoly.intersects(otherShape));
+            verify(otherShape.getPoints).wasCalledOnce();
         });
     });
+
     describe('contains point', function () {
         var rectanglePoly;
         var convexPolygon;
@@ -131,7 +171,7 @@ describe('Shape', function () {
                 new Point(1, 1),
                 new Point(1, -1)
             ]);
-            rotatedPoly= new Shape([
+            rotatedPoly = new Shape([
                 new Point(-1, -1),
                 new Point(-1, 1),
                 new Point(1, 1),

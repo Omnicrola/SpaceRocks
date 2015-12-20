@@ -14,7 +14,7 @@ module.exports = (function () {
         var self = this;
         Object.defineProperties(self, {
             rotation: {
-                enumerble: true,
+                enumerable: true,
                 writeable: true,
                 get: function () {
                     return self._shape.rotation;
@@ -23,17 +23,27 @@ module.exports = (function () {
                     self._shape.rotation = value;
                 }
             },
+            position: {
+                enumerable: true,
+                writeable: true,
+                get: function () {
+                    return self._shape.position;
+                },
+                set: function (value) {
+                    self._shape.position = value;
+                }
+            },
             shape: {
                 value: shape,
                 writeable: false,
-                enumerable: false
+                enumerable: true
             }
         });
         this.rotation = 0;
     };
 
     entity.prototype.render = function (renderer) {
-        this._shape.render(renderer, this.position);
+        this._shape.render(renderer);
     };
 
     entity.prototype.update = function (delta) {

@@ -21,9 +21,6 @@ module.exports = (function () {
     entitySubsystem.prototype.update = function (gameContainer) {
         this._collisionManager.update();
         this._entities = this._entities.filter(function (singleEntity) {
-            if (!singleEntity.isAlive) {
-                Debug.log('Removing entity: ' + singleEntity.id);
-            }
             return singleEntity.isAlive;
         });
         this._entities.forEach(function (singleEntity) {
@@ -56,7 +53,6 @@ module.exports = (function () {
     var nextId = 1;
     entitySubsystem.prototype.addEntity = function (newEntity, collisionGroup) {
         newEntity.id = nextId++;
-        Debug.log('add entity: ' + newEntity.id);
         this._entities.push(newEntity);
         this._collisionManager.add(newEntity, collisionGroup);
     };

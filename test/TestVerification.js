@@ -179,6 +179,12 @@ module.exports = (function () {
         }
 
     };
+    verify.point = function (expectedPoint, actualPoint) {
+        if (expectedPoint.x !== actualPoint.x ||
+            expectedPoint.y !== actualPoint.y) {
+            throw new Error('Points do not match.\n Expected: ' + expectedPoint + '\n Actual:' + actualPoint);
+        }
+    }
     return verify;
 })
 ();

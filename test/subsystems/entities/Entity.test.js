@@ -35,20 +35,15 @@ describe('Entity', function () {
         expect(fakeShape.rotation).to.equal(expectedRotation);
     });
 
-    it('should have a read-only shape', function () {
-        expect(entity.shape).to.equal(stubShape);
-        entity.shape = {};
-        expect(entity.shape).to.equal(stubShape);
+    it('shape is read-only', function () {
+        verify.readOnlyProperty(entity, 'shape', stubShape);
     });
 
     it('should render its shape', function () {
         var stubRenderer = spies.createStubInstance(Renderer, 'Renderer');
-        var expectedPosition = new Point(Math.random(), Math.random());
-
-        entity.position = expectedPosition;
 
         entity.render(stubRenderer);
-        verify(stubShape.render).wasCalledWith(stubRenderer, entity.position);
+        verify(stubShape.render).wasCalledWith(stubRenderer);
     });
 
     it('should update position based on velocity and delta', function () {
@@ -64,9 +59,19 @@ describe('Entity', function () {
         entity.velocity = initialVelocity;
 
         entity.update(delta);
-        assert.equal(expectedPosition.x, entity.position.x);
-        assert.equal(expectedPosition.y, entity.position.y);
+        verify.point(expectedPosition, entity.position);
+        verify.point(expectedPosition, stubShape.position);
+    });
 
+    it('should update shapes position and rotation', function () {
+        var expectedPosition = new Point(Math.random(), Math.random());
+        var expectedRotation = Math.random();
+
+        entity.position = expectedPosition;
+        entity.rotation = expectedRotation;
+
+        assert.equal(expectedRotation, stubShape.rotation);
+        verify.point(expectedPosition, stubShape.position);
     });
 
     it('should call behaviors on update', function () {
