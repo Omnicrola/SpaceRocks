@@ -68,4 +68,67 @@ describe('Shape', function () {
             stubRenderer.drawLine
         ]).whereCalledInOrder();
     });
+
+    describe('contains point', function () {
+        var rectanglePoly;
+        var convexPolygon;
+        beforeEach(function () {
+            rectanglePoly = new Shape([
+                new Point(-1, -1),
+                new Point(-1, 1),
+                new Point(1, 1),
+                new Point(1, -1)
+            ]);
+            convexPolygon = new Shape([
+                new Point(0, 0),
+                new Point(0, 3),
+                new Point(2, 3),
+                new Point(2, 2),
+                new Point(1, 2),
+                new Point(1, 1),
+                new Point(2, 1),
+                new Point(2, 0),
+            ]);
+        });
+
+        it('should not contain points on edge', function () {
+            assert.isFalse(rectanglePoly.contains(new Point(0, 1)));
+            assert.isFalse(rectanglePoly.contains(new Point(0, -1.01)));
+            assert.isFalse(rectanglePoly.contains(new Point(1, 0)));
+            assert.isFalse(rectanglePoly.contains(new Point(-1.01, 0)));
+            assert.isFalse(rectanglePoly.contains(new Point(1, 1)));
+            assert.isFalse(rectanglePoly.contains(new Point(-1, -1.01)));
+        });
+
+        it('should contain points near the edge', function () {
+            assert.isTrue(rectanglePoly.contains(new Point(0.999, 0.999)));
+            assert.isTrue(rectanglePoly.contains(new Point(0.999, -0.999)));
+            assert.isTrue(rectanglePoly.contains(new Point(-0.999, 0)));
+            assert.isTrue(rectanglePoly.contains(new Point(-0.999, -0.999)));
+        });
+
+        it('should not contain points outside', function () {
+            assert.isFalse(rectanglePoly.contains(new Point(1.001, 1)));
+            assert.isFalse(rectanglePoly.contains(new Point(-1, 1.001)));
+            assert.isFalse(rectanglePoly.contains(new Point(0, 1.001)));
+            assert.isFalse(rectanglePoly.contains(new Point(0, -1.001)));
+        });
+
+        it('should contain points in a convex shape', function () {
+            assert.isTrue(convexPolygon.contains(new Point(1.5, 2.5)));
+            assert.isFalse(convexPolygon.contains(new Point(1.5, 1.5)));
+            assert.isFalse(convexPolygon.contains(new Point(-1.5, -2.5)));
+            assert.isFalse(convexPolygon.contains(new Point(1.5, 3.1)));
+        });
+
+        it('should handle invalid values', function () {
+            assert.isFalse(rectanglePoly.contains(new Point(0, null)));
+            assert.isFalse(rectanglePoly.contains(new Point(null, 0)));
+            assert.isFalse(rectanglePoly.contains(new Point(0, undefined)));
+            assert.isFalse(rectanglePoly.contains(new Point(undefined, 0)));
+            var nan = 1 / 0;
+            assert.isFalse(rectanglePoly.contains(new Point(0, nan)));
+            assert.isFalse(rectanglePoly.contains(new Point(nan, 0)));
+        });
+    });
 });

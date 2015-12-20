@@ -8,6 +8,31 @@ module.exports = (function () {
         this.color = '#ffffff';
     };
 
+    shape.prototype.contains = function (pointToCheck) {
+        var points = this._points;
+        var totalPoints = this._points.length;
+        var x = pointToCheck.x;
+        var y = pointToCheck.y;
+        if (isNaN(x) || isNaN(y) ||
+            x === undefined || y === undefined ||
+            x === null || y === null) {
+            return false;
+        }
+        var isContained = false;
+        for (var i = 0, j = totalPoints - 1; i < totalPoints; j = i++) {
+            var x1 = points[i].x;
+            var y1 = points[i].y;
+            var x2 = points[j].x;
+            var y2 = points[j].y;
+
+            var intersect = ((y1 > y) != (y2 > y))
+                && (x < (x2 - x1) * (y - y1) / (y2 - y1) + x1);
+            if (intersect) isContained = !isContained;
+        }
+
+        return isContained;
+    }
+
     shape.prototype.render = function (renderer, offset, rotation) {
         renderer.setColor(this.color);
         var rotatedPoints = _rotatePoints.call(this, rotation);
