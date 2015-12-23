@@ -22,8 +22,11 @@ module.exports = (function () {
             var y = point.y + position.y;
             return new Point(x, y);
         });
+        if (points === undefined) {
+            throw new Error('point mapping unsuccessful. Attempted to map: ' + JSON.stringify(this._points));
+        }
         return points;
-    }
+    };
 
     Shape.prototype.contains = function (pointToCheck) {
         var points = this.getPoints();
@@ -48,7 +51,7 @@ module.exports = (function () {
         }
 
         return isContained;
-    }
+    };
 
     Shape.prototype.intersects = function (otherShape) {
         if (!(otherShape instanceof Shape)) {
@@ -56,13 +59,14 @@ module.exports = (function () {
         }
         var intersects = false;
         var self = this;
-        otherShape.getPoints().forEach(function (otherPoint) {
+        var points = otherShape.getPoints();
+        points.forEach(function (otherPoint) {
             if (self.contains(otherPoint)) {
                 intersects = true;
             }
         });
         return intersects;
-    }
+    };
 
     Shape.prototype.render = function (renderer) {
         renderer.setColor(this.color);
