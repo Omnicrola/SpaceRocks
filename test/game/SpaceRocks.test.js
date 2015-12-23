@@ -7,6 +7,7 @@ var spies = require('../TestSpies');
 
 var SpaceRocks = require('../../src/game/SpaceRocks');
 var actualModules = {
+    Time: require('../../src/engine/Time'),
     SpaceEngine: require('../../src/engine/SpaceEngine'),
     LevelManager: require('../../src/subsystems/LevelManager'),
     PlayerSubsystem: require('../../src/subsystems/PlayerSubsystem'),
@@ -32,8 +33,10 @@ describe('SpaceRocks', function () {
         var playerSubsystem = mockModule('PlayerSubsystem');
         var entitySubsystem = mockModule('EntitySubsystem');
         var spaceEngine = mockModule('SpaceEngine');
+        var timeModule = mockModule('Time');
 
         SpaceRocks = proxy('../../src/game/SpaceRocks', {
+            '../engine/Time': timeModule,
             '../engine/SpaceEngine': spaceEngine,
             '../subsystems/LevelManager': levelManager,
             '../subsystems/PlayerSubsystem': playerSubsystem,
@@ -47,6 +50,7 @@ describe('SpaceRocks', function () {
         var expectedConfig = {
             audioPath: '',
             canvas: expectedCanvasId,
+            fps: 30,
             subsystems: [
                 mockedModules.stubs.LevelManager,
                 mockedModules.stubs.PlayerSubsystem,
@@ -59,13 +63,19 @@ describe('SpaceRocks', function () {
     });
 
     it('will initialize subsystems correctly', function () {
+        var expectedPlayerSubsystemConfig = {
+            entitySubsystem: mockedModules.stubs.EntitySubsystem,
+            time: mockedModules.stubs.Time,
+            playerWeaponDelay: 500
+        };
+
         var spaceRocks = new SpaceRocks('mycanvas');
 
         verify(mockedModules.LevelManager).wasCalledWithNew();
         verify(mockedModules.PlayerSubsystem).wasCalledWithNew();
         verify(mockedModules.EntitySubsystem).wasCalledWithNew();
 
-        verify(mockedModules.PlayerSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
+        verify(mockedModules.PlayerSubsystem).wasCalledWithConfig(0, expectedPlayerSubsystemConfig);
         verify(mockedModules.LevelManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);
     });
 

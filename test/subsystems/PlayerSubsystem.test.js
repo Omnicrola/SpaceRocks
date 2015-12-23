@@ -9,6 +9,7 @@ var containerGenerator = require('../mocks/GameContainer');
 
 var GameEvent = require('../../src/engine/GameEvent');
 var GameInput = require('../../src/engine/GameInput');
+var Time = require('../../src/engine/Time');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
 var Point = require('../../src/subsystems/entities/Point');
@@ -23,6 +24,7 @@ describe('PlayerSubsystem', function () {
     var mockEntitySubsystem;
     var newLevelSubscriber;
     var mockEntityFactory;
+    var stubTime;
 
     var ROTATION_SPEED = 5.0;
     var THRUST_INCREMENT = 0.125;
@@ -37,7 +39,13 @@ describe('PlayerSubsystem', function () {
         PlayerSubsystem = proxy('../../src/subsystems/PlayerSubsystem', {
             './entities/EntityFactory': mockEntityFactory
         });
-        playerSubsystem = new PlayerSubsystem(mockEntitySubsystem);
+        stubTime = spies.createStub(new Time());
+        stubTime.getCurrentTime.returns(100);
+        playerSubsystem = new PlayerSubsystem({
+            entitySubsystem: mockEntitySubsystem,
+            time: stubTime,
+            playerWeaponDelay: 250
+        });
         mockContainer = containerGenerator.create();
 
         playerSubsystem.initialize(mockContainer);
@@ -143,6 +151,7 @@ describe('PlayerSubsystem', function () {
         });
 
         it('should fire a bullet when spacebar is pressed', function () {
+            stubTime.getCurrentTime.returns(1000);
             var playerRotation = 22.134;
             var expectedVelocity = new Point(0, BULLET_VELOCITY).rotate(playerRotation);
             var expectedPosition = new Point(23.33, 192.53);
@@ -164,6 +173,24 @@ describe('PlayerSubsystem', function () {
 
             verify(mockEntitySubsystem.addEntity).wasCalledTwice();
             verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.BULLETS);
+        });
+
+        it('should not fire a bullet too frequently', function () {
+
+            mockEntityFactory.buildBullet.returns({});
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(GameInput.SPACEBAR)
+                .returns(true);
+            verify(mockEntitySubsystem.addEntity).wasCalledOnce();
+            stubTime.getCurrentTime.returns(350);
+
+            playerSubsystem.update(gameContainerForKeys);
+            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
+
+            stubTime.getCurrentTime.returns(599);
+            playerSubsystem.update(gameContainerForKeys);
+            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
         });
 
     });

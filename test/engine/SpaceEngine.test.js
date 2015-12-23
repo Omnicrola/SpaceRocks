@@ -250,14 +250,15 @@ describe('GameEngine', function () {
 
 
     it('will initialize Delta with a new Time', function () {
+        var expectedFps = Math.random();
         var expectedConfig = {
             time: mockedModules.stubs.Time,
             config: {
-                fps: 24
+                fps: expectedFps
             }
         };
 
-        var spaceEngine = createSpaceEngineForTesting();
+        var spaceEngine = createSpaceEngineForTesting({fps:expectedFps});
 
         verify(mockedModules.Time).wasCalledWithNew();
         verify(mockedModules.Delta).wasCalledWithNew();

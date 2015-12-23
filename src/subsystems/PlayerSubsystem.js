@@ -14,8 +14,11 @@ module.exports = (function () {
     var ACCELLERATION = 0.125;
     var BULLET_VELOCITY = 5.0;
 
-    var playersubsystem = function (entitySubsystem) {
-        this._entitySubsystem = entitySubsystem;
+    var playersubsystem = function (config) {
+        this._entitySubsystem = config.entitySubsystem;
+        this._timer = config.time;
+        this._playerWeaponDelay = config.playerWeaponDelay;
+        this._lastWeaponDischarge = config.time.getCurrentTime();
     };
 
     playersubsystem.prototype.initialize = function (gameContainer) {
@@ -39,12 +42,7 @@ module.exports = (function () {
     playersubsystem.prototype.update = function (gameContainer) {
         _handleMovement.call(this, gameContainer);
         var input = gameContainer.input;
-        if (input.isPressed(GameInput.SPACEBAR)) {
-            var position = this._player.position;
-            var velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
-            var bullet = EntityFactory.buildBullet(position, velocity);
-            this._entitySubsystem.addEntity(bullet, CollisionManager.BULLETS);
-        }
+        _handleWeapons.call(this, input);
     };
 
     function _handleMovement(gameContainer) {
@@ -67,6 +65,20 @@ module.exports = (function () {
             thrust = new Point(velocity.x - thrust.x, velocity.y - thrust.y);
             var newVelocity = this._player.velocity = thrust;
             gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
+        }
+    }
+
+    function _handleWeapons(input) {
+        if (input.isPressed(GameInput.SPACEBAR)) {
+            var now = this._timer.getCurrentTime();
+            var elapsed = now - this._lastWeaponDischarge;
+            if (elapsed >= this._playerWeaponDelay) {
+                this._lastWeaponDischarge = now;
+                var position = this._player.position;
+                var velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
+                var bullet = EntityFactory.buildBullet(position, velocity);
+                this._entitySubsystem.addEntity(bullet, CollisionManager.BULLETS);
+            }
         }
     }
 

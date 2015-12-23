@@ -13,7 +13,7 @@ var GameEvent = require('./GameEvent');
 
 module.exports = (function () {
     var engine = function (config) {
-        this._delta = _createDelta();
+        this._delta = _createDelta(config);
         this._subsystemManager = new SubsystemManager();
         this._input = new GameInput();
         this._audio = new GameAudio({basePath: config.audioPath});
@@ -24,11 +24,11 @@ module.exports = (function () {
         _finishLoading.call(this);
     };
 
-    function _createDelta() {
+    function _createDelta(config) {
         return new Delta({
             time: new Time(),
             config: {
-                fps: 24
+                fps: config.fps
             }
         });
     }
