@@ -19,7 +19,7 @@ module.exports = (function () {
     };
 
     entitySubsystem.prototype.update = function (gameContainer) {
-        this._collisionManager.update();
+        this._collisionManager.update(gameContainer);
         this._entities = this._entities.filter(function (singleEntity) {
             return singleEntity.isAlive;
         });

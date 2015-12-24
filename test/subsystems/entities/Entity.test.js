@@ -3,6 +3,7 @@
  */
 var proxy = require('proxyquireify')(require);
 var Renderer = require('../../../src/engine/Renderer');
+var GameEvent = require('../../../src/engine/GameEvent');
 var Entity = require('../../../src/subsystems/entities/Entity');
 var Shape = require('../../../src/subsystems/entities/Shape');
 var Point = require('../../../src/subsystems/entities/Point');
@@ -18,7 +19,7 @@ describe('Entity', function () {
     var mockGameContainer;
     beforeEach(function () {
         stubShape = spies.createStub(new Shape());
-        entity = new Entity(stubShape);
+        entity = new Entity(stubShape, 'generictype');
         mockGameContainer = containerGenerator.create();
     });
 
@@ -41,6 +42,23 @@ describe('Entity', function () {
 
     it('shape is read-only', function () {
         verify.readOnlyProperty(entity, 'shape', stubShape);
+    });
+
+    it('isAlive is read-only', function () {
+        verify.readOnlyProperty(entity, 'isAlive', true);
+    });
+
+    it('should change alive state and emit an event when destroy is called', function () {
+        var expectedType = Entity.Type.PLAYER;
+        var expectedEvent = new GameEvent('entity-death', expectedType);
+        entity = new Entity(stubShape, expectedType);
+
+        entity.destroy(mockGameContainer);
+        verify(mockGameContainer.events.emit).wasCalledOnce();
+        var actualEvent = mockGameContainer.events.emit.firstCall.args[0];
+        verify.event(expectedEvent, actualEvent);
+        assert.isFalse(entity.isAlive);
+
     });
 
     it('should render its shape', function () {
@@ -96,6 +114,13 @@ describe('Entity', function () {
         verify(behavior2).wasCalledOnce();
         verify(behavior1).wasCalledWith(mockGameContainer, entity);
         verify(behavior2).wasCalledWith(mockGameContainer, entity);
+    });
+
+    it('has static values', function () {
+        verify.readOnlyProperty(Entity.Type, 'PLAYER', 'player');
+        verify.readOnlyProperty(Entity.Type, 'ASTEROID', 'asteroid');
+        verify.readOnlyProperty(Entity.Type, 'BULLET', 'bullet');
+        verify.readOnlyProperty(Entity.Type, 'FX', 'fx');
     });
 
 });

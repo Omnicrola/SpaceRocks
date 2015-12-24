@@ -1,6 +1,8 @@
 /**
  * Created by omnic on 11/29/2015.
  */
+var GameEvent = require('../src/engine/GameEvent');
+
 module.exports = (function () {
 
     function spyName(spy) {
@@ -170,7 +172,10 @@ module.exports = (function () {
                 propName + '" with a value of "' +
                 expectedValue + '" but got "' + object[propName]);
         }
-        object[propName] = Math.random();
+        try {
+            object[propName] = Math.random();
+        } catch (e) {
+        }
         if (object[propName] !== expectedValue) {
             throw new Error('Objects property "' + propName + '" should be read-only, but was not.');
         }
@@ -184,6 +189,11 @@ module.exports = (function () {
             expectedPoint.y !== actualPoint.y) {
             throw new Error('Points do not match.\n Expected: ' + expectedPoint + '\n Actual:' + actualPoint);
         }
+    }
+    verify.event = function (expectedEvent, actualEvent) {
+        assert.isTrue(actualEvent instanceof GameEvent, actualEvent + ' should use the "GameEvent" prototype');
+        assert.equal(expectedEvent.type, actualEvent.type);
+        assert.deepEqual(expectedEvent.data, actualEvent.data);
     }
     return verify;
 })

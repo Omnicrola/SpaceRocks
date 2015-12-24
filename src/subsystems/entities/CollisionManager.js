@@ -42,7 +42,7 @@ module.exports = (function () {
         this._entities[groupId].members.push(entity);
     };
 
-    CollisionManager.prototype.update = function () {
+    CollisionManager.prototype.update = function (gameContainer) {
         _removeDestroyedEntities.call(this);
         var allEntities = this._entities;
 
@@ -51,12 +51,12 @@ module.exports = (function () {
             allGroupNames.forEach(function (secondGroupName) {
                 var firstGroup = allEntities[firstGroupName];
                 var secondGroup = allEntities[secondGroupName];
-                _collideGroups(firstGroup, secondGroup);
+                _collideGroups(gameContainer, firstGroup, secondGroup);
             });
         });
     };
 
-    function _collideGroups(firstGroup, secondGroup) {
+    function _collideGroups(gameContainer, firstGroup, secondGroup) {
         if (firstGroup === secondGroup) {
             return;
         }
@@ -67,8 +67,8 @@ module.exports = (function () {
                 secondGroup.members.forEach(function (entity2) {
                     if (entity1.isAlive && entity2.isAlive) {
                         if (entity1.shape.intersects(entity2.shape)) {
-                            entity1.isAlive = false;
-                            entity2.isAlive = false;
+                            entity1.destroy(gameContainer);
+                            entity2.destroy(gameContainer);
                         }
                     }
                 });

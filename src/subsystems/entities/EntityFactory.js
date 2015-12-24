@@ -20,7 +20,7 @@ module.exports = (function () {
         bullet.addBehavior(function (gameContainer, entity) {
             lifetime -= gameContainer.delta;
             if (lifetime <= 0) {
-                entity.isAlive = false;
+                entity.destroy(gameContainer);
             }
         });
         return bullet;

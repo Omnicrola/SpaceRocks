@@ -31,19 +31,20 @@ describe('EntityFactory', function () {
 
         it('should self-terminate after one second', function () {
             var bullet = EntityFactory.buildBullet(new Point(0, 0), new Point(0, 0));
+            var mockBullet = spies.createStubInstance(Entity);
             assert.equal(1, bullet._behaviors.length);
             var selfDestructBehavior = bullet._behaviors[0];
 
             mockGameContainer.delta = 1.0;
-            selfDestructBehavior(mockGameContainer, bullet);
-            assert.isTrue(bullet.isAlive);
+            selfDestructBehavior(mockGameContainer, mockBullet);
+
             mockGameContainer.delta = 28.9
-            selfDestructBehavior(mockGameContainer, bullet);
-            assert.isTrue(bullet.isAlive);
+            selfDestructBehavior(mockGameContainer, mockBullet);
+            verify(mockBullet.destroy).wasNotCalled();
 
             mockGameContainer.delta = 0.5;
-            selfDestructBehavior(mockGameContainer, bullet);
-            assert.isFalse(bullet.isAlive, 'Should not be alive');
+            selfDestructBehavior(mockGameContainer, mockBullet);
+            verify(mockBullet.destroy).wasCalledWith(mockGameContainer);
         });
 
         it('death of one bullet should not affect another', function () {

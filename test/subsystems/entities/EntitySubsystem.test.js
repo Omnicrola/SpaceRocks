@@ -53,7 +53,7 @@ describe('EntitySubsystem', function () {
 
     it('should call update on CollisionManager', function () {
         entitySubsystem.update(mockContainer);
-        verify(stubCollisionManager.update).wasCalledWith();
+        verify(stubCollisionManager.update).wasCalledWith(mockContainer);
     });
 
     it('should remove entities', function () {
