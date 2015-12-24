@@ -25,7 +25,7 @@ module.exports = (function () {
         });
         this._entities.forEach(function (singleEntity) {
             _wrapPosition(singleEntity, gameContainer.display);
-            singleEntity.update(gameContainer.delta);
+            singleEntity.update(gameContainer);
         });
     };
 

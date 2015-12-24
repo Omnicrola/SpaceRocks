@@ -173,6 +173,11 @@ describe('PlayerSubsystem', function () {
 
             verify(mockEntitySubsystem.addEntity).wasCalledTwice();
             verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.BULLETS);
+            verify(gameContainerForKeys.events.emit).wasCalledOnce();
+            var actualEvent = gameContainerForKeys.events.emit.firstCall.args[0];
+            assert.equal('player-fire', actualEvent.type);
+            verify.point(expectedPosition, actualEvent.data.position);
+            verify.point(expectedVelocity, actualEvent.data.velocity);
         });
 
         it('should not fire a bullet too frequently', function () {

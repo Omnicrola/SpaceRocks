@@ -38,12 +38,10 @@ describe('EntitySubsystem', function () {
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
 
-        var expectedDelta = Math.random();
-        mockContainer.delta = expectedDelta;
         entitySubsystem.update(mockContainer);
 
-        verify(stubEntity1.update).wasCalledWith(expectedDelta);
-        verify(stubEntity2.update).wasCalledWith(expectedDelta);
+        verify(stubEntity1.update).wasCalledWith(mockContainer);
+        verify(stubEntity2.update).wasCalledWith(mockContainer);
     });
 
     it('should add entities to CollisionManager ', function () {

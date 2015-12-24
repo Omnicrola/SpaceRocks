@@ -41,8 +41,7 @@ module.exports = (function () {
 
     playersubsystem.prototype.update = function (gameContainer) {
         _handleMovement.call(this, gameContainer);
-        var input = gameContainer.input;
-        _handleWeapons.call(this, input);
+        _handleWeapons.call(this, gameContainer);
     };
 
     function _handleMovement(gameContainer) {
@@ -68,8 +67,8 @@ module.exports = (function () {
         }
     }
 
-    function _handleWeapons(input) {
-        if (input.isPressed(GameInput.SPACEBAR)) {
+    function _handleWeapons(gameContainer) {
+        if (gameContainer.input.isPressed(GameInput.SPACEBAR)) {
             var now = this._timer.getCurrentTime();
             var elapsed = now - this._lastWeaponDischarge;
             if (elapsed >= this._playerWeaponDelay) {
@@ -78,6 +77,10 @@ module.exports = (function () {
                 var velocity = new Point(0, BULLET_VELOCITY).rotate(this._player.rotation);
                 var bullet = EntityFactory.buildBullet(position, velocity);
                 this._entitySubsystem.addEntity(bullet, CollisionManager.BULLETS);
+                gameContainer.events.emit(new GameEvent('player-fire', {
+                    position: position,
+                    velocity: velocity
+                }));
             }
         }
     }

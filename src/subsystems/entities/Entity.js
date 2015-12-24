@@ -46,10 +46,10 @@ module.exports = (function () {
         this._shape.render(renderer);
     };
 
-    entity.prototype.update = function (delta) {
-        _invokeBehaviors.call(this, delta);
-        var vX = this.velocity.x * delta;
-        var vY = this.velocity.y * delta;
+    entity.prototype.update = function (gameContainer) {
+        _invokeBehaviors.call(this, gameContainer);
+        var vX = this.velocity.x * gameContainer.delta;
+        var vY = this.velocity.y * gameContainer.delta;
         this.position = this.position.translate({x: vX, y: vY});
     };
 
@@ -57,10 +57,10 @@ module.exports = (function () {
         this._behaviors.push(newBehavior);
     }
 
-    function _invokeBehaviors(delta) {
+    function _invokeBehaviors(gameContainer) {
         var entity = this;
         this._behaviors.forEach(function (behavior) {
-            behavior(delta, entity);
+            behavior(gameContainer, entity);
         });
     }
 

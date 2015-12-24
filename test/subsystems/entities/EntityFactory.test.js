@@ -3,6 +3,7 @@
  */
 var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
+var GameContainerGenerator = require('../../mocks/GameContainer');
 
 var Entity = require('../../../src/subsystems/entities/Entity');
 var Shape = require('../../../src/subsystems/entities/Shape');
@@ -10,6 +11,10 @@ var Point = require('../../../src/subsystems/entities/Point');
 var EntityFactory = require('../../../src/subsystems/entities/EntityFactory');
 
 describe('EntityFactory', function () {
+    var mockGameContainer;
+    beforeEach(function () {
+        mockGameContainer = GameContainerGenerator.create();
+    });
 
     describe('Bullets', function () {
         it('should build with correct position, velocity, and shape', function () {
@@ -29,12 +34,15 @@ describe('EntityFactory', function () {
             assert.equal(1, bullet._behaviors.length);
             var selfDestructBehavior = bullet._behaviors[0];
 
-            selfDestructBehavior(1, bullet);
+            mockGameContainer.delta = 1.0;
+            selfDestructBehavior(mockGameContainer, bullet);
             assert.isTrue(bullet.isAlive);
-            selfDestructBehavior(28.9, bullet);
+            mockGameContainer.delta = 28.9
+            selfDestructBehavior(mockGameContainer, bullet);
             assert.isTrue(bullet.isAlive);
 
-            selfDestructBehavior(0.5, bullet);
+            mockGameContainer.delta = 0.5;
+            selfDestructBehavior(mockGameContainer, bullet);
             assert.isFalse(bullet.isAlive, 'Should not be alive');
         });
 
@@ -42,7 +50,8 @@ describe('EntityFactory', function () {
             var bullet1 = EntityFactory.buildBullet(new Point(0, 0), new Point(0, 0));
             var bullet2 = EntityFactory.buildBullet(new Point(0, 0), new Point(0, 0));
 
-            bullet1.update(50);
+            mockGameContainer.delta = 50;
+            bullet1.update(mockGameContainer);
             assert.isFalse(bullet1.isAlive);
             assert.isTrue(bullet2.isAlive);
         });
@@ -113,7 +122,8 @@ describe('EntityFactory', function () {
 
             var startingRotation = Math.random();
             asteroid.rotation = startingRotation;
-            rotationBehavior(1.0, asteroid);
+            mockGameContainer.delta = 1.0;
+            rotationBehavior(mockGameContainer, asteroid);
 
             var newRotation = asteroid.rotation;
             expect(newRotation - startingRotation).to.be.within(-2, 2);

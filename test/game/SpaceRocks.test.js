@@ -66,7 +66,7 @@ describe('SpaceRocks', function () {
         var expectedPlayerSubsystemConfig = {
             entitySubsystem: mockedModules.stubs.EntitySubsystem,
             time: mockedModules.stubs.Time,
-            playerWeaponDelay: 500
+            playerWeaponDelay: 250
         };
 
         var spaceRocks = new SpaceRocks('mycanvas');

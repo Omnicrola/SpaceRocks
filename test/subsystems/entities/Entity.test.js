@@ -8,14 +8,18 @@ var Shape = require('../../../src/subsystems/entities/Shape');
 var Point = require('../../../src/subsystems/entities/Point');
 var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
+var containerGenerator = require('../../mocks/GameContainer');
+
 
 describe('Entity', function () {
     var entity;
     var stubShape;
     var pointStub;
+    var mockGameContainer;
     beforeEach(function () {
         stubShape = spies.createStub(new Shape());
         entity = new Entity(stubShape);
+        mockGameContainer = containerGenerator.create();
     });
 
     it('should have an initial values', function () {
@@ -49,16 +53,17 @@ describe('Entity', function () {
     it('should update position based on velocity and delta', function () {
         var initialPosition = new Point(Math.random(), Math.random());
         var initialVelocity = new Point(Math.random(), Math.random());
-        var delta = Math.random();
+        var expectedDelta = Math.random();
+        mockGameContainer.delta = expectedDelta;
         var expectedPosition = new Point(
-            initialPosition.x + (initialVelocity.x * delta),
-            initialPosition.y + (initialVelocity.y * delta)
+            initialPosition.x + (initialVelocity.x * expectedDelta),
+            initialPosition.y + (initialVelocity.y * expectedDelta)
         );
 
         entity.position = initialPosition;
         entity.velocity = initialVelocity;
 
-        entity.update(delta);
+        entity.update(mockGameContainer);
         verify.point(expectedPosition, entity.position);
         verify.point(expectedPosition, stubShape.position);
     });
@@ -78,6 +83,7 @@ describe('Entity', function () {
         var behavior1 = spies.create('Behavior');
         var behavior2 = spies.create('Behavior');
         var expectedDelta = Math.random();
+        mockGameContainer.delta = expectedDelta;
 
         entity.addBehavior(behavior1);
         entity.addBehavior(behavior2);
@@ -85,11 +91,11 @@ describe('Entity', function () {
         verify(behavior1).wasNotCalled();
         verify(behavior2).wasNotCalled();
 
-        entity.update(expectedDelta);
+        entity.update(mockGameContainer);
         verify(behavior1).wasCalledOnce();
         verify(behavior2).wasCalledOnce();
-        verify(behavior1).wasCalledWith(expectedDelta, entity);
-        verify(behavior2).wasCalledWith(expectedDelta, entity);
+        verify(behavior1).wasCalledWith(mockGameContainer, entity);
+        verify(behavior2).wasCalledWith(mockGameContainer, entity);
     });
 
 });

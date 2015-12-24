@@ -25,7 +25,7 @@ module.exports = (function () {
         var playerSubsystem = new PlayerSubsystem({
             entitySubsystem: entitySubsystem,
             time: new Time(),
-            playerWeaponDelay: 500
+            playerWeaponDelay: 250
         });
         return [
             levelManager,

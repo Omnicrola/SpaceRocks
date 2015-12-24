@@ -17,8 +17,8 @@ module.exports = (function () {
         bullet.position = position;
         bullet.velocity = velocity;
         var lifetime = 30;
-        bullet.addBehavior(function (delta, entity) {
-            lifetime -= delta;
+        bullet.addBehavior(function (gameContainer, entity) {
+            lifetime -= gameContainer.delta;
             if (lifetime <= 0) {
                 entity.isAlive = false;
             }
