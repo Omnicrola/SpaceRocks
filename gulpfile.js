@@ -24,7 +24,7 @@ var browserify = require('gulp-browserify');
 var sourceStream = require('vinyl-source-stream');
 var clean = require('gulp-clean');
 
-gulp.task('build', ['clean', 'make-js', 'copy-index']);
+gulp.task('build', ['clean', 'make-js', 'copy-index', 'copy-resources']);
 
 gulp.task('clean', function () {
     return gulp.src('./bin', {read: false})
@@ -32,15 +32,20 @@ gulp.task('clean', function () {
 })
 
 gulp.task('make-js', function () {
-    gulp.src('src/exports.js')
+    return gulp.src('src/exports.js')
         .pipe(browserify({
-            insertGlobals : true,
-            debug : true
+            insertGlobals: true,
+            debug: true
         }))
         .pipe(gulp.dest('bin'));
 });
 
-gulp.task('copy-index', function(){
+gulp.task('copy-index', function () {
     return gulp.src('./src/index.html')
         .pipe(gulp.dest('./bin'));
-})
+});
+
+gulp.task('copy-resources', function () {
+    return gulp.src('./resources/**/*')
+        .pipe(gulp.dest('./bin'));
+});

@@ -7,13 +7,14 @@ var SpaceEngine = require('../engine/SpaceEngine');
 var LevelManager = require('../subsystems/LevelManager');
 var PlayerSubsystem = require('../subsystems/PlayerSubsystem');
 var EntitySubsystem = require('../subsystems/entities/EntitySubsystem');
+var EffectsSubsystem = require('../subsystems/fx/EffectsSubsystem');
 
 module.exports = (function () {
     var spacerocks = function (canvasId) {
         var subsystems = _createSubsystems();
         new SpaceEngine({
             fps: 30,
-            audioPath: '',
+            audioPath: 'audio/',
             canvas: canvasId,
             subsystems: subsystems
         }).start();
@@ -27,10 +28,12 @@ module.exports = (function () {
             time: new Time(),
             playerWeaponDelay: 250
         });
+        var effectsSubsystem = new EffectsSubsystem();
         return [
             levelManager,
             playerSubsystem,
-            entitySubsystem
+            entitySubsystem,
+            effectsSubsystem
         ];
     }
 
