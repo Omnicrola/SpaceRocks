@@ -8,6 +8,11 @@ Object.defineProperties(AudioFx, {
         value: 'atarisquare',
         enumerable: true,
         writeable: false
+    },
+    EXPLOSION: {
+        value: 'cannon-boom4',
+        enumerable: true,
+        writeable: false
     }
 });
 

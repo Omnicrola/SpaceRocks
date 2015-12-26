@@ -14,3 +14,5 @@ Sound FX 'atarisquare' from Jonnay on FreeSound : https://www.freesound.org/peop
 Sound FX 'asteroid-ship-fire' from CGEffects on FreeSound : http://www.freesound.org/people/CGEffex/
 
 Sound FX 'woosh' from RunnerPack on FreeSound : http://www.freesound.org/people/RunnerPack/
+
+Sound FX 'cannon-boom4' from RunnerPack on ReadeOnly : http://www.freesound.org/people/ReadeOnly/
