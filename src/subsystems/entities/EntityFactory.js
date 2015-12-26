@@ -13,7 +13,7 @@ module.exports = (function () {
         var bullet = new Entity(new Shape([
             new Point(0, 0),
             new Point(1, 0)
-        ]));
+        ]), Entity.Type.BULLET);
         bullet.position = position;
         bullet.velocity = velocity;
         var lifetime = 30;
@@ -32,7 +32,7 @@ module.exports = (function () {
             new Point(0, -5),
             new Point(5, -5),
             new Point(0, 5),
-        ]));
+        ]), Entity.Type.PLAYER);
         player.position = position;
         return player;
     }
@@ -45,10 +45,10 @@ module.exports = (function () {
             new Point(-10, -40),
             new Point(-50, -10),
             new Point(-40, 50)
-        ]));
+        ]), Entity.Type.ASTEROID);
         var x = Math.random() * config.width;
         var y = Math.random() * config.height;
-        asteroid.position = new Point(0,0);
+        asteroid.position = new Point(0, 0);
         var vX = (Math.random() * 2) - 1;
         var vY = (Math.random() * 2) - 1;
         asteroid.velocity = new Point(vX, vY);

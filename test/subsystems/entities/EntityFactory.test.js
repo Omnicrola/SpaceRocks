@@ -26,7 +26,7 @@ describe('EntityFactory', function () {
             ]);
 
             var bullet = EntityFactory.buildBullet(expectedPosition, expectedVelocity);
-            checkEntity(bullet, expectedPosition, expectedVelocity, expectedShape);
+            checkEntity(bullet, expectedPosition, expectedVelocity, expectedShape, Entity.Type.BULLET);
         });
 
         it('should self-terminate after one second', function () {
@@ -66,7 +66,7 @@ describe('EntityFactory', function () {
 
             var player = EntityFactory.buildPlayer(expectedPosition);
             assert.equal(0, player.rotation);
-            checkEntity(player, expectedPosition, expectedVelocity, expectedShape);
+            checkEntity(player, expectedPosition, expectedVelocity, expectedShape, Entity.Type.PLAYER);
         });
 
         it('should not have any behaviors', function () {
@@ -88,6 +88,7 @@ describe('EntityFactory', function () {
             ]);
 
             checkShape(expectedShape, asteroid._shape);
+            assert.equal(Entity.Type.ASTEROID, asteroid._type);
         });
 
         it('should generate a position within a specified range', function () {
@@ -133,10 +134,11 @@ describe('EntityFactory', function () {
     });
 
 
-    function checkEntity(actualEntity, expectedPosition, expectedVelocity, expectedShape) {
+    function checkEntity(actualEntity, expectedPosition, expectedVelocity, expectedShape, expectedType) {
         assert.isTrue(actualEntity instanceof Entity, 'Should use the "Entity" prototype');
         checkPoint(expectedPosition, actualEntity.position);
         checkPoint(expectedVelocity, actualEntity.velocity);
+        assert.equal(expectedType, actualEntity._type);
 
         checkShape(expectedShape, actualEntity._shape);
     }

@@ -19,6 +19,7 @@ EffectsSubsystem.prototype.initialize = function (gameContainer) {
             event.data === Entity.Type.PLAYER) {
             gameContainer.audio.play(AudioFx.EXPLOSION);
         }
+        console.log('entity death: ' + event.data);
     });
 };
 
