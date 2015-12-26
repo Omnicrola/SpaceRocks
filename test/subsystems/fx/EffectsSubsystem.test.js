@@ -9,14 +9,27 @@ var GameContainerMock = require('../../mocks/GameContainer');
 
 var EffectsSubsystem = require('../../../src/subsystems/fx/EffectsSubsystem');
 var Entity = require('../../../src/subsystems/entities/Entity');
+var EntityFactory = require('../../../src/subsystems/entities/EntityFactory');
+var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
+var Point = require('../../../src/subsystems/entities/Point');
 var GameEvent = require('../../../src/engine/GameEvent');
 var AudioFx = require('../../../src/subsystems/fx/AudioFx');
 
 describe('EffectsSubsystem', function () {
     var effectsSubsystem;
+    var mockEntityFactory;
     var mockGameContainer;
+    var mockEntitySubsystem;
+
     beforeEach(function () {
-        effectsSubsystem = new EffectsSubsystem();
+        mockEntityFactory = {
+            buildParticles: spies.create('buildParticles')
+        };
+        EffectsSubsystem = proxy('../../../src/subsystems/fx/EffectsSubsystem', {
+            '../entities/EntityFactory': mockEntityFactory
+        });
+        mockEntitySubsystem = spies.createStubInstance(EntitySubsystem);
+        effectsSubsystem = new EffectsSubsystem(mockEntitySubsystem);
         mockGameContainer = GameContainerMock.create();
     });
 
@@ -37,36 +50,74 @@ describe('EffectsSubsystem', function () {
         var entityDeathSubscriber;
         beforeEach(function () {
             effectsSubsystem.initialize(mockGameContainer);
+            mockEntityFactory.buildParticles.returns([]);
             entityDeathSubscriber = mockGameContainer.events.subscribe.getCall(1).args[1];
         });
 
         it('should play a sound when the player dies', function () {
-            var gameEvent = new GameEvent('entity-death', Entity.Type.PLAYER);
+            var gameEvent = new GameEvent('entity-death', {
+                type: Entity.Type.PLAYER,
+                position: new Point(0, 0)
+            });
             verify(mockGameContainer.audio.play).wasNotCalled();
 
-            entityDeathSubscriber(gameEvent);
+            entityDeathSubscriber.call({}, gameEvent);
             verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
         });
 
-        it('should play a sound when the player dies', function () {
-            var gameEvent = new GameEvent('entity-death', Entity.Type.ASTEROID);
+        it('should generate particles when asteroid dies', function () {
+            var expectedPosition = new Point(Math.random(), Math.random());
+            var gameEvent = new GameEvent('entity-death', {
+                type: Entity.Type.ASTEROID,
+                position: expectedPosition
+            });
+            var expectedEntities = [{foo: 123}, {bar: 3455}];
+            mockEntityFactory.buildParticles.returns(expectedEntities);
+            var expectedConfig = {
+                count: 4,
+                position: expectedPosition,
+                duration: 50,
+                minForce: 1,
+                maxForce: 3
+            };
+
+            entityDeathSubscriber.call({}, gameEvent);
+            verify(mockEntityFactory.buildParticles).wasCalledWithConfig(0, expectedConfig);
+
+
+            verify(mockEntitySubsystem.addEntity).wasCalledTwice();
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[0]);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[1]);
+        });
+
+        it('should play a sound when an asteroid dies', function () {
+            var gameEvent = new GameEvent('entity-death', {
+                type: Entity.Type.ASTEROID,
+                position: new Point(0, 0)
+            });
             verify(mockGameContainer.audio.play).wasNotCalled();
 
-            entityDeathSubscriber(gameEvent);
+            entityDeathSubscriber.call({}, gameEvent);
             verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
         });
 
         it('should not play a sound when a bullet dies', function () {
-            var gameEvent = new GameEvent('entity-death', Entity.Type.BULLET);
+            var gameEvent = new GameEvent('entity-death', {
+                type: Entity.Type.BULLET,
+                position: new Point(0, 0)
+            });
 
-            entityDeathSubscriber(gameEvent);
+            entityDeathSubscriber.call({}, gameEvent);
             verify(mockGameContainer.audio.play).wasNotCalled();
         });
 
         it('should not play a sound when an effect dies', function () {
-            var gameEvent = new GameEvent('entity-death', Entity.Type.FX);
+            var gameEvent = new GameEvent('entity-death', {
+                type: Entity.Type.FX,
+                position: new Point(0, 0)
+            });
 
-            entityDeathSubscriber(gameEvent);
+            entityDeathSubscriber.call({}, gameEvent);
             verify(mockGameContainer.audio.play).wasNotCalled();
         });
     });
@@ -83,7 +134,7 @@ describe('EffectsSubsystem', function () {
 
             verify(mockGameContainer.audio.play).wasNotCalled();
 
-            playerFireSubscriber(gameEvent);
+            playerFireSubscriber.call({}, gameEvent);
             verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.WEAPON_FIRE);
 
 

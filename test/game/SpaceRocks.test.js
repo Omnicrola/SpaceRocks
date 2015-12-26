@@ -82,6 +82,7 @@ describe('SpaceRocks', function () {
 
         verify(mockedModules.PlayerSubsystem).wasCalledWithConfig(0, expectedPlayerSubsystemConfig);
         verify(mockedModules.LevelManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);
+        verify(mockedModules.EffectsSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
     });
 
     it('will call start on  engine', function () {

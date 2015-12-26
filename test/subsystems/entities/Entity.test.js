@@ -33,7 +33,7 @@ describe('Entity', function () {
     it('should pass rotation to the shape', function () {
         var fakeShape = {};
         var expectedRotation = Math.random();
-        entity = new Entity(fakeShape);
+        entity = new Entity(fakeShape, 'mock');
         expect(fakeShape.rotation).to.equal(0);
 
         entity.rotation = expectedRotation;
@@ -50,15 +50,20 @@ describe('Entity', function () {
 
     it('should change alive state and emit an event when destroy is called', function () {
         var expectedType = Entity.Type.PLAYER;
-        var expectedEvent = new GameEvent('entity-death', expectedType);
+        var expectedPosition = new Point(Math.random(), Math.random());
+        var expectedEvent = new GameEvent('entity-death', {
+            type: expectedType,
+            position: expectedPosition
+        });
         entity = new Entity(stubShape, expectedType);
+        entity.position = expectedPosition;
 
         entity.destroy(mockGameContainer);
+
         verify(mockGameContainer.events.emit).wasCalledOnce();
         var actualEvent = mockGameContainer.events.emit.firstCall.args[0];
         verify.event(expectedEvent, actualEvent);
         assert.isFalse(entity.isAlive);
-
     });
 
     it('should render its shape', function () {

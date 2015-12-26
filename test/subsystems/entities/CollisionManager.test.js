@@ -95,6 +95,7 @@ describe('CollisionManager', function () {
             verify(stubShape2.intersects).wasNotCalled();
         });
     });
+
     it('has static values', function () {
         verify.readOnlyProperty(CollisionManager, 'PLAYER', 0);
         verify.readOnlyProperty(CollisionManager, 'ASTEROID', 1);
@@ -111,13 +112,13 @@ describe('CollisionManager', function () {
                 new Point(-1, 1),
                 new Point(1, 1),
                 new Point(1, -1)
-            ]));
+            ]), 'mock1');
             entity2 = new Entity(new Shape([
                 new Point(-0.5, -0.5),
                 new Point(-0.5, 0.5),
                 new Point(0.5, 0.5),
                 new Point(0.5, -0.5)
-            ]));
+            ]), 'mock2');
             spies.replace(entity1, 'destroy');
             spies.replace(entity2, 'destroy');
         });
@@ -157,7 +158,6 @@ describe('CollisionManager', function () {
             collisionManager.add(entity2, CollisionManager.FX);
             assertCollisionDidNotOccur();
         });
-
 
         it('bullet and fx', function () {
             collisionManager.add(entity1, CollisionManager.BULLETS);

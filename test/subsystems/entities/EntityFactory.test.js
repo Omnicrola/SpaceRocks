@@ -87,7 +87,8 @@ describe('EntityFactory', function () {
             var particles = EntityFactory.buildParticles({
                 count: particleCount,
                 position: new Point(0, 0),
-                force: 1
+                minForce: 1,
+                maxForce: 1
             });
             expect(particles.length).to.equal(particleCount);
             var particle = particles[0];
@@ -101,7 +102,8 @@ describe('EntityFactory', function () {
             var particles = EntityFactory.buildParticles({
                 count: particleCount,
                 position: expectedPosition,
-                force: 1
+                minForce: 1,
+                maxForce: 1
             });
             expect(particles.length).to.equal(particleCount);
 
@@ -125,6 +127,45 @@ describe('EntityFactory', function () {
             assert.isTrue(velocity.y < minForce * -1 || velocity.y > minForce, 'Velocity is at least minForce ' + minForce + ' ' + velocity);
             assert.isTrue(velocity.x > maxForce * -1 || velocity.x > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
             assert.isTrue(velocity.y > maxForce * -1 || velocity.y > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
+
+        });
+
+        it('should self terminate', function () {
+            var expectedDuration = Math.random() * 10;
+            var mockParticle = spies.createStubInstance(Entity);
+            var particles = EntityFactory.buildParticles({
+                count: 1,
+                position: new Point(0, 0),
+                minForce: 1,
+                maxForce: 1,
+                duration: expectedDuration
+            });
+            assert.equal(1, particles[0]._behaviors.length);
+            var deathBehavior = particles[0]._behaviors[0];
+
+            mockGameContainer.delta = expectedDuration - 0.1;
+
+            deathBehavior(mockGameContainer, mockParticle);
+            verify(mockParticle.destroy).wasNotCalled();
+
+            mockGameContainer.delta = 0.2;
+            deathBehavior(mockGameContainer, mockParticle);
+            verify(mockParticle.destroy).wasCalledWith(mockGameContainer);
+        });
+
+        it('should not destroy other particles when one dies', function () {
+            var particles = EntityFactory.buildParticles({
+                count: 2,
+                position: new Point(0, 0),
+                minForce: 1,
+                maxForce: 1,
+                duration: 1
+            });
+            mockGameContainer.delta = 2;
+            particles[0].update(mockGameContainer);
+
+            assert.isFalse(particles[0].isAlive);
+            assert.isTrue(particles[1].isAlive);
 
         });
     });

@@ -193,7 +193,7 @@ module.exports = (function () {
     verify.event = function (expectedEvent, actualEvent) {
         assert.isTrue(actualEvent instanceof GameEvent, actualEvent + ' should use the "GameEvent" prototype');
         assert.equal(expectedEvent.type, actualEvent.type);
-        assert.deepEqual(expectedEvent.data, actualEvent.data);
+        verifyConfigProperties(expectedEvent.data, actualEvent.data, '');
     }
     return verify;
 })

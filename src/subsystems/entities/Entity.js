@@ -67,7 +67,10 @@ module.exports = (function () {
 
     Entity.prototype.destroy = function (gameContainer) {
         this._isAlive = false;
-        gameContainer.events.emit(new GameEvent('entity-death', this._type));
+        gameContainer.events.emit(new GameEvent('entity-death', {
+            type: this._type,
+            position: this.position
+        }));
     };
 
     Entity.prototype.addBehavior = function (newBehavior) {

@@ -62,7 +62,7 @@ describe('PlayerSubsystem', function () {
 
         beforeEach(function () {
             gameContainerForKeys = containerGenerator.create();
-            playerEntity = new Entity({});
+            playerEntity = spies.createStub(new Entity({},'mock'));
             mockEntityFactory.buildPlayer.returns(playerEntity);
             newLevelSubscriber(new GameEvent('new-level'));
         });

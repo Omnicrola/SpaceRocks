@@ -68,6 +68,13 @@ module.exports = (function () {
             ]), Entity.Type.FX);
             particle.position = config.position;
             particle.velocity = _particleVelocity(config);
+            var lifetime = 0;
+            particle.addBehavior(function (gameContainer, entity) {
+                lifetime += gameContainer.delta;
+                if (lifetime > config.duration) {
+                    entity.destroy(gameContainer);
+                }
+            });
             particles.push(particle);
         }
         return particles;
@@ -77,6 +84,8 @@ module.exports = (function () {
         var multipler = config.maxForce - config.minForce;
         var vX = (Math.random() * multipler) + config.minForce;
         var vY = (Math.random() * multipler) + config.minForce;
+        vX = Math.random() > 0.5 ? vX : vX * -1;
+        vY = Math.random() > 0.5 ? vY : vY * -1;
         return new Point(vX, vY);
     }
 
