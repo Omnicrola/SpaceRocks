@@ -10,6 +10,7 @@ var GameContainerMock = require('../../mocks/GameContainer');
 var EffectsSubsystem = require('../../../src/subsystems/fx/EffectsSubsystem');
 var Entity = require('../../../src/subsystems/entities/Entity');
 var EntityFactory = require('../../../src/subsystems/entities/EntityFactory');
+var CollisionManager = require('../../../src/subsystems/entities/CollisionManager');
 var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
 var Point = require('../../../src/subsystems/entities/Point');
 var GameEvent = require('../../../src/engine/GameEvent');
@@ -41,9 +42,41 @@ describe('EffectsSubsystem', function () {
         effectsSubsystem.initialize(mockGameContainer);
 
         var subscribeSpy = mockGameContainer.events.subscribe;
-        verify(subscribeSpy).wasCalledTwice();
+        verify(subscribeSpy).wasCalledExactly(3);
         expect(subscribeSpy.getCall(0).args[0]).to.equal('player-fire');
         expect(subscribeSpy.getCall(1).args[0]).to.equal('entity-death');
+        expect(subscribeSpy.getCall(2).args[0]).to.equal('player-thrust');
+    });
+
+    describe('reacting to player-thrust event', function () {
+        var playerThrustSubscriber;
+        beforeEach(function () {
+            effectsSubsystem.initialize(mockGameContainer);
+            playerThrustSubscriber = mockGameContainer.events.subscribe.getCall(2).args[1];
+        });
+
+        it('will emit particles in the direction of thrust', function () {
+            var expectedDirection = new Point(Math.random(), Math.random());
+            var expectedPosition = new Point(Math.random(), Math.random());
+            var gameEvent = new GameEvent('player-thrust', {
+                direction: expectedDirection,
+                position: expectedPosition
+            });
+            var expectedConfig = {
+                count: 2,
+                position: expectedPosition,
+                direction: expectedDirection.scale(-5),
+                directionalSpread: 15,
+                duration: 5,
+            };
+            var expectedEntities = [{foo: 22}, {bar: 2999}];
+            mockEntityFactory.buildParticles.returns(expectedEntities);
+
+            playerThrustSubscriber.call({}, gameEvent);
+            verify(mockEntityFactory.buildParticles).wasCalledWithConfig(0,expectedConfig);
+
+        });
+
     });
 
     describe('reacting to a entity-death event', function () {
@@ -86,8 +119,8 @@ describe('EffectsSubsystem', function () {
 
 
             verify(mockEntitySubsystem.addEntity).wasCalledTwice();
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[0]);
-            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[1]);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[0], CollisionManager.FX);
+            verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[1], CollisionManager.FX);
         });
 
         it('should play a sound when an asteroid dies', function () {

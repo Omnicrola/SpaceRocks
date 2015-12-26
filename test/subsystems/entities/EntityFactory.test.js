@@ -112,7 +112,7 @@ describe('EntityFactory', function () {
             checkPoint(expectedPosition, particles[2].position);
         });
 
-        it('should have velocity', function () {
+        it('should have a random velocity', function () {
             var minForce = Math.random() + 10;
             var maxForce = Math.random() + 15;
             var particles = EntityFactory.buildParticles({
@@ -123,11 +123,22 @@ describe('EntityFactory', function () {
             });
 
             var velocity = particles[0].velocity;
-            assert.isTrue(velocity.x < minForce * -1 || velocity.x > minForce, 'Velocity is at least minForce ' + minForce + ' ' + velocity);
-            assert.isTrue(velocity.y < minForce * -1 || velocity.y > minForce, 'Velocity is at least minForce ' + minForce + ' ' + velocity);
-            assert.isTrue(velocity.x > maxForce * -1 || velocity.x > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
-            assert.isTrue(velocity.y > maxForce * -1 || velocity.y > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
+            assert.isTrue(velocity.x !== 0);
+            assert.isTrue(velocity.y !== 0);
+        });
 
+        it('should have a velocity based on a primary direction', function () {
+            var particles = EntityFactory.buildParticles({
+                count: 1,
+                position: new Point(1, 1),
+                direction: new Point(1, 0),
+                directionalSpread: 1,
+                duration: 5
+            });
+            assert.equal(1, particles.length);
+            var velocity = particles[0].velocity;
+            assert.isTrue(velocity.x !== 0);
+            assert.isTrue(velocity.y !== 0);
         });
 
         it('should self terminate', function () {

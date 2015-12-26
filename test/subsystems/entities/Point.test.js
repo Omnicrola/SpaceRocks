@@ -34,7 +34,7 @@ describe('Point', function () {
         assert.equal(y + addY, newPoint.y);
     });
 
-    it('should rotate around origin', function(){
+    it('should rotate around origin', function () {
         var x = 18.12;
         var y = 22.18;
         var degreesToRotate = 83.1;
@@ -47,6 +47,39 @@ describe('Point', function () {
         assert.equal(20.653398121114034, newPoint.y);
     });
 
+    it('should scale', function () {
+        var point = new Point(3.5, 21);
+        var newPoint = point.scale(4);
+
+        assert.isTrue(point !== newPoint);
+        assert.equal(newPoint.x, 14);
+        assert.equal(newPoint.y, 84);
+    });
+
+    it('should normalize - x case', function () {
+        var point = new Point(5, 3);
+        var newPoint = point.normalize();
+
+        assert.isTrue(point !== newPoint);
+        assert.equal(newPoint.x, 0.8574929257125441);
+        assert.equal(newPoint.y, 0.5144957554275265);
+    });
+
+    it('should normalize - y case', function () {
+        var point = new Point(4, 7);
+        var newPoint = point.normalize();
+
+        assert.isTrue(point !== newPoint);
+        assert.equal(newPoint.x, 0.49613893835683387);
+        assert.equal(newPoint.y, 0.8682431421244593);
+    });
+
+    it('should calculate magnitude', function () {
+        var point = new Point(13, 23);
+        var magnitude = point.magnitude();
+
+        assert.equal(26.419689627245813, magnitude);
+    });
 
     function randomFloat() {
         return Math.random() * 50 - 100;

@@ -29,6 +29,20 @@ module.exports = (function () {
     Point.prototype.translate = function (otherPoint) {
         return new Point(this.x + otherPoint.x, this.y + otherPoint.y);
     };
+    Point.prototype.scale = function (multiplier) {
+        return new Point(this.x * multiplier, this.y * multiplier);
+    };
+
+    Point.prototype.magnitude = function () {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    };
+
+    Point.prototype.normalize = function () {
+        var magnitude = this.magnitude();
+        var x = this.x / magnitude;
+        var y = this.y / magnitude;
+        return new Point(x, y);
+    };
 
     Point.prototype.rotate = function (degrees) {
         var theta = degrees * Math.PI / 180.0;

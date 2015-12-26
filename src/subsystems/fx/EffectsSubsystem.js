@@ -5,6 +5,7 @@
 var AudioFx = require('./AudioFx');
 var Entity = require('../entities/Entity');
 var EntityFactory = require('../entities/EntityFactory');
+var CollisionManager = require('../entities/CollisionManager');
 
 var EffectsSubsystem = function (entitySubsystem) {
     this._entitySubsystem = entitySubsystem;
@@ -23,7 +24,21 @@ EffectsSubsystem.prototype.initialize = function (gameContainer) {
             gameContainer.audio.play(AudioFx.EXPLOSION);
             _createParticles.call(self, event.data.position);
         }
-        console.log('entity death: ' + type);
+    });
+
+    gameContainer.events.subscribe('player-thrust', function (event) {
+        var direction = event.data.direction.scale(-5);
+        var particles = EntityFactory.buildParticles({
+            count: 2,
+            position: event.data.position,
+            direction: direction,
+            directionalSpread: 15,
+            duration: 5
+        });
+        particles.forEach(function (particle) {
+            self._entitySubsystem.addEntity(particle);
+        });
+
     });
 };
 
@@ -37,7 +52,7 @@ function _createParticles(position) {
         maxForce: 3
     });
     newParticles.forEach(function (newParticle) {
-        entitySubsystem.addEntity(newParticle);
+        entitySubsystem.addEntity(newParticle, CollisionManager.FX);
     });
 }
 

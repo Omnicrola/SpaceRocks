@@ -81,12 +81,19 @@ module.exports = (function () {
     }
 
     function _particleVelocity(config) {
-        var multipler = config.maxForce - config.minForce;
-        var vX = (Math.random() * multipler) + config.minForce;
-        var vY = (Math.random() * multipler) + config.minForce;
-        vX = Math.random() > 0.5 ? vX : vX * -1;
-        vY = Math.random() > 0.5 ? vY : vY * -1;
-        return new Point(vX, vY);
+        if (config.maxForce && config.minForce) {
+            var velocity = (Math.random() * (config.maxForce - config.minForce)) + config.minForce;
+            return new Point(0, velocity)
+                .rotate(Math.random() * 360)
+        } else if (config.direction && config.directionalSpread) {
+            var spread = config.directionalSpread;
+            var baseMagnitude = config.direction.magnitude();
+            return config.direction
+                .normalize()
+                .scale(Math.random() * baseMagnitude)
+                .rotate((Math.random() * spread * 2) - spread);
+        }
+
     }
 
     var entityFactory = {};

@@ -56,14 +56,20 @@ module.exports = (function () {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
             var newVelocity = this._player.velocity = velocity.translate(thrust);
-            gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
+            gameContainer.events.emit(new GameEvent('player-thrust', {
+                direction: new Point(0, 1).rotate(this._player.rotation),
+                position: this._player.position
+            }));
         }
         if (input.isPressed(GameInput.DOWN)) {
             var velocity = this._player.velocity;
             var thrust = _calculateThrust(this._player.rotation);
             thrust = new Point(velocity.x - thrust.x, velocity.y - thrust.y);
             var newVelocity = this._player.velocity = thrust;
-            gameContainer.events.emit(new GameEvent('player-thrust', newVelocity));
+            gameContainer.events.emit(new GameEvent('player-thrust', {
+                direction: new Point(0, -1).rotate(this._player.rotation),
+                position: this._player.position
+            }));
         }
     }
 

@@ -62,7 +62,7 @@ describe('PlayerSubsystem', function () {
 
         beforeEach(function () {
             gameContainerForKeys = containerGenerator.create();
-            playerEntity = spies.createStub(new Entity({},'mock'));
+            playerEntity = spies.createStub(new Entity({}, 'mock'));
             mockEntityFactory.buildPlayer.returns(playerEntity);
             newLevelSubscriber(new GameEvent('new-level'));
         });
@@ -96,16 +96,15 @@ describe('PlayerSubsystem', function () {
             assert.equal(ROTATION_SPEED, playerEntity.rotation);
             assert.equal(0, playerEntity.velocity.x);
             assert.equal(0, playerEntity.velocity.y);
-
         });
 
         it('should thrust forward based on rotation', function () {
             assert.equal(0, playerEntity.rotation);
 
-            var expectedVX = -0.04753292659165062;
-            var expectedVY = 0.1156097785208187;
+            var expectedVelocity = new Point(-0.04753292659165062, 0.1156097785208187);
             var expectedRotation = 22.35;
             playerEntity.rotation = expectedRotation;
+            playerEntity.position = new Point(Math.random(), Math.random());
             gameContainerForKeys.input
                 .isPressed
                 .withArgs(GameInput.UP)
@@ -114,24 +113,22 @@ describe('PlayerSubsystem', function () {
             playerSubsystem.update(gameContainerForKeys);
 
             assert.equal(expectedRotation, playerEntity.rotation);
-            assert.equal(expectedVX, playerEntity.velocity.x);
-            assert.equal(expectedVY, playerEntity.velocity.y);
+            verify.point(expectedVelocity, playerEntity.velocity);
 
             verify(gameContainerForKeys.events.emit).wasCalledOnce();
             var thrustEvent = gameContainerForKeys.events.emit.firstCall.args[0];
             assert.equal('player-thrust', thrustEvent.type);
-            assert.equal(expectedVX, thrustEvent.data.x);
-            assert.equal(expectedVY, thrustEvent.data.y);
-
+            verify.point(new Point(0, 1).rotate(expectedRotation), thrustEvent.data.direction);
+            verify.point(playerEntity.position, thrustEvent.data.position);
         });
 
         it('should thrust backward based on rotation', function () {
             assert.equal(0, playerEntity.rotation);
 
-            var expectedVX = 0.09335879324904192;
-            var expectedVY = -0.08312121102993293;
+            var expectedVelocity = new Point(0.09335879324904192, -0.08312121102993293);
             var expectedRotation = 48.32;
             playerEntity.rotation = expectedRotation;
+            playerEntity.position = new Point(Math.random(), Math.random());
             gameContainerForKeys.input
                 .isPressed
                 .withArgs(GameInput.DOWN)
@@ -140,14 +137,13 @@ describe('PlayerSubsystem', function () {
             playerSubsystem.update(gameContainerForKeys);
 
             assert.equal(expectedRotation, playerEntity.rotation);
-            assert.equal(expectedVX, playerEntity.velocity.x);
-            assert.equal(expectedVY, playerEntity.velocity.y);
+            verify.point(expectedVelocity, playerEntity.velocity);
 
             verify(gameContainerForKeys.events.emit).wasCalledOnce();
             var thrustEvent = gameContainerForKeys.events.emit.firstCall.args[0];
             assert.equal('player-thrust', thrustEvent.type);
-            assert.equal(expectedVX, thrustEvent.data.x);
-            assert.equal(expectedVY, thrustEvent.data.y);
+            verify.point(new Point(0, -1).rotate(expectedRotation), thrustEvent.data.direction);
+            verify.point(playerEntity.position, thrustEvent.data.position);
         });
 
         it('should fire a bullet when spacebar is pressed', function () {
