@@ -59,6 +59,27 @@ module.exports = (function () {
         return asteroid;
     }
 
+    function _buildParticles(config) {
+        var particles = [];
+        for (var c = 0; c < config.count; c++) {
+            var particle = new Entity(new Shape([
+                new Point(0, 0),
+                new Point(1, 0)
+            ]), Entity.Type.FX);
+            particle.position = config.position;
+            particle.velocity = _particleVelocity(config);
+            particles.push(particle);
+        }
+        return particles;
+    }
+
+    function _particleVelocity(config) {
+        var multipler = config.maxForce - config.minForce;
+        var vX = (Math.random() * multipler) + config.minForce;
+        var vY = (Math.random() * multipler) + config.minForce;
+        return new Point(vX, vY);
+    }
+
     var entityFactory = {};
     Object.defineProperties(entityFactory, {
         buildBullet: {
@@ -73,6 +94,11 @@ module.exports = (function () {
         },
         buildAsteroid: {
             value: _buildAsteroid,
+            writeable: false,
+            enumerable: true
+        },
+        buildParticles: {
+            value: _buildParticles,
             writeable: false,
             enumerable: true
         }

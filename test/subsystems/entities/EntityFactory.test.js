@@ -75,6 +75,60 @@ describe('EntityFactory', function () {
         });
     });
 
+    describe('Particles', function () {
+        it('should have the correct shape', function () {
+            var expectedShape = new Shape([
+                new Point(0, 0),
+                new Point(1, 0)
+            ]);
+
+
+            var particleCount = 1;
+            var particles = EntityFactory.buildParticles({
+                count: particleCount,
+                position: new Point(0, 0),
+                force: 1
+            });
+            expect(particles.length).to.equal(particleCount);
+            var particle = particles[0];
+            checkShape(expectedShape, particle.shape);
+            expect(particle._type).to.equal(Entity.Type.FX);
+        });
+
+        it('should have correct position', function () {
+            var expectedPosition = new Point(Math.random(), Math.random());
+            var particleCount = 3;
+            var particles = EntityFactory.buildParticles({
+                count: particleCount,
+                position: expectedPosition,
+                force: 1
+            });
+            expect(particles.length).to.equal(particleCount);
+
+            checkPoint(expectedPosition, particles[0].position);
+            checkPoint(expectedPosition, particles[1].position);
+            checkPoint(expectedPosition, particles[2].position);
+        });
+
+        it('should have velocity', function () {
+            var minForce = Math.random() + 10;
+            var maxForce = Math.random() + 15;
+            var particles = EntityFactory.buildParticles({
+                count: 1,
+                position: new Point(0, 0),
+                minForce: minForce,
+                maxForce: maxForce
+            });
+
+            var velocity = particles[0].velocity;
+            assert.isTrue(velocity.x < minForce * -1 || velocity.x > minForce, 'Velocity is at least minForce ' + minForce + ' ' + velocity);
+            assert.isTrue(velocity.y < minForce * -1 || velocity.y > minForce, 'Velocity is at least minForce ' + minForce + ' ' + velocity);
+            assert.isTrue(velocity.x > maxForce * -1 || velocity.x > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
+            assert.isTrue(velocity.y > maxForce * -1 || velocity.y > maxForce, 'Velocity is no more than maxForce ' + maxForce + ' ' + velocity);
+
+        });
+    });
+
     describe('Asteroid', function () {
         it('should have the correct shape', function () {
             var asteroid = EntityFactory.buildAsteroid({width: 100, height: 100});
