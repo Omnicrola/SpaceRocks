@@ -189,12 +189,15 @@ module.exports = (function () {
             expectedPoint.y !== actualPoint.y) {
             throw new Error('Points do not match.\n Expected: ' + expectedPoint + '\n Actual:' + actualPoint);
         }
-    }
+    };
     verify.event = function (expectedEvent, actualEvent) {
         assert.isTrue(actualEvent instanceof GameEvent, actualEvent + ' should use the "GameEvent" prototype');
         assert.equal(expectedEvent.type, actualEvent.type);
         verifyConfigProperties(expectedEvent.data, actualEvent.data, '');
-    }
+    };
+    verify.config = function (expectedConfig, actualConfig) {
+        verifyConfigProperties(expectedConfig, actualConfig, '');
+    };
     return verify;
 })
 ();
