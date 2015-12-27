@@ -7,12 +7,29 @@ var UserInterface = function () {
 };
 
 UserInterface.prototype.initialize = function (gameContainer) {
+    var subscribe = gameContainer.events.subscribe;
+    subscribe('score-change', _scoreChange.call(this, gameContainer));
+    subscribe('player-life-change', _playerLifeChange.call(this, gameContainer));
 };
+
+function _scoreChange(gameContainer) {
+    return function (event) {
+        this._score = event.data.score;
+    }.bind(this);
+}
+
+function _playerLifeChange(gameContainer) {
+    return function (event) {
+        this._lives = event.data.lives;
+    }.bind(this);
+}
 
 UserInterface.prototype.update = function (gameContainer) {
 };
 
 UserInterface.prototype.render = function (renderer) {
+    renderer.drawText(10, 10, 'SCORE: ' + this._score);
+    renderer.drawText(500, 10, 'LIVES: ' + this._lives);
 };
 
 

@@ -38,18 +38,25 @@ describe('LevelManager', function () {
     it('should subscribe to events', function () {
         levelManager.initialize(gameContainer);
         var subscribeSpy = gameContainer.events.subscribe;
-        verify(subscribeSpy).wasCalledExactly(3);
-        assert.equal('engine-start', subscribeSpy.firstCall.args[0]);
-        assert.equal('entity-death', subscribeSpy.secondCall.args[0]);
-        assert.equal('new-level', subscribeSpy.thirdCall.args[0]);
+        verify(subscribeSpy).wasCalledExactly(4);
+        assert.equal('engine-start', subscribeSpy.getCall(0).args[0]);
+        assert.equal('new-game', subscribeSpy.getCall(1).args[0]);
+        assert.equal('new-level', subscribeSpy.getCall(2).args[0]);
+        assert.equal('entity-death', subscribeSpy.getCall(3).args[0]);
     });
 
-    describe('reacting to "engine-start" event', function () {
+    describe('reacting to events', function () {
         var engineStartSubscriber;
-
+        var newGameSubscriber;
+        var newLevelSubscriber;
+        var entityDeathSubscriber;
         beforeEach(function () {
+            var subscribeSpy = gameContainer.events.subscribe;
             levelManager.initialize(gameContainer);
-            engineStartSubscriber = gameContainer.events.subscribe.firstCall.args[1];
+            engineStartSubscriber = subscribeSpy.getCall(0).args[1];
+            newGameSubscriber = subscribeSpy.getCall(1).args[1];
+            newLevelSubscriber = subscribeSpy.getCall(2).args[1];
+            entityDeathSubscriber = subscribeSpy.getCall(3).args[1];
         });
 
         it('should emit events to start new game', function () {
@@ -58,24 +65,65 @@ describe('LevelManager', function () {
             verify(emitSpy).wasNotCalled();
 
             engineStartSubscriber(startEvent);
-            verify(emitSpy).wasCalledExactly(4);
+            verify(emitSpy).wasCalledExactly(1);
             var newGameEvent = emitSpy.getCall(0).args[0];
             assert.equal('new-game', newGameEvent.type);
             assert.equal(null, newGameEvent.data);
 
-            var newLevelEvent = emitSpy.getCall(1).args[0];
+        });
+
+        it('should reset score and life when new game starts', function () {
+            var emitSpy = gameContainer.events.emit;
+            newGameSubscriber.call({}, new GameEvent('new-game', null));
+
+            verify(emitSpy).wasCalledExactly(3);
+
+            var newLevelEvent = emitSpy.getCall(0).args[0];
             assert.equal('new-level', newLevelEvent.type);
             verify.config({levelNumber: 1}, newLevelEvent.data);
 
-            var scoreChangeEvent = emitSpy.getCall(2).args[0];
+            var scoreChangeEvent = emitSpy.getCall(1).args[0];
             assert.equal('score-change', scoreChangeEvent.type);
             verify.config({score: 0}, scoreChangeEvent.data);
 
-            var playerLifeChange = emitSpy.getCall(3).args[0];
+            var playerLifeChange = emitSpy.getCall(2).args[0];
             assert.equal('player-life-change', playerLifeChange.type);
             verify.config({lives: 3}, playerLifeChange.data);
+        });
+
+        it('should emit events when asteroids are destroyed', function () {
+            var entityEvent = new GameEvent("entity-death", {type: Entity.Type.ASTEROID});
+            var emitSpy = gameContainer.events.emit;
+            newGameSubscriber.call({}, new GameEvent('new-game', null));
+            newLevelSubscriber.call({}, new GameEvent('new-level', null));
+            emitSpy.reset();
+            assert.equal(0, emitSpy.callCount);
+
+            entityDeathSubscriber.call({}, entityEvent);
+            checkScoreEvent(100, emitSpy.getCall(0).args[0]);
+            entityDeathSubscriber.call({}, entityEvent);
+            checkScoreEvent(200, emitSpy.getCall(1).args[0]);
+            entityDeathSubscriber.call({}, entityEvent);
+            checkScoreEvent(300, emitSpy.getCall(2).args[0]);
+            entityDeathSubscriber.call({}, entityEvent);
+            checkScoreEvent(400, emitSpy.getCall(3).args[0]);
+            entityDeathSubscriber.call({}, entityEvent);
+            checkScoreEvent(500, emitSpy.getCall(4).args[0]);
+
+            verify(emitSpy).wasCalledExactly(6);
+            checkNewLevelEvent(2, emitSpy.getCall(5).args[0]);
 
         });
+
+        function checkScoreEvent(expectedScore, event) {
+            assert.equal('score-change', event.type);
+            assert.equal(expectedScore, event.data.score);
+        }
+
+        function checkNewLevelEvent(expectedLevel, event) {
+            assert.equal('new-level', event.type);
+            assert.equal(expectedLevel, event.data.levelNumber);
+        }
     });
 
     describe('reacting to "new-level" event', function () {
@@ -101,11 +149,14 @@ describe('LevelManager', function () {
             var expectedAsteroid3 = {foo: Math.random()};
             var expectedAsteroid4 = {foo: Math.random()};
             var expectedAsteroid5 = {foo: Math.random()};
-            mockEntityFactory.buildAsteroid.onCall(0).returns(expectedAsteroid1);
-            mockEntityFactory.buildAsteroid.onCall(1).returns(expectedAsteroid2);
-            mockEntityFactory.buildAsteroid.onCall(2).returns(expectedAsteroid3);
-            mockEntityFactory.buildAsteroid.onCall(3).returns(expectedAsteroid4);
-            mockEntityFactory.buildAsteroid.onCall(4).returns(expectedAsteroid5);
+
+            var buildSpy = mockEntityFactory.buildAsteroid;
+
+            buildSpy.onCall(0).returns(expectedAsteroid1);
+            buildSpy.onCall(1).returns(expectedAsteroid2);
+            buildSpy.onCall(2).returns(expectedAsteroid3);
+            buildSpy.onCall(3).returns(expectedAsteroid4);
+            buildSpy.onCall(4).returns(expectedAsteroid5);
 
 
             newLevelSubscriber(newLevelEvent);
@@ -117,20 +168,18 @@ describe('LevelManager', function () {
             verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid4, CollisionManager.ASTEROID);
             verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedAsteroid5, CollisionManager.ASTEROID);
 
-            verify(mockEntityFactory.buildAsteroid).wasCalledExactly(5);
-            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(0));
-            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(1));
-            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(2));
-            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(3));
-            checkFactoryConfig(mockEntityFactory.buildAsteroid.getCall(4));
-        });
+            verify(buildSpy).wasCalledExactly(5);
+            var expectedConfig = {
+                width: expectedWidth,
+                height: expectedHeight
+            };
+            verify.config(expectedConfig, buildSpy.getCall(0).args[0]);
+            verify.config(expectedConfig, buildSpy.getCall(1).args[0]);
+            verify.config(expectedConfig, buildSpy.getCall(2).args[0]);
+            verify.config(expectedConfig, buildSpy.getCall(3).args[0]);
+            verify.config(expectedConfig, buildSpy.getCall(4).args[0]);
 
-        function checkFactoryConfig(actualCall) {
-            var actualConfig = actualCall.args[0];
-            expect(actualConfig).to.be.ok;
-            expect(actualConfig.width).to.equal(expectedWidth);
-            expect(actualConfig.height).to.equal(expectedHeight);
-        }
+        });
 
     });
 
@@ -144,26 +193,6 @@ describe('LevelManager', function () {
             newLevelSubscriber.call({}, new GameEvent('new-level', {levelNumber: 1}));
         });
 
-        it('should emit "new-level" event when 5 asteroids are destroyed', function () {
-            var entityEvent = new GameEvent("entity-death", {type: Entity.Type.ASTEROID});
-            var emitSpy = gameContainer.events.emit;
-
-            entityDestroyedSubscriber.call({}, entityEvent);
-            entityDestroyedSubscriber.call({}, entityEvent);
-            entityDestroyedSubscriber.call({}, entityEvent);
-            entityDestroyedSubscriber.call({}, entityEvent);
-            verify(emitSpy).wasNotCalled();
-            entityDestroyedSubscriber.call({}, entityEvent);
-
-            verify(emitSpy).wasCalledOnce();
-            var newLevelEvent = emitSpy.firstCall.args[0];
-            expect(newLevelEvent.type).to.equal('new-level');
-            verify.config({levelNumber: 1}, newLevelEvent.data);
-
-            entityDestroyedSubscriber(entityEvent);
-            entityDestroyedSubscriber(entityEvent);
-            verify(emitSpy).wasCalledOnce();
-        });
 
     });
 });

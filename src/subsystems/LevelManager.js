@@ -22,34 +22,52 @@ var LevelManager = function (entitySubsystem) {
 
 LevelManager.prototype.initialize = function (gameContainer) {
     var subscribe = gameContainer.events.subscribe;
-    subscribe('engine-start', function (event) {
+    subscribe('engine-start', _engineStart.call(this, gameContainer));
+    subscribe('new-game', _newGame.call(this, gameContainer));
+    subscribe('new-level', _newLevel.call(this, gameContainer));
+    subscribe('entity-death', _entityDeath.call(this, gameContainer));
+};
+
+function _engineStart(gameContainer) {
+    return function (event) {
         gameContainer.events.emit(new GameEvent('new-game', null));
+    }.bind(this);
+};
+
+function _newGame(gameContainer) {
+    return function (event) {
+        this._gameModel.playerScore = 0;
+        this._gameModel.playerLives = 3;
+        this._gameModel.currentLevel = 0;
         gameContainer.events.emit(_newLevelEvent.call(this));
         gameContainer.events.emit(new GameEvent('score-change', {score: 0}));
         gameContainer.events.emit(new GameEvent('player-life-change', {lives: 3}));
-    }.bind(this));
-    subscribe('entity-death', function (event) {
+    }.bind(this);
+}
+function _newLevel(gameContainer) {
+    return function (event) {
+        for (var i = 0; i < 5; i++) {
+            var asteroid = EntityFactory.buildAsteroid(gameContainer.display);
+            this._entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
+        }
+        this._gameModel.liveAsteroids = 5;
+        this._gameModel.isLevelActive = true;
+    }.bind(this);
+}
+
+function _entityDeath(gameContainer) {
+    return function (event) {
         if (event.data.type === Entity.Type.ASTEROID) {
             this._gameModel.liveAsteroids--;
+            var currentScore = this._gameModel.playerScore = this._gameModel.playerScore + 100;
+            gameContainer.events.emit(new GameEvent('score-change', {score: currentScore}));
         }
         if (this._gameModel.liveAsteroids <= 0 &&
             this._gameModel.isLevelActive) {
             this._gameModel.isLevelActive = false;
             gameContainer.events.emit(_newLevelEvent.call(this));
         }
-    }.bind(this));
-    subscribe('new-level', function (event) {
-        _loadNewLevel.call(this, gameContainer);
-    }.bind(this));
-};
-
-function _loadNewLevel(gameContainer) {
-    for (var i = 0; i < 5; i++) {
-        var asteroid = EntityFactory.buildAsteroid(gameContainer.display);
-        this._entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
-    }
-    this._gameModel.liveAsteroids = 5;
-    this._gameModel.isLevelActive = true;
+    }.bind(this);
 }
 
 function _newLevelEvent() {

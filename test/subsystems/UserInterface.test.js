@@ -8,6 +8,7 @@ var interface = require('../TestInterfaces');
 var containerGenerator = require('../mocks/GameContainer');
 
 var UserInterface = require('../../src/subsystems/UserInterface');
+var GameEvent = require('../../src/engine/GameEvent');
 var Renderer = require('../../src/engine/Renderer');
 
 describe('UserInterface', function () {
@@ -16,7 +17,7 @@ describe('UserInterface', function () {
     var mockGameContainer;
     beforeEach(function () {
         userInterface = new UserInterface();
-        mockRenderer = spies.createStubInstance(Renderer);
+        mockRenderer = spies.createStubInstance(Renderer, 'Renderer');
         mockGameContainer = containerGenerator.create();
     });
 
@@ -24,29 +25,42 @@ describe('UserInterface', function () {
         interface.assert.subsystems(userInterface);
     });
 
-    it('should subscribe to events', function(){
-        userInterface.update(mockGameContainer);
-        assert.equal('new-game', mockGameContainer.events.subscribe.getCall(0).args[0]);
-        assert.equal('new-level', mockGameContainer.events.subscribe.getCall(1).args[0]);
-        assert.equal('entity-death', mockGameContainer.events.subscribe.getCall(2).args[0]);
+    it('should subscribe to events', function () {
+        userInterface.initialize(mockGameContainer);
+        assert.equal('score-change', mockGameContainer.events.subscribe.getCall(0).args[0]);
+        assert.equal('player-life-change', mockGameContainer.events.subscribe.getCall(1).args[0]);
     });
 
-    describe('reacting to new-game event', function(){
-        var newGameSubscriber;
-        beforeEach(function(){
-            userInterface.update(mockGameContainer);
-            newGameSubscriber = mockGameContainer.events.subscribe.getCall(0).args[1]
+    describe('reacting to events', function () {
+        var scoreChangeSubscriber;
+        var playerLifeChangeSubscriber;
+        beforeEach(function () {
+            userInterface.initialize(mockGameContainer);
+            scoreChangeSubscriber = mockGameContainer.events.subscribe.getCall(0).args[1];
+            playerLifeChangeSubscriber = mockGameContainer.events.subscribe.getCall(1).args[1];
         });
 
-        it('should reset score and lives', function(){
+        it('should draw last score emitted', function () {
+            userInterface.render(mockRenderer);
+            verify(mockRenderer.drawText).wasCalledWith(10, 10, 'SCORE: 0');
 
+            var expectedScore = Math.random();
+            scoreChangeSubscriber.call({}, new GameEvent('score-change', {score: expectedScore}));
+            userInterface.render(mockRenderer);
+            verify(mockRenderer.drawText).wasCalledWith(10, 10, 'SCORE: ' + expectedScore);
         });
+
+        it('should draw last player life count emitted', function () {
+            userInterface.render(mockRenderer);
+            verify(mockRenderer.drawText).wasCalledWith(500, 10, 'LIVES: 0');
+
+            var expectedLives = Math.random()*10;
+            playerLifeChangeSubscriber.call({}, new GameEvent('player-life-change', {lives: expectedLives}));
+            userInterface.render(mockRenderer);
+            verify(mockRenderer.drawText).wasCalledWith(500, 10, 'LIVES: ' + expectedLives);
+        });
+
     });
 
-    it('should draw text labels', function () {
-        userInterface.render(mockRenderer);
 
-        verify(mockRenderer.drawText).wasCalledWith(10, 10, 'SCORE:0');
-        verify(mockRenderer.drawText).wasCalledWith(500, 10, 'LIVES:3');
-    });
 });
