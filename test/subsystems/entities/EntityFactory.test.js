@@ -4,6 +4,7 @@
 var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
 var GameContainerGenerator = require('../../mocks/GameContainer');
+var Types = require('../../ExpectedTypes');
 
 var Entity = require('../../../src/subsystems/entities/Entity');
 var Shape = require('../../../src/subsystems/entities/Shape');
@@ -11,6 +12,7 @@ var Point = require('../../../src/subsystems/entities/Point');
 var EntityFactory = require('../../../src/subsystems/entities/EntityFactory');
 
 describe('EntityFactory', function () {
+
     var mockGameContainer;
     beforeEach(function () {
         mockGameContainer = GameContainerGenerator.create();
@@ -26,7 +28,7 @@ describe('EntityFactory', function () {
             ]);
 
             var bullet = EntityFactory.buildBullet(expectedPosition, expectedVelocity);
-            checkEntity(bullet, expectedPosition, expectedVelocity, expectedShape, Entity.Type.BULLET);
+            checkEntity(bullet, expectedPosition, expectedVelocity, expectedShape, Types.entities.BULLET);
         });
 
         it('should self-terminate after one second', function () {
@@ -66,7 +68,7 @@ describe('EntityFactory', function () {
 
             var player = EntityFactory.buildPlayer(expectedPosition);
             assert.equal(0, player.rotation);
-            checkEntity(player, expectedPosition, expectedVelocity, expectedShape, Entity.Type.PLAYER);
+            checkEntity(player, expectedPosition, expectedVelocity, expectedShape, Types.entities.PLAYER);
         });
 
         it('should not have any behaviors', function () {
@@ -93,7 +95,7 @@ describe('EntityFactory', function () {
             expect(particles.length).to.equal(particleCount);
             var particle = particles[0];
             checkShape(expectedShape, particle.shape);
-            expect(particle._type).to.equal(Entity.Type.FX);
+            expect(particle._type).to.equal(Types.entities.FX);
         });
 
         it('should have correct position', function () {
@@ -191,7 +193,7 @@ describe('EntityFactory', function () {
             var expectedShape = expectedMediumAsteroidShape();
 
             checkShape(expectedShape, asteroid._shape);
-            assert.equal(Entity.Type.ASTEROID, asteroid._type);
+            assert.equal(Types.entities.ASTEROID_MEDIUM, asteroid._type);
             verify.point(new Point(expectedX, expectedY), asteroid.position);
         });
 
@@ -202,7 +204,7 @@ describe('EntityFactory', function () {
             var expectedShape = expectedSmallAsteroidShape();
 
             checkShape(expectedShape, asteroid._shape);
-            assert.equal(Entity.Type.ASTEROID, asteroid._type);
+            assert.equal(Types.entities.ASTEROID_SMALL, asteroid._type);
             verify.point(new Point(expectedX, expectedY), asteroid.position);
         });
 
@@ -212,7 +214,7 @@ describe('EntityFactory', function () {
                 var expectedShape = expectedLargeAsteroidShape();
 
                 checkShape(expectedShape, asteroid._shape);
-                assert.equal(Entity.Type.ASTEROID, asteroid._type);
+                assert.equal(Types.entities.ASTEROID_LARGE, asteroid._type);
             });
 
             it('should generate a position within a specified range', function () {

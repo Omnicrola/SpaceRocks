@@ -57,7 +57,7 @@ function _newLevel(gameContainer) {
 
 function _entityDeath(gameContainer) {
     return function (event) {
-        if (event.data.type === Entity.Type.ASTEROID) {
+        if (event.data.type === 'asteroid-large') {
             this._gameModel.liveAsteroids--;
             var currentScore = this._gameModel.playerScore = this._gameModel.playerScore + 100;
             gameContainer.events.emit(new GameEvent('score-change', {score: currentScore}));

@@ -49,8 +49,8 @@ describe('Entity', function () {
     });
 
     it('should change alive state and emit an event when destroy is called', function () {
-        var expectedType = Entity.Type.PLAYER;
         var expectedPosition = new Point(Math.random(), Math.random());
+        var expectedType = 'mytype';
         var expectedEvent = new GameEvent('entity-death', {
             type: expectedType,
             position: expectedPosition
@@ -121,11 +121,5 @@ describe('Entity', function () {
         verify(behavior2).wasCalledWith(mockGameContainer, entity);
     });
 
-    it('has static values', function () {
-        verify.readOnlyProperty(Entity.Type, 'PLAYER', 'player');
-        verify.readOnlyProperty(Entity.Type, 'ASTEROID', 'asteroid');
-        verify.readOnlyProperty(Entity.Type, 'BULLET', 'bullet');
-        verify.readOnlyProperty(Entity.Type, 'FX', 'fx');
-    });
 
 });

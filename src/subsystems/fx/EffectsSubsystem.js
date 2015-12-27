@@ -19,8 +19,8 @@ EffectsSubsystem.prototype.initialize = function (gameContainer) {
 
     gameContainer.events.subscribe('entity-death', function (event) {
         var type = event.data.type;
-        if (type === Entity.Type.ASTEROID ||
-            type === Entity.Type.PLAYER) {
+        if (type === 'asteroid-large' ||
+            type === 'player') {
             gameContainer.audio.play(AudioFx.EXPLOSION);
             _createParticles.call(self, event.data.position);
         }

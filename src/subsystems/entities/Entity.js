@@ -84,32 +84,6 @@ module.exports = (function () {
         });
     }
 
-    var Types = {};
-    Object.defineProperties(Types, {
-        PLAYER: {
-            value: 'player',
-            writeable: false,
-            enumerable: true
-        },
-        ASTEROID: {
-            value: 'asteroid',
-            writeable: false,
-            enumerable: true
-        },
-        BULLET: {
-            value: 'bullet',
-            writeable: false,
-            enumerable: true
-        },
-        FX: {
-            value: 'fx',
-            writeable: false,
-            enumerable: true
-        },
-
-    });
-    Entity.Type = Types;
-
     return Entity;
 })
 ();

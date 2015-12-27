@@ -6,6 +6,7 @@ var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
 var interface = require('../../TestInterfaces');
 var GameContainerMock = require('../../mocks/GameContainer');
+var Types = require('../../ExpectedTypes');
 
 var EffectsSubsystem = require('../../../src/subsystems/fx/EffectsSubsystem');
 var Entity = require('../../../src/subsystems/entities/Entity');
@@ -43,9 +44,9 @@ describe('EffectsSubsystem', function () {
 
         var subscribeSpy = mockGameContainer.events.subscribe;
         verify(subscribeSpy).wasCalledExactly(3);
-        expect(subscribeSpy.getCall(0).args[0]).to.equal('player-fire');
-        expect(subscribeSpy.getCall(1).args[0]).to.equal('entity-death');
-        expect(subscribeSpy.getCall(2).args[0]).to.equal('player-thrust');
+        expect(subscribeSpy.getCall(0).args[0]).to.equal(Types.events.PLAYER_FIRE);
+        expect(subscribeSpy.getCall(1).args[0]).to.equal(Types.events.ENTITY_DEATH);
+        expect(subscribeSpy.getCall(2).args[0]).to.equal(Types.events.PLAYER_THRUST);
     });
 
     describe('reacting to player-thrust event', function () {
@@ -58,7 +59,7 @@ describe('EffectsSubsystem', function () {
         it('will emit particles in the direction of thrust', function () {
             var expectedDirection = new Point(Math.random(), Math.random());
             var expectedPosition = new Point(Math.random(), Math.random());
-            var gameEvent = new GameEvent('player-thrust', {
+            var gameEvent = new GameEvent(Types.events.PLAYER_THRUST, {
                 direction: expectedDirection,
                 position: expectedPosition
             });
@@ -88,8 +89,8 @@ describe('EffectsSubsystem', function () {
         });
 
         it('should play a sound when the player dies', function () {
-            var gameEvent = new GameEvent('entity-death', {
-                type: Entity.Type.PLAYER,
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: Types.entities.PLAYER,
                 position: new Point(0, 0)
             });
             verify(mockGameContainer.audio.play).wasNotCalled();
@@ -100,8 +101,8 @@ describe('EffectsSubsystem', function () {
 
         it('should generate particles when asteroid dies', function () {
             var expectedPosition = new Point(Math.random(), Math.random());
-            var gameEvent = new GameEvent('entity-death', {
-                type: Entity.Type.ASTEROID,
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: Types.entities.ASTEROID_LARGE,
                 position: expectedPosition
             });
             var expectedEntities = [{foo: 123}, {bar: 3455}];
@@ -124,8 +125,8 @@ describe('EffectsSubsystem', function () {
         });
 
         it('should play a sound when an asteroid dies', function () {
-            var gameEvent = new GameEvent('entity-death', {
-                type: Entity.Type.ASTEROID,
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: Types.entities.ASTEROID_LARGE,
                 position: new Point(0, 0)
             });
             verify(mockGameContainer.audio.play).wasNotCalled();
@@ -135,8 +136,8 @@ describe('EffectsSubsystem', function () {
         });
 
         it('should not play a sound when a bullet dies', function () {
-            var gameEvent = new GameEvent('entity-death', {
-                type: Entity.Type.BULLET,
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: Types.entities.BULLET,
                 position: new Point(0, 0)
             });
 
@@ -145,8 +146,8 @@ describe('EffectsSubsystem', function () {
         });
 
         it('should not play a sound when an effect dies', function () {
-            var gameEvent = new GameEvent('entity-death', {
-                type: Entity.Type.FX,
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: Types.entities.FX,
                 position: new Point(0, 0)
             });
 
@@ -163,7 +164,7 @@ describe('EffectsSubsystem', function () {
         });
 
         it('should play an audio file when the player shoots a bullet', function () {
-            var gameEvent = new GameEvent('player-fire', {});
+            var gameEvent = new GameEvent(Types.events.PLAYER_FIRE, {});
 
             verify(mockGameContainer.audio.play).wasNotCalled();
 

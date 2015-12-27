@@ -6,6 +6,7 @@ var verify = require('../TestVerification');
 var spies = require('../TestSpies');
 var interface = require('../TestInterfaces');
 var mockGameContainer = require('../mocks/GameContainer');
+var Types = require('../../ExpectedTypes');
 
 var LevelManager = require('../../src/subsystems/LevelManager');
 var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
@@ -39,10 +40,10 @@ describe('LevelManager', function () {
         levelManager.initialize(gameContainer);
         var subscribeSpy = gameContainer.events.subscribe;
         verify(subscribeSpy).wasCalledExactly(4);
-        assert.equal('engine-start', subscribeSpy.getCall(0).args[0]);
-        assert.equal('new-game', subscribeSpy.getCall(1).args[0]);
-        assert.equal('new-level', subscribeSpy.getCall(2).args[0]);
-        assert.equal('entity-death', subscribeSpy.getCall(3).args[0]);
+        assert.equal(Types.events.ENGINE_START, subscribeSpy.getCall(0).args[0]);
+        assert.equal(Types.events.NEW_GAME, subscribeSpy.getCall(1).args[0]);
+        assert.equal(Types.events.NEW_LEVEL, subscribeSpy.getCall(2).args[0]);
+        assert.equal(Types.events.ENTITY_DEATH, subscribeSpy.getCall(3).args[0]);
     });
 
     describe('reacting to events', function () {
@@ -61,41 +62,41 @@ describe('LevelManager', function () {
 
         it('should emit events to start new game', function () {
             var emitSpy = gameContainer.events.emit;
-            var startEvent = new GameEvent('engine-start', null);
+            var startEvent = new GameEvent(Types.events.ENGINE_START, null);
             verify(emitSpy).wasNotCalled();
 
             engineStartSubscriber(startEvent);
             verify(emitSpy).wasCalledExactly(1);
             var newGameEvent = emitSpy.getCall(0).args[0];
-            assert.equal('new-game', newGameEvent.type);
+            assert.equal(Types.events.NEW_GAME, newGameEvent.type);
             assert.equal(null, newGameEvent.data);
 
         });
 
         it('should reset score and life when new game starts', function () {
             var emitSpy = gameContainer.events.emit;
-            newGameSubscriber.call({}, new GameEvent('new-game', null));
+            newGameSubscriber.call({}, new GameEvent(Types.events.NEW_GAME, null));
 
             verify(emitSpy).wasCalledExactly(3);
 
             var newLevelEvent = emitSpy.getCall(0).args[0];
-            assert.equal('new-level', newLevelEvent.type);
+            assert.equal(Types.events.NEW_LEVEL, newLevelEvent.type);
             verify.config({levelNumber: 1}, newLevelEvent.data);
 
             var scoreChangeEvent = emitSpy.getCall(1).args[0];
-            assert.equal('score-change', scoreChangeEvent.type);
+            assert.equal(Types.events.SCORE_CHANGE, scoreChangeEvent.type);
             verify.config({score: 0}, scoreChangeEvent.data);
 
             var playerLifeChange = emitSpy.getCall(2).args[0];
-            assert.equal('player-life-change', playerLifeChange.type);
+            assert.equal(Types.events.PLAYER_LIFE_CHANGE, playerLifeChange.type);
             verify.config({lives: 3}, playerLifeChange.data);
         });
 
         it('should emit events when asteroids are destroyed', function () {
-            var entityEvent = new GameEvent("entity-death", {type: Entity.Type.ASTEROID});
+            var entityEvent = new GameEvent(Types.events.ENTITY_DEATH, {type: Types.entities.ASTEROID_LARGE});
             var emitSpy = gameContainer.events.emit;
-            newGameSubscriber.call({}, new GameEvent('new-game', null));
-            newLevelSubscriber.call({}, new GameEvent('new-level', null));
+            newGameSubscriber.call({}, new GameEvent(Types.events.NEW_GAME, null));
+            newLevelSubscriber.call({}, new GameEvent(Types.events.NEW_LEVEL, null));
             emitSpy.reset();
             assert.equal(0, emitSpy.callCount);
 
@@ -116,19 +117,19 @@ describe('LevelManager', function () {
         });
 
         function checkScoreEvent(expectedScore, event) {
-            assert.equal('score-change', event.type);
+            assert.equal(Types.events.SCORE_CHANGE, event.type);
             assert.equal(expectedScore, event.data.score);
         }
 
         function checkNewLevelEvent(expectedLevel, event) {
-            assert.equal('new-level', event.type);
+            assert.equal(Types.events.NEW_LEVEL, event.type);
             assert.equal(expectedLevel, event.data.levelNumber);
         }
     });
 
     describe('reacting to "new-level" event', function () {
         var newLevelSubscriber;
-        var newLevelEvent = new Event('new-level', null);
+        var newLevelEvent = new Event(Types.events.NEW_LEVEL, null);
         var expectedWidth;
         var expectedHeight;
         beforeEach(function () {
@@ -183,16 +184,4 @@ describe('LevelManager', function () {
 
     });
 
-    describe('reacting to "entity-death" events', function () {
-        var entityDestroyedSubscriber;
-        var newLevelSubscriber;
-        beforeEach(function () {
-            levelManager.initialize(gameContainer);
-            entityDestroyedSubscriber = gameContainer.events.subscribe.secondCall.args[1];
-            newLevelSubscriber = gameContainer.events.subscribe.thirdCall.args[1];
-            newLevelSubscriber.call({}, new GameEvent('new-level', {levelNumber: 1}));
-        });
-
-
-    });
 });

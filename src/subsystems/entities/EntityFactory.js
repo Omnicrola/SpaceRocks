@@ -12,7 +12,7 @@ function _buildBullet(position, velocity) {
     var bullet = new Entity(new Shape([
         new Point(0, 0),
         new Point(1, 0)
-    ]), Entity.Type.BULLET);
+    ]), 'bullet');
     bullet.position = position;
     bullet.velocity = velocity;
     var lifetime = 30;
@@ -31,7 +31,7 @@ function _buildPlayer(position) {
         new Point(0, -5),
         new Point(5, -5),
         new Point(0, 5),
-    ]), Entity.Type.PLAYER);
+    ]), 'player');
     player.position = position;
     return player;
 }
@@ -49,7 +49,7 @@ function _buildMediumAsteroid(config) {
         new Point(-17, 3),
         new Point(-16, -4),
         new Point(-4, -4)
-    ]), Entity.Type.ASTEROID);
+    ]), 'asteroid-medium');
     asteroid.position = new Point(config.x, config.y);
     _addRandomVelocity(asteroid);
     _rotateAsteroid(asteroid);
@@ -70,14 +70,14 @@ function _buildSmallAsteroid(config) {
         new Point(4, -5),
         new Point(7, -3),
         new Point(4, 0)
-    ]), Entity.Type.ASTEROID);
+    ]), 'asteroid-small');
     asteroid.position = new Point(config.x, config.y);
     _addRandomVelocity(asteroid);
     _rotateAsteroid(asteroid);
     return asteroid;
 }
 
-function _buildAsteroid(config) {
+function _buildLargeAsteroid(config) {
     var asteroid = new Entity(new Shape([
         new Point(-10, -24),
         new Point(15, -24),
@@ -90,7 +90,7 @@ function _buildAsteroid(config) {
         new Point(-30, 4),
         new Point(-17, -2),
         new Point(-30, -8)
-    ]), Entity.Type.ASTEROID);
+    ]), 'asteroid-large');
     var x = Math.random() * config.width;
     var y = Math.random() * config.height;
     asteroid.position = new Point(0, 0);
@@ -117,7 +117,7 @@ function _buildParticles(config) {
         var particle = new Entity(new Shape([
             new Point(0, 0),
             new Point(1, 0)
-        ]), Entity.Type.FX);
+        ]), 'fx');
         particle.position = config.position;
         particle.velocity = _particleVelocity(config);
         var lifetime = 0;
@@ -161,7 +161,7 @@ Object.defineProperties(EntityFactory, {
         enumerable: true
     },
     buildLargeAsteroid: {
-        value: _buildAsteroid,
+        value: _buildLargeAsteroid,
         writeable: false,
         enumerable: true
     },
