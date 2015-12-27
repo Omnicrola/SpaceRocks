@@ -211,7 +211,7 @@ describe('PlayerSubsystem', function () {
         verify(mockEntitySubsystem.addEntity).wasNotCalled();
         var event = new GameEvent('new-level', {});
 
-        newLevelSubscriber(event);
+        newLevelSubscriber.call({}, event);
         verify(mockEntitySubsystem.addEntity).wasCalledOnce();
         verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.PLAYER);
 
@@ -230,8 +230,8 @@ describe('PlayerSubsystem', function () {
             .onFirstCall().returns(firstPlayer)
             .onSecondCall().returns(secondPlayer);
 
-        newLevelSubscriber(event);
-        newLevelSubscriber(event);
+        newLevelSubscriber.call({}, event);
+        newLevelSubscriber.call({}, event);
 
         verify(mockEntitySubsystem.addEntity).wasCalledTwice();
         var firstPlayer = mockEntitySubsystem.addEntity.firstCall.args[0];

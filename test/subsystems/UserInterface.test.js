@@ -12,9 +12,12 @@ var GameEvent = require('../../src/engine/GameEvent');
 var Renderer = require('../../src/engine/Renderer');
 
 describe('UserInterface', function () {
+
     var userInterface;
     var mockRenderer;
     var mockGameContainer;
+    var EXPECTED_FONT = '12px atari';
+
     beforeEach(function () {
         userInterface = new UserInterface();
         mockRenderer = spies.createStubInstance(Renderer, 'Renderer');
@@ -42,7 +45,7 @@ describe('UserInterface', function () {
 
         it('should draw last score emitted', function () {
             userInterface.render(mockRenderer);
-            verify(mockRenderer.setFont).wasCalledWith('14px atari');
+            verify(mockRenderer.setFont).wasCalledWith(EXPECTED_FONT);
             verify(mockRenderer.drawText).wasCalledWith(10, 20, 'SCORE: 0');
 
             var expectedScore = Math.random();
@@ -53,10 +56,10 @@ describe('UserInterface', function () {
 
         it('should draw last player life count emitted', function () {
             userInterface.render(mockRenderer);
-            verify(mockRenderer.setFont).wasCalledWith('14px atari');
+            verify(mockRenderer.setFont).wasCalledWith(EXPECTED_FONT);
             verify(mockRenderer.drawText).wasCalledWith(500, 20, 'LIVES: 0');
 
-            var expectedLives = Math.random()*10;
+            var expectedLives = Math.random() * 10;
             playerLifeChangeSubscriber.call({}, new GameEvent('player-life-change', {lives: expectedLives}));
             userInterface.render(mockRenderer);
             verify(mockRenderer.drawText).wasCalledWith(500, 20, 'LIVES: ' + expectedLives);
