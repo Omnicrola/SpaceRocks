@@ -42,22 +42,24 @@ describe('UserInterface', function () {
 
         it('should draw last score emitted', function () {
             userInterface.render(mockRenderer);
-            verify(mockRenderer.drawText).wasCalledWith(10, 10, 'SCORE: 0');
+            verify(mockRenderer.setFont).wasCalledWith('14px atari');
+            verify(mockRenderer.drawText).wasCalledWith(10, 20, 'SCORE: 0');
 
             var expectedScore = Math.random();
             scoreChangeSubscriber.call({}, new GameEvent('score-change', {score: expectedScore}));
             userInterface.render(mockRenderer);
-            verify(mockRenderer.drawText).wasCalledWith(10, 10, 'SCORE: ' + expectedScore);
+            verify(mockRenderer.drawText).wasCalledWith(10, 20, 'SCORE: ' + expectedScore);
         });
 
         it('should draw last player life count emitted', function () {
             userInterface.render(mockRenderer);
-            verify(mockRenderer.drawText).wasCalledWith(500, 10, 'LIVES: 0');
+            verify(mockRenderer.setFont).wasCalledWith('14px atari');
+            verify(mockRenderer.drawText).wasCalledWith(500, 20, 'LIVES: 0');
 
             var expectedLives = Math.random()*10;
             playerLifeChangeSubscriber.call({}, new GameEvent('player-life-change', {lives: expectedLives}));
             userInterface.render(mockRenderer);
-            verify(mockRenderer.drawText).wasCalledWith(500, 10, 'LIVES: ' + expectedLives);
+            verify(mockRenderer.drawText).wasCalledWith(500, 20, 'LIVES: ' + expectedLives);
         });
 
     });

@@ -28,8 +28,9 @@ UserInterface.prototype.update = function (gameContainer) {
 };
 
 UserInterface.prototype.render = function (renderer) {
-    renderer.drawText(10, 10, 'SCORE: ' + this._score);
-    renderer.drawText(500, 10, 'LIVES: ' + this._lives);
+    renderer.setFont('12px atari');
+    renderer.drawText(10, 20, 'SCORE: ' + this._score);
+    renderer.drawText(500, 20, 'LIVES: ' + this._lives);
 };
 
 

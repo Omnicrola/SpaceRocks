@@ -13,6 +13,7 @@ var actualModules = {
     PlayerSubsystem: require('../../src/subsystems/PlayerSubsystem'),
     EffectsSubsystem: require('../../src/subsystems/fx/EffectsSubsystem'),
     EntitySubsystem: require('../../src/subsystems/entities/EntitySubsystem'),
+    UserInterface: require('../../src/subsystems/UserInterface'),
 };
 
 describe('SpaceRocks', function () {
@@ -36,6 +37,7 @@ describe('SpaceRocks', function () {
         var spaceEngine = mockModule('SpaceEngine');
         var timeModule = mockModule('Time');
         var effectsSubsystemModule = mockModule('EffectsSubsystem');
+        var uiModule = mockModule('UserInterface');
 
         SpaceRocks = proxy('../../src/game/SpaceRocks', {
             '../engine/Time': timeModule,
@@ -43,6 +45,7 @@ describe('SpaceRocks', function () {
             '../subsystems/LevelManager': levelManager,
             '../subsystems/PlayerSubsystem': playerSubsystem,
             '../subsystems/entities/EntitySubsystem': entitySubsystem,
+            '../subsystems/UserInterface': uiModule,
             '../subsystems/fx/EffectsSubsystem': effectsSubsystemModule,
         });
 
@@ -59,6 +62,7 @@ describe('SpaceRocks', function () {
                 mockedModules.stubs.PlayerSubsystem,
                 mockedModules.stubs.EntitySubsystem,
                 mockedModules.stubs.EffectsSubsystem,
+                mockedModules.stubs.UserInterface,
             ]
         };
         var spaceRocks = new SpaceRocks(expectedCanvasId);
@@ -79,6 +83,7 @@ describe('SpaceRocks', function () {
         verify(mockedModules.PlayerSubsystem).wasCalledWithNew();
         verify(mockedModules.EntitySubsystem).wasCalledWithNew();
         verify(mockedModules.EffectsSubsystem).wasCalledWithNew();
+        verify(mockedModules.UserInterface).wasCalledWithNew();
 
         verify(mockedModules.PlayerSubsystem).wasCalledWithConfig(0, expectedPlayerSubsystemConfig);
         verify(mockedModules.LevelManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);

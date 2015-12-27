@@ -8,6 +8,7 @@ var LevelManager = require('../subsystems/LevelManager');
 var PlayerSubsystem = require('../subsystems/PlayerSubsystem');
 var EntitySubsystem = require('../subsystems/entities/EntitySubsystem');
 var EffectsSubsystem = require('../subsystems/fx/EffectsSubsystem');
+var UserInterface = require('../subsystems/UserInterface');
 
 module.exports = (function () {
     var spacerocks = function (canvasId) {
@@ -29,11 +30,13 @@ module.exports = (function () {
             playerWeaponDelay: 250
         });
         var effectsSubsystem = new EffectsSubsystem(entitySubsystem);
+        var userInterface = new UserInterface();
         return [
             levelManager,
             playerSubsystem,
             entitySubsystem,
-            effectsSubsystem
+            effectsSubsystem,
+            userInterface
         ];
     }
 
