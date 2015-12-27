@@ -24,12 +24,14 @@
         #content {
             margin: auto;
             width: 800px;
+            perspective: 1000px;
         }
 
         .screen {
             border: 20px solid #222222;
             border-radius: 50px;
             padding: 25px;
+            transform: rotateX(12deg);
         }
 
         .inner-screen {
@@ -49,7 +51,6 @@
 <body>
 <div id="content">
     <h1 class="atari">Space Rocks!</h1>
-
     <div class="screen">
         <canvas id="spacerocks" class="inner-screen" width="640" height="480"></canvas>
     </div>
