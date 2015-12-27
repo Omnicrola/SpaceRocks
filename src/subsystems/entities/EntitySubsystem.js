@@ -6,61 +6,61 @@ var Point = require('./Point');
 var CollisionManager = require('./CollisionManager');
 var Debug = require('../../Debug');
 
-module.exports = (function () {
-    var entitySubsystem = function () {
-        this._entities = [];
-        this._collisionManager = new CollisionManager();
-    };
 
-    entitySubsystem.prototype.render = function (renderer) {
-        this._entities.forEach(function (singleEntity) {
-            singleEntity.render(renderer);
-        });
-    };
+var EntitySubsystem = function () {
+    this._entities = [];
+    this._collisionManager = new CollisionManager();
+};
 
-    entitySubsystem.prototype.update = function (gameContainer) {
-        this._collisionManager.update(gameContainer);
-        this._entities = this._entities.filter(function (singleEntity) {
-            return singleEntity.isAlive;
-        });
-        this._entities.forEach(function (singleEntity) {
-            _wrapPosition(singleEntity, gameContainer.display);
-            singleEntity.update(gameContainer);
-        });
-    };
+EntitySubsystem.prototype.render = function (renderer) {
+    this._entities.forEach(function (singleEntity) {
+        singleEntity.render(renderer);
+    });
+};
 
-    function _wrapPosition(entity, display) {
-        var newPosition = entity.position;
-        if (entity.position.x < 0) {
-            newPosition = new Point(display.width, newPosition.y);
-        }
-        if (entity.position.x > display.width) {
-            newPosition = new Point(0, newPosition.y);
-        }
-        if (entity.position.y < 0) {
-            newPosition = new Point(newPosition.x, display.height);
-        }
-        if (entity.position.y > display.height) {
-            newPosition = new Point(newPosition.x, 0);
-        }
-        entity.position = newPosition;
+EntitySubsystem.prototype.update = function (gameContainer) {
+    this._collisionManager.update(gameContainer);
+    this._entities = this._entities.filter(function (singleEntity) {
+        return singleEntity.isAlive;
+    });
+    this._entities.forEach(function (singleEntity) {
+        _wrapPosition(singleEntity, gameContainer.display);
+        singleEntity.update(gameContainer);
+    });
+};
+
+function _wrapPosition(entity, display) {
+    var newPosition = entity.position;
+    if (entity.position.x < 0) {
+        newPosition = new Point(display.width, newPosition.y);
     }
-
-    entitySubsystem.prototype.initialize = function (container) {
-
-    };
-
-    var nextId = 1;
-    entitySubsystem.prototype.addEntity = function (newEntity, collisionGroup) {
-        newEntity.id = nextId++;
-        this._entities.push(newEntity);
-        this._collisionManager.add(newEntity, collisionGroup);
-    };
-
-    entitySubsystem.prototype.removeEntity = function (entityToRemove) {
-        var position = this._entities.indexOf(entityToRemove);
-        this._entities.splice(position, 1);
+    if (entity.position.x > display.width) {
+        newPosition = new Point(0, newPosition.y);
     }
+    if (entity.position.y < 0) {
+        newPosition = new Point(newPosition.x, display.height);
+    }
+    if (entity.position.y > display.height) {
+        newPosition = new Point(newPosition.x, 0);
+    }
+    entity.position = newPosition;
+}
 
-    return entitySubsystem;
-})();
+EntitySubsystem.prototype.initialize = function (container) {
+
+};
+
+var nextId = 1;
+EntitySubsystem.prototype.addEntity = function (newEntity, collisionGroup) {
+    newEntity.id = nextId++;
+    this._entities.push(newEntity);
+    this._collisionManager.add(newEntity, collisionGroup);
+};
+
+EntitySubsystem.prototype.removeEntity = function (entityToRemove) {
+    this._collisionManager.remove(entityToRemove);
+    var position = this._entities.indexOf(entityToRemove);
+    this._entities.splice(position, 1);
+}
+
+module.exports = EntitySubsystem;

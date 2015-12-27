@@ -65,6 +65,7 @@ describe('EntitySubsystem', function () {
         entitySubsystem.update(mockContainer);
         entitySubsystem.render({});
 
+        verify(stubCollisionManager.remove).wasCalledWith(stubEntity);
         verify(stubEntity.update).wasNotCalled();
         verify(stubEntity.render).wasNotCalled();
     });

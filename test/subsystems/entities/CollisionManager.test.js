@@ -19,6 +19,8 @@ describe('CollisionManager', function () {
         mockGameContainer = GameContainerMock.create();
     });
 
+
+
     describe('entities colliding', function () {
         var stubShape1;
         var stubEntity1;
@@ -38,7 +40,14 @@ describe('CollisionManager', function () {
             collisionManager.add(stubEntity2, CollisionManager.PLAYER);
 
         });
+        it('should remove an entity', function() {
+            collisionManager.remove(stubEntity1);
+            collisionManager.update(mockGameContainer);
 
+            verify(stubShape1.intersects).wasNotCalled();
+            verify(stubShape2.intersects).wasNotCalled();
+
+        });
         it('should not destroy entities if they do not intersect', function () {
             stubShape1.intersects.returns(false);
             stubShape2.intersects.returns(false);
