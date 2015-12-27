@@ -182,59 +182,79 @@ describe('EntityFactory', function () {
     });
 
     describe('Asteroid', function () {
-        it('should have the correct shape', function () {
-            var asteroid = EntityFactory.buildAsteroid({width: 100, height: 100});
-            var expectedShape = new Shape([
-                new Point(-20, 60),
-                new Point(50, 20),
-                new Point(40, -30),
-                new Point(-10, -40),
-                new Point(-50, -10),
-                new Point(-40, 50)
-            ]);
+
+
+        it('Medium should have the correct shape', function () {
+            var expectedX = Math.random();
+            var expectedY = Math.random();
+            var asteroid = EntityFactory.buildMediumAsteroid({x: expectedX, y: expectedY});
+            var expectedShape = expectedMediumAsteroidShape();
 
             checkShape(expectedShape, asteroid._shape);
             assert.equal(Entity.Type.ASTEROID, asteroid._type);
+            verify.point(new Point(expectedX, expectedY), asteroid.position);
         });
 
-        it('should generate a position within a specified range', function () {
-            var maxX = Math.random() * 1000;
-            var maxY = Math.random() * 1000;
-            var config = {width: maxX, height: maxY};
+        it('Small should have the correct shape', function () {
+            var expectedX = Math.random();
+            var expectedY = Math.random();
+            var asteroid = EntityFactory.buildSmallAsteroid({x: expectedX, y: expectedY});
+            var expectedShape = expectedSmallAsteroidShape();
 
-            for (var i = 0; i < 100; i++) {
-                var asteroid = EntityFactory.buildAsteroid(config);
-                var position = asteroid.position;
-                checkRange(position.x, 0, maxX);
-                checkRange(position.y, 0, maxY);
-            }
+            checkShape(expectedShape, asteroid._shape);
+            assert.equal(Entity.Type.ASTEROID, asteroid._type);
+            verify.point(new Point(expectedX, expectedY), asteroid.position);
         });
 
-        it('should generate a random velocity', function () {
-            var config = {width: 10, height: 10};
+        describe('Large Asteroids', function () {
+            it('should have the correct shape', function () {
+                var asteroid = EntityFactory.buildLargeAsteroid({width: 100, height: 100});
+                var expectedShape = expectedLargeAsteroidShape();
 
-            for (var i = 0; i < 100; i++) {
-                var asteroid = EntityFactory.buildAsteroid(config);
-                var velocity = asteroid.velocity;
-                checkRange(velocity.x, -2, 2);
-                checkRange(velocity.y, -2, 2);
-            }
-        });
+                checkShape(expectedShape, asteroid._shape);
+                assert.equal(Entity.Type.ASTEROID, asteroid._type);
+            });
 
-        it('should rotate slowly', function () {
-            var config = {width: 10, height: 10};
+            it('should generate a position within a specified range', function () {
+                var maxX = Math.random() * 1000;
+                var maxY = Math.random() * 1000;
+                var config = {width: maxX, height: maxY};
 
-            var asteroid = EntityFactory.buildAsteroid(config);
-            assert.equal(1, asteroid._behaviors.length);
-            var rotationBehavior = asteroid._behaviors[0];
+                for (var i = 0; i < 100; i++) {
+                    var asteroid = EntityFactory.buildLargeAsteroid(config);
+                    var position = asteroid.position;
+                    checkRange(position.x, 0, maxX);
+                    checkRange(position.y, 0, maxY);
+                }
+            });
 
-            var startingRotation = Math.random();
-            asteroid.rotation = startingRotation;
-            mockGameContainer.delta = 1.0;
-            rotationBehavior(mockGameContainer, asteroid);
+            it('should generate a random velocity', function () {
+                var config = {width: 10, height: 10};
 
-            var newRotation = asteroid.rotation;
-            expect(newRotation - startingRotation).to.be.within(-2, 2);
+                for (var i = 0; i < 100; i++) {
+                    var asteroid = EntityFactory.buildLargeAsteroid(config);
+                    var velocity = asteroid.velocity;
+                    checkRange(velocity.x, -2, 2);
+                    checkRange(velocity.y, -2, 2);
+                }
+            });
+
+            it('should rotate slowly', function () {
+                var config = {width: 10, height: 10};
+
+                var asteroid = EntityFactory.buildLargeAsteroid(config);
+                assert.equal(1, asteroid._behaviors.length);
+                var rotationBehavior = asteroid._behaviors[0];
+
+                var startingRotation = Math.random();
+                asteroid.rotation = startingRotation;
+                mockGameContainer.delta = 1.0;
+                rotationBehavior(mockGameContainer, asteroid);
+
+                var newRotation = asteroid.rotation;
+                expect(newRotation - startingRotation).to.be.within(-2, 2);
+
+            });
 
         });
     });
@@ -277,6 +297,56 @@ describe('EntityFactory', function () {
             new Point(0, -5),
             new Point(5, -5),
             new Point(0, 5),
+        ]);
+    }
+
+    function expectedLargeAsteroidShape() {
+        return new Shape([
+            new Point(-10, -24),
+            new Point(15, -24),
+            new Point(29, -7),
+            new Point(30, 5),
+            new Point(15, 21),
+            new Point(-1, 20),
+            new Point(-1, 3),
+            new Point(-15, 20),
+            new Point(-30, 4),
+            new Point(-17, -2),
+            new Point(-30, -8)
+        ]);
+    }
+
+    function expectedMediumAsteroidShape() {
+        return new Shape([
+            new Point(-8, -10),
+            new Point(6, -11),
+            new Point(15, -5),
+            new Point(14, -2),
+            new Point(4, 0),
+            new Point(14, 7),
+            new Point(7, 13),
+            new Point(-1, 9),
+            new Point(-9, 13),
+            new Point(-17, 3),
+            new Point(-16, -4),
+            new Point(-4, -4)
+        ]);
+    }
+
+    function expectedSmallAsteroidShape() {
+        return new Shape([
+            new Point(9, 3),
+            new Point(4, 8),
+            new Point(-2, 5),
+            new Point(-5, 7),
+            new Point(-8, 2),
+            new Point(-5, 1),
+            new Point(-7, -3),
+            new Point(-3, -6),
+            new Point(0, -3),
+            new Point(4, -5),
+            new Point(7, -3),
+            new Point(4, 0)
         ]);
     }
 

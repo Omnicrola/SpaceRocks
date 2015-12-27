@@ -47,7 +47,7 @@ function _newGame(gameContainer) {
 function _newLevel(gameContainer) {
     return function (event) {
         for (var i = 0; i < 5; i++) {
-            var asteroid = EntityFactory.buildAsteroid(gameContainer.display);
+            var asteroid = EntityFactory.buildLargeAsteroid(gameContainer.display);
             this._entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
         }
         this._gameModel.liveAsteroids = 5;

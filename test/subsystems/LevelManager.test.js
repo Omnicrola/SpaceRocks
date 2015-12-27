@@ -21,7 +21,7 @@ describe('LevelManager', function () {
     beforeEach(function () {
         mockEntitySubsystem = spies.createStubInstance(EntitySubsystem);
         mockEntityFactory = {
-            buildAsteroid: spies.create('buildAsteroid')
+            buildLargeAsteroid: spies.create('buildAsteroid')
         };
         LevelManager = proxy('../../src/subsystems/LevelManager', {
             './entities/EntityFactory': mockEntityFactory
@@ -150,7 +150,7 @@ describe('LevelManager', function () {
             var expectedAsteroid4 = {foo: Math.random()};
             var expectedAsteroid5 = {foo: Math.random()};
 
-            var buildSpy = mockEntityFactory.buildAsteroid;
+            var buildSpy = mockEntityFactory.buildLargeAsteroid;
 
             buildSpy.onCall(0).returns(expectedAsteroid1);
             buildSpy.onCall(1).returns(expectedAsteroid2);
