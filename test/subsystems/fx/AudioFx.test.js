@@ -9,7 +9,7 @@ var AudioFx = require('../../../src/subsystems/fx/AudioFx');
 
 describe('AudioFx', function () {
     it('has the correct constants', function () {
-        verify.readOnlyProperty(AudioFx, 'WEAPON_FIRE', 'atarisquare');
+        verify.readOnlyProperty(AudioFx, 'WEAPON_FIRE', 'asteroids-ship-fire');
         verify.readOnlyProperty(AudioFx, 'EXPLOSION', 'cannon-boom4');
     });
 });

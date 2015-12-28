@@ -5,7 +5,7 @@ var AudioFx = {};
 
 Object.defineProperties(AudioFx, {
     WEAPON_FIRE: {
-        value: 'atarisquare',
+        value: 'asteroids-ship-fire',
         enumerable: true,
         writeable: false
     },
