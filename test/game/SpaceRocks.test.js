@@ -9,7 +9,7 @@ var SpaceRocks = require('../../src/game/SpaceRocks');
 var actualModules = {
     Time: require('../../src/engine/Time'),
     SpaceEngine: require('../../src/engine/SpaceEngine'),
-    LevelManager: require('../../src/subsystems/LevelManager'),
+    StateManager: require('../../src/subsystems/state/StateManager'),
     PlayerSubsystem: require('../../src/subsystems/PlayerSubsystem'),
     EffectsSubsystem: require('../../src/subsystems/fx/EffectsSubsystem'),
     EntitySubsystem: require('../../src/subsystems/entities/EntitySubsystem'),
@@ -31,7 +31,7 @@ describe('SpaceRocks', function () {
     }
 
     beforeEach(function () {
-        var levelManager = mockModule('LevelManager');
+        var stateManager = mockModule('StateManager');
         var playerSubsystem = mockModule('PlayerSubsystem');
         var entitySubsystem = mockModule('EntitySubsystem');
         var spaceEngine = mockModule('SpaceEngine');
@@ -42,7 +42,7 @@ describe('SpaceRocks', function () {
         SpaceRocks = proxy('../../src/game/SpaceRocks', {
             '../engine/Time': timeModule,
             '../engine/SpaceEngine': spaceEngine,
-            '../subsystems/LevelManager': levelManager,
+            '../subsystems/state/StateManager': stateManager,
             '../subsystems/PlayerSubsystem': playerSubsystem,
             '../subsystems/entities/EntitySubsystem': entitySubsystem,
             '../subsystems/UserInterface': uiModule,
@@ -58,7 +58,7 @@ describe('SpaceRocks', function () {
             canvas: expectedCanvasId,
             fps: 30,
             subsystems: [
-                mockedModules.stubs.LevelManager,
+                mockedModules.stubs.StateManager,
                 mockedModules.stubs.PlayerSubsystem,
                 mockedModules.stubs.EntitySubsystem,
                 mockedModules.stubs.EffectsSubsystem,
@@ -79,14 +79,14 @@ describe('SpaceRocks', function () {
 
         var spaceRocks = new SpaceRocks('mycanvas');
 
-        verify(mockedModules.LevelManager).wasCalledWithNew();
+        verify(mockedModules.StateManager).wasCalledWithNew();
         verify(mockedModules.PlayerSubsystem).wasCalledWithNew();
         verify(mockedModules.EntitySubsystem).wasCalledWithNew();
         verify(mockedModules.EffectsSubsystem).wasCalledWithNew();
         verify(mockedModules.UserInterface).wasCalledWithNew();
 
         verify(mockedModules.PlayerSubsystem).wasCalledWithConfig(0, expectedPlayerSubsystemConfig);
-        verify(mockedModules.LevelManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);
+        verify(mockedModules.StateManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);
         verify(mockedModules.EffectsSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
     });
 

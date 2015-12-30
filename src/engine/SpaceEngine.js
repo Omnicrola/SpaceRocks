@@ -59,7 +59,7 @@ module.exports = (function () {
     }
 
     engine.prototype.start = function () {
-        window.setInterval(cycle.bind(this), 1000 / 24);
+        window.setInterval(cycle.bind(this), 1000 / 60);
     };
 
     function cycle() {

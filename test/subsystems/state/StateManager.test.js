@@ -2,20 +2,20 @@
  * Created by Eric on 12/12/2015.
  */
 var proxy = require('proxyquireify')(require);
-var verify = require('../TestVerification');
-var spies = require('../TestSpies');
-var interface = require('../TestInterfaces');
-var mockGameContainer = require('../mocks/GameContainer');
+var verify = require('../../TestVerification');
+var spies = require('../../TestSpies');
+var interface = require('../../TestInterfaces');
+var mockGameContainer = require('../../mocks/GameContainer');
 var Types = require('../../ExpectedTypes');
 
-var LevelManager = require('../../src/subsystems/LevelManager');
-var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
-var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
-var Entity = require('../../src/subsystems/entities/Entity');
-var GameEvent = require('../../src/engine/GameEvent');
+var StateManager = require('../../../src/subsystems/state/StateManager');
+var CollisionManager = require('../../../src/subsystems/entities/CollisionManager');
+var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
+var Entity = require('../../../src/subsystems/entities/Entity');
+var GameEvent = require('../../../src/engine/GameEvent');
 
-describe('LevelManager', function () {
-    var levelManager;
+describe('StateManager', function () {
+    var stateManager;
     var gameContainer;
     var mockEntitySubsystem;
     var mockEntityFactory;
@@ -24,20 +24,20 @@ describe('LevelManager', function () {
         mockEntityFactory = {
             buildLargeAsteroid: spies.create('buildAsteroid')
         };
-        LevelManager = proxy('../../src/subsystems/LevelManager', {
-            './entities/EntityFactory': mockEntityFactory
+        StateManager = proxy('../../../src/subsystems/state/StateManager', {
+            '../entities/EntityFactory': mockEntityFactory
         });
-        levelManager = new LevelManager(mockEntitySubsystem);
+        stateManager = new StateManager(mockEntitySubsystem);
         gameContainer = mockGameContainer.create();
 
     });
 
     it('should implement Subsystem interface', function () {
-        interface.assert.subsystems(levelManager);
+        interface.assert.subsystems(stateManager);
     });
 
     it('should subscribe to events', function () {
-        levelManager.initialize(gameContainer);
+        stateManager.initialize(gameContainer);
         var subscribeSpy = gameContainer.events.subscribe;
         verify(subscribeSpy).wasCalledExactly(4);
         assert.equal(Types.events.ENGINE_START, subscribeSpy.getCall(0).args[0]);
@@ -53,7 +53,7 @@ describe('LevelManager', function () {
         var entityDeathSubscriber;
         beforeEach(function () {
             var subscribeSpy = gameContainer.events.subscribe;
-            levelManager.initialize(gameContainer);
+            stateManager.initialize(gameContainer);
             engineStartSubscriber = subscribeSpy.getCall(0).args[1];
             newGameSubscriber = subscribeSpy.getCall(1).args[1];
             newLevelSubscriber = subscribeSpy.getCall(2).args[1];
@@ -139,7 +139,7 @@ describe('LevelManager', function () {
                 width: expectedWidth,
                 height: expectedHeight
             }
-            levelManager.initialize(gameContainer);
+            stateManager.initialize(gameContainer);
             newLevelSubscriber = gameContainer.events.subscribe.thirdCall.args[1];
         });
 

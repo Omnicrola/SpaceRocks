@@ -4,7 +4,7 @@
 
 var Time = require('../engine/Time');
 var SpaceEngine = require('../engine/SpaceEngine');
-var LevelManager = require('../subsystems/LevelManager');
+var StateManager = require('../subsystems/state/StateManager');
 var PlayerSubsystem = require('../subsystems/PlayerSubsystem');
 var EntitySubsystem = require('../subsystems/entities/EntitySubsystem');
 var EffectsSubsystem = require('../subsystems/fx/EffectsSubsystem');
@@ -23,7 +23,7 @@ module.exports = (function () {
 
     function _createSubsystems() {
         var entitySubsystem = new EntitySubsystem();
-        var levelManager = new LevelManager(entitySubsystem);
+        var stateManager = new StateManager(entitySubsystem);
         var playerSubsystem = new PlayerSubsystem({
             entitySubsystem: entitySubsystem,
             time: new Time(),
@@ -32,7 +32,7 @@ module.exports = (function () {
         var effectsSubsystem = new EffectsSubsystem(entitySubsystem);
         var userInterface = new UserInterface();
         return [
-            levelManager,
+            stateManager,
             playerSubsystem,
             entitySubsystem,
             effectsSubsystem,

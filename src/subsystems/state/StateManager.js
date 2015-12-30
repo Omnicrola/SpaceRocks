@@ -2,12 +2,12 @@
  * Created by Eric on 12/12/2015.
  */
 
-var GameEvent = require('../engine/GameEvent');
-var CollisionManager = require('./entities/CollisionManager');
-var EntityFactory = require('./entities/EntityFactory');
-var Entity = require('./entities/Entity');
-var Shape = require('./entities/Shape');
-var Point = require('./entities/Point');
+var GameEvent = require('../../engine/GameEvent');
+var CollisionManager = require('../entities/CollisionManager');
+var EntityFactory = require('../entities/EntityFactory');
+var Entity = require('../entities/Entity');
+var Shape = require('../entities/Shape');
+var Point = require('../entities/Point');
 
 var LevelManager = function (entitySubsystem) {
     this._entitySubsystem = entitySubsystem;
@@ -18,7 +18,7 @@ var LevelManager = function (entitySubsystem) {
         playerScore: 0,
         isLevelActive: false
     };
-};
+}; 
 
 LevelManager.prototype.initialize = function (gameContainer) {
     var subscribe = gameContainer.events.subscribe;
