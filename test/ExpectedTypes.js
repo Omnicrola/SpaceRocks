@@ -16,6 +16,8 @@ module.exports = {
         NEW_LEVEL: 'new-level',
         GAME_RESET: 'game-reset',
         ENTITY_DEATH: 'entity-death',
+        ENTITY_ADDED: 'entity-added',
+        ENTITY_REMOVED: 'entity-removed',
         SCORE_CHANGE: 'score-change',
         PLAYER_LIFE_CHANGE: 'player-life-change',
         PLAYER_FIRE: 'player-fire',

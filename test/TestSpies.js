@@ -30,6 +30,13 @@ module.exports = (function () {
         stubInstance.methodName = name;
         return stubInstance;
     }
+    function createStubFromProperties(target){
+        var obj = {};
+        for(prop in target){
+            obj[prop] = createNamedStub(prop);
+        }
+        return obj;
+    }
 
     return {
         create: function (name) {
@@ -41,6 +48,9 @@ module.exports = (function () {
             } else if (typeof stubTarget == 'object') {
                 return createStubOfObject(stubTarget);
             }
+        },
+        createStubCopy : function(target){
+          return createStubFromProperties(target);
         },
         createStubInstance: function (stubTarget, name) {
             return createStubOfClass(stubTarget, name);
