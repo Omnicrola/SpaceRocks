@@ -8,6 +8,7 @@ var interfaces = require('../TestInterfaces');
 var MockGameContainer = require('../mocks/GameContainer');
 
 
+var GameInput = require('../../src/engine/GameInput');
 var GameStateBuilder = require('../../src/game/GameStateBuilder');
 var StateManager = require('../../src/subsystems/state/StateManager');
 
@@ -19,26 +20,23 @@ describe('GameStateBuilder', function () {
         mockGameContainer = MockGameContainer.create();
     });
 
-    describe('Startup game state', function () {
-        var startupState;
+    describe('Loading game state', function () {
+        var loadingState;
         beforeEach(function () {
-            startupState = GameStateBuilder.buildStartupState(stubStateManager);
+            loadingState = GameStateBuilder.buildLoadingState(stubStateManager);
         });
 
         it('should implement the State interface', function () {
-            interfaces.assert.state(startupState);
+            interfaces.assert.state(loadingState);
+            verify.readOnlyProperty(loadingState, 'name', Types.state.LOADING);
         });
 
         it('should unsubscribe all subscribers', function () {
-            startupState.load(mockGameContainer);
-            startupState.unload(mockGameContainer);
-            verify(mockGameContainer.events.subscribe).wasCalled();
-            var subscriberCount = mockGameContainer.events.subscribe.callCount;
-            verify(mockGameContainer.events.unsubscribe).wasCalled(subscriberCount);
+            checkSubscribersAreRemoved(loadingState);
         });
 
         it('should switch to start screen after engine is loaded', function () {
-            startupState.load(mockGameContainer);
+            loadingState.load(mockGameContainer);
             verify(stubStateManager.changeState).wasNotCalled();
 
             mockGameContainer.$emitMockEvent(Types.events.ENGINE_START, null);
@@ -48,4 +46,51 @@ describe('GameStateBuilder', function () {
         });
 
     });
+
+    describe('Start game state', function(){
+        var startScreenState;
+        beforeEach(function () {
+            startScreenState = GameStateBuilder.buildStartScreen(stubStateManager);
+        });
+
+        it('should implement State interface', function() {
+            interfaces.assert.state(startScreenState);
+            verify.readOnlyProperty(startScreenState, 'name', Types.state.START);
+        });
+
+        it('should not have any subscribers', function () {
+            startScreenState.load(mockGameContainer);
+            verify(mockGameContainer.events.subscribe).wasNotCalled();
+        });
+
+        it('should change state when spacebar is pressed', function() {
+            mockGameContainer.input
+                .isPressed
+                .withArgs(GameInput.SPACEBAR)
+                .returns(true);
+
+            startScreenState.update(mockGameContainer);
+            verify(stubStateManager.changeState).wasCalledWith(Types.state.PLAY);
+        });
+
+        it('should not change if spacebar is not pressed', function() {
+            mockGameContainer.input
+                .isPressed
+                .withArgs(GameInput.SPACEBAR)
+                .returns(false);
+
+            startScreenState.update(mockGameContainer);
+            verify(stubStateManager.changeState).wasNotCalled();
+
+        });
+
+    });
+
+    function checkSubscribersAreRemoved(gameState){
+        gameState.load(mockGameContainer);
+        gameState.unload(mockGameContainer);
+        verify(mockGameContainer.events.subscribe).wasCalled();
+        var subscriberCount = mockGameContainer.events.subscribe.callCount;
+        verify(mockGameContainer.events.unsubscribe).wasCalled(subscriberCount);
+    }
 });

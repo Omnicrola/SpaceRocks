@@ -2,7 +2,7 @@
  * Created by Eric on 12/12/2015.
  */
 module.exports = (function () {
-    var inputWrapper = function () {
+    var GameInput = function () {
         this._keyStates = _initializeKeyStates();
         document.addEventListener('keyup', _keyUp.bind(this));
         document.addEventListener('keydown', _keyDown.bind(this));
@@ -32,11 +32,11 @@ module.exports = (function () {
         }
     }
 
-    inputWrapper.prototype.isPressed = function (keyCode) {
+    GameInput.prototype.isPressed = function (keyCode) {
         return this._keyStates[keyCode];
     }
 
-    Object.defineProperties(inputWrapper, {
+    Object.defineProperties(GameInput, {
         'LEFT': {
             value: 37,
             enumerable: true
@@ -60,5 +60,5 @@ module.exports = (function () {
     });
     var blockedKeys = [37, 38, 39, 40, 32];
 
-    return inputWrapper;
+    return GameInput;
 })();

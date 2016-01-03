@@ -22,6 +22,8 @@ module.exports = {
         PLAYER_THRUST: 'player-thrust'
     },
     state: {
-        START: 'start-screen'
+        LOADING: 'loading',
+        START: 'start-screen',
+        PLAY: 'play'
     }
 };
