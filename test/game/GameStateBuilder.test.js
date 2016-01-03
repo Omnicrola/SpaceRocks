@@ -16,7 +16,7 @@ var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var GameStateBuilder = require('../../src/game/GameStateBuilder');
 var StateManager = require('../../src/subsystems/state/StateManager');
 
-describe('GameStateBuilder', function () {
+describe.only('GameStateBuilder', function () {
     var stubStateManager;
     var mockGameContainer;
     beforeEach(function () {
@@ -74,6 +74,9 @@ describe('GameStateBuilder', function () {
                 .returns(true);
 
             startScreenState.update(mockGameContainer);
+            verify(mockGameContainer.events.emit).wasCalledTwice();
+            verify.event(new GameEvent(Types.events.SCORE_CHANGE, {score: 0}), mockGameContainer.events.emit.firstCall.args[0]);
+            verify.event(new GameEvent(Types.events.PLAYER_LIFE_CHANGE, {lives: 3}), mockGameContainer.events.emit.secondCall.args[0]);
             verify(stubStateManager.changeState).wasCalledWith(Types.state.PLAY);
         });
 
@@ -107,6 +110,57 @@ describe('GameStateBuilder', function () {
 
         it('should unsubscribe all subscribers', function () {
             checkSubscribersAreRemoved(playState);
+        });
+
+        describe('tracking score', function () {
+            it('should add to score when an asteroid is destroyed', function () {
+                playState.load(mockGameContainer);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_MEDIUM);
+                destroyEntity(Types.entities.ASTEROID_SMALL);
+                destroyEntity(Types.entities.ASTEROID_MEDIUM);
+
+                verify(mockGameContainer.events.emit).wasCalledExactly(4);
+                checkScoreEvent(0, 25);
+                checkScoreEvent(1, 60);
+                checkScoreEvent(2, 110);
+                checkScoreEvent(3, 145);
+            });
+
+            function checkScoreEvent(callIndex, expectedScore) {
+                var call = mockGameContainer.events.emit.getCall(callIndex);
+                if (!call) {
+                    throw new Error('Score event was not emitted');
+                }
+                var actualEvent = call.args[0];
+                assert.equal(Types.events.SCORE_CHANGE, actualEvent.type);
+                verify.config({score: expectedScore}, actualEvent.data);
+            }
+        });
+
+        describe('player lives', function () {
+            it('decrements when player dies', function () {
+                playState.load(mockGameContainer);
+
+                destroyEntity(Types.entities.PLAYER);
+                destroyEntity(Types.entities.PLAYER);
+                destroyEntity(Types.entities.PLAYER);
+
+                verify(mockGameContainer.events.emit).wasCalledExactly(3);
+                checkPlayerLifeEvent(0, 2);
+                checkPlayerLifeEvent(1, 1);
+                checkPlayerLifeEvent(2, 0);
+            });
+
+            function checkPlayerLifeEvent(callIndex, expectedLives) {
+                var call = mockGameContainer.events.emit.getCall(callIndex);
+                if (!call) {
+                    throw new Error('Score event was not emitted');
+                }
+                var actualEvent = call.args[0];
+                assert.equal(Types.events.PLAYER_LIFE_CHANGE, actualEvent.type);
+                verify.config({lives: expectedLives}, actualEvent.data);
+            }
         });
 
         describe('asteroids triggering a new level', function () {
@@ -163,7 +217,7 @@ describe('GameStateBuilder', function () {
                 verify.event(expectedEvent, mockGameContainer.events.emit.firstCall.args[0]);
             });
 
-            it('should not start a new level until new asteroids are added', function() {
+            it('should not start a new level until new asteroids are added', function () {
                 var expectedEvent = new GameEvent(Types.events.NEW_LEVEL, {levelNumber: 2});
                 playState.load(mockGameContainer);
                 addEntity(Types.entities.ASTEROID_LARGE);
@@ -197,7 +251,7 @@ describe('GameStateBuilder', function () {
 
                 playState.load(mockGameContainer);
                 verify(stubEntitySubsystem.addEntity).wasNotCalled();
-                mockGameContainer.$emitMockEvent(Types.events.NEW_LEVEL, {levelNumber:99});
+                mockGameContainer.$emitMockEvent(Types.events.NEW_LEVEL, {levelNumber: 99});
                 verify(stubEntitySubsystem.addEntity).wasCalledExactly(5);
                 verify(stubEntitySubsystem.addEntity).wasCalledWith(stubAsteroid1, CollisionManager.ASTEROID);
                 verify(stubEntitySubsystem.addEntity).wasCalledWith(stubAsteroid2, CollisionManager.ASTEROID);
@@ -217,6 +271,10 @@ describe('GameStateBuilder', function () {
 
         function removeEntity(type) {
             mockGameContainer.$emitMockEvent(Types.events.ENTITY_REMOVED, {type: type});
+        }
+
+        function destroyEntity(type) {
+            mockGameContainer.$emitMockEvent(Types.events.ENTITY_DEATH, {type: type});
         }
     });
 

@@ -32,6 +32,8 @@ function _startScreenState(stateManager) {
         var spacebarPressed = gameContainer.input.isPressed(GameInput.SPACEBAR);
         if (spacebarPressed) {
             stateManager.changeState('play');
+            gameContainer.events.emit(new GameEvent('score-change', {score:0}));
+            gameContainer.events.emit(new GameEvent('player-life-change', {lives:3}));
         }
     };
     return startState;
@@ -41,6 +43,8 @@ function _playState(stateManager, entityFactory, entitySubsystem) {
     var asteroidCount = 0;
     var currentLevelNumber = 0;
     var levelHasEnded = false;
+    var currentScore = 0;
+    var playerLives = 3;
     playState.addEventHandler('entity-added', function (event) {
         if (isAsteroid(event.data.type)) {
             levelHasEnded = false;
@@ -58,10 +62,27 @@ function _playState(stateManager, entityFactory, entitySubsystem) {
             entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
         }
     });
+    playState.addEventHandler('entity-death', function (event) {
+        if (isAsteroid(event.data.type)) {
+            if (event.data.type === 'asteroid-large') {
+                currentScore += 25;
+            } else if (event.data.type === 'asteroid-medium') {
+                currentScore += 35;
+            }
+            else if (event.data.type === 'asteroid-small') {
+                currentScore += 50;
+            }
+            playState._gameContainer.events.emit(new GameEvent('score-change', {score: currentScore}));
+        } else if (isPlayer(event.data.type)) {
+            playerLives--;
+            playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: playerLives}));
+        }
+
+    });
     playState.update = function (gameContainer) {
         if (asteroidCount === 0 && !levelHasEnded) {
             levelHasEnded = true;
-            currentLevelNumber ++;
+            currentLevelNumber++;
             gameContainer.events.emit(new GameEvent('new-level', {levelNumber: currentLevelNumber}));
         }
     };
@@ -72,6 +93,10 @@ function isAsteroid(type) {
     return type === 'asteroid-large' ||
         type === 'asteroid-medium' ||
         type === 'asteroid-small';
+}
+
+function isPlayer(type) {
+    return type === 'player';
 }
 /*
  State Class
