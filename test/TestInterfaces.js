@@ -9,6 +9,14 @@ module.exports = {
                 'render',
                 'initialize'
             ]);
+        },
+        state: function (obj) {
+            verify(obj).implements('State',
+                [
+                    'load',
+                    'unload',
+                    'update'
+                ])
         }
     }
 };

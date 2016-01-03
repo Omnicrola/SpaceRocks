@@ -198,6 +198,28 @@ module.exports = (function () {
     verify.config = function (expectedConfig, actualConfig) {
         verifyConfigProperties(expectedConfig, actualConfig, '');
     };
+    verify.method = function () {
+        var obj = arguments[0];
+        var methodThatThrows = arguments[1];
+        var args = Array.prototype.slice.call(arguments).slice(2, 99);
+        return {
+            throwsMessage: function (expectedMessage) {
+                var threw = false;
+                try {
+                    obj[methodThatThrows].apply(obj, args);
+                } catch (error) {
+                    threw = true;
+                    if (expectedMessage != error.message) {
+                        throw new Error('Expected method "' + methodThatThrows + '" to throw the message:\n"' +
+                            expectedMessage + '"\nbut instead it threw:\n"' + error.message + '"');
+                    }
+                }
+                if (threw === false) {
+                    throw new Error('Expected method "' + methodThatThrows + '" to throw an error, but it did not throw anything.');
+                }
+            }
+        }
+    };
     return verify;
 })
 ();
