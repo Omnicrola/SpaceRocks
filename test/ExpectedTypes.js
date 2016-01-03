@@ -20,5 +20,8 @@ module.exports = {
         PLAYER_LIFE_CHANGE: 'player-life-change',
         PLAYER_FIRE: 'player-fire',
         PLAYER_THRUST: 'player-thrust'
+    },
+    state: {
+        START: 'start-screen'
     }
 };
