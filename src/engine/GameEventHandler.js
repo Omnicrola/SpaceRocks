@@ -37,7 +37,6 @@ function _process() {
     allEvents = self._pendingEvents;
     self._pendingEvents = [];
     allEvents.forEach(function (event) {
-        console.log('Event: ' + event.type);
         var subscribers = self._subscribers[event.type];
         if (subscribers) {
             subscribers.forEach(function (subscriber) {

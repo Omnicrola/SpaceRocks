@@ -48,6 +48,12 @@ describe('Entity', function () {
         verify.readOnlyProperty(entity, 'isAlive', true);
     });
 
+    it('type is read-only', function () {
+        var expectedType = 'my-favorite-type';
+        entity = new Entity(stubShape, expectedType);
+        verify.readOnlyProperty(entity, 'type', expectedType);
+    });
+
     it('should change alive state and emit an event when destroy is called', function () {
         var expectedPosition = new Point(Math.random(), Math.random());
         var expectedType = 'mytype';

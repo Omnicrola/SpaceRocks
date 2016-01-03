@@ -5,8 +5,10 @@ var proxy = require('proxyquireify')(require);
 var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
 var interface = require('../../TestInterfaces');
+var Types = require('../../ExpectedTypes');
 var containerGenerator = require('../../mocks/GameContainer');
 
+var GameEvent = require('../../../src/engine/GameEvent');
 var Entity = require('../../../src/subsystems/entities/Entity');
 var Point = require('../../../src/subsystems/entities/Point');
 var EntitySubsystem = require('../../../src/subsystems/entities/EntitySubsystem');
@@ -14,7 +16,7 @@ var CollisionManager = require('../../../src/subsystems/entities/CollisionManage
 
 describe('EntitySubsystem', function () {
     var entitySubsystem;
-    var mockContainer;
+    var mockGameContainer;
     var stubCollisionManager;
     beforeEach(function () {
         var mockCollisionManagerModule = spies.create('CollisionManager');
@@ -24,7 +26,8 @@ describe('EntitySubsystem', function () {
             './CollisionManager': mockCollisionManagerModule
         });
         entitySubsystem = new EntitySubsystem();
-        mockContainer = containerGenerator.create();
+        mockGameContainer = containerGenerator.create();
+        entitySubsystem.initialize(mockGameContainer);
     });
 
     it('should implement Subsystem interface', function () {
@@ -38,10 +41,10 @@ describe('EntitySubsystem', function () {
         entitySubsystem.addEntity(stubEntity1);
         entitySubsystem.addEntity(stubEntity2);
 
-        entitySubsystem.update(mockContainer);
+        entitySubsystem.update(mockGameContainer);
 
-        verify(stubEntity1.update).wasCalledWith(mockContainer);
-        verify(stubEntity2.update).wasCalledWith(mockContainer);
+        verify(stubEntity1.update).wasCalledWith(mockGameContainer);
+        verify(stubEntity2.update).wasCalledWith(mockGameContainer);
     });
 
     it('should add entities to CollisionManager ', function () {
@@ -52,8 +55,41 @@ describe('EntitySubsystem', function () {
     });
 
     it('should call update on CollisionManager', function () {
-        entitySubsystem.update(mockContainer);
-        verify(stubCollisionManager.update).wasCalledWith(mockContainer);
+        entitySubsystem.update(mockGameContainer);
+        verify(stubCollisionManager.update).wasCalledWith(mockGameContainer);
+    });
+
+    it('should emit an event when an entity is added', function () {
+        var expectedType = 'my-type';
+        var collisionGroup = Math.random() * 100;
+        var expectedEvent = new GameEvent(Types.events.ENTITY_ADDED, {type: expectedType});
+        var stubEntity = createStubEntity(expectedType);
+
+        entitySubsystem.addEntity(stubEntity, collisionGroup);
+        entitySubsystem.update(mockGameContainer);
+
+        verify(mockGameContainer.events.emit).wasCalledOnce();
+        var actualEvent = mockGameContainer.events.emit.firstCall.args[0];
+        assert.equal(Types.events.ENTITY_ADDED, actualEvent.type);
+        verify.config({type: expectedType}, actualEvent.data);
+
+    });
+
+    it('should emit an event when an entity is removed', function () {
+        var expectedType = 'other-type';
+        var collisionGroup = Math.random() * 100;
+        var expectedEvent = new GameEvent(Types.events.ENTITY_ADDED, {type: expectedType});
+        var stubEntity = createStubEntity(expectedType);
+
+        entitySubsystem.addEntity(stubEntity, collisionGroup);
+        entitySubsystem.removeEntity(stubEntity, collisionGroup);
+        entitySubsystem.update(mockGameContainer);
+
+        verify(mockGameContainer.events.emit).wasCalledTwice();
+        var actualEvent = mockGameContainer.events.emit.secondCall.args[0];
+        assert.equal(Types.events.ENTITY_REMOVED, actualEvent.type);
+        verify.config({type: expectedType}, actualEvent.data);
+
     });
 
     it('should remove entities', function () {
@@ -62,7 +98,7 @@ describe('EntitySubsystem', function () {
         entitySubsystem.addEntity(stubEntity);
         entitySubsystem.removeEntity(stubEntity);
 
-        entitySubsystem.update(mockContainer);
+        entitySubsystem.update(mockGameContainer);
         entitySubsystem.render({});
 
         verify(stubCollisionManager.remove).wasCalledWith(stubEntity);
@@ -77,8 +113,8 @@ describe('EntitySubsystem', function () {
         beforeEach(function () {
             width = 1000;
             height = 1000;
-            mockContainer.display.width = width;
-            mockContainer.display.height = height;
+            mockGameContainer.display.width = width;
+            mockGameContainer.display.height = height;
 
             stubEntity = createStubEntity();
         });
@@ -88,7 +124,7 @@ describe('EntitySubsystem', function () {
             stubEntity.position = expectedPosition;
 
             entitySubsystem.addEntity(stubEntity);
-            entitySubsystem.update(mockContainer);
+            entitySubsystem.update(mockGameContainer);
             checkPoint(new Point(width, 100), stubEntity.position);
         });
 
@@ -97,7 +133,7 @@ describe('EntitySubsystem', function () {
             stubEntity.position = expectedPosition;
 
             entitySubsystem.addEntity(stubEntity);
-            entitySubsystem.update(mockContainer);
+            entitySubsystem.update(mockGameContainer);
             checkPoint(new Point(0, 100), stubEntity.position);
         });
 
@@ -106,7 +142,7 @@ describe('EntitySubsystem', function () {
             stubEntity.position = expectedPosition;
 
             entitySubsystem.addEntity(stubEntity);
-            entitySubsystem.update(mockContainer);
+            entitySubsystem.update(mockGameContainer);
             checkPoint(new Point(1, height), stubEntity.position);
         });
 
@@ -115,7 +151,7 @@ describe('EntitySubsystem', function () {
             stubEntity.position = expectedPosition;
 
             entitySubsystem.addEntity(stubEntity);
-            entitySubsystem.update(mockContainer);
+            entitySubsystem.update(mockGameContainer);
             checkPoint(new Point(1, 0), stubEntity.position);
         });
     });
@@ -130,7 +166,7 @@ describe('EntitySubsystem', function () {
         stubEntity1.isAlive = false;
         stubEntity2.isAlive = true;
 
-        entitySubsystem.update(mockContainer);
+        entitySubsystem.update(mockGameContainer);
         entitySubsystem.render({});
 
         verify(stubEntity1.update).wasNotCalled();
@@ -153,14 +189,14 @@ describe('EntitySubsystem', function () {
         verify(renderSpy).wasNotCalled();
         verify(stubEntity1.render).wasCalledWith(renderSpy);
         verify(stubEntity2.render).wasCalledWith(renderSpy);
-
-
     });
 
-    function createStubEntity() {
+
+    function createStubEntity(type) {
         var entity = spies.createStubInstance(Entity);
         entity.isAlive = true;
         entity.position = new Point(0, 0);
+        entity.type = type || 'mock type';
         return entity;
     }
 

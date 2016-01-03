@@ -49,6 +49,11 @@ module.exports = (function () {
                 value: shape,
                 writeable: false,
                 enumerable: true
+            },
+            type: {
+                value: type,
+                writeable: false,
+                enumerable: true
             }
         });
         this.rotation = 0;

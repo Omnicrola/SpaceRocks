@@ -4,6 +4,7 @@
 
 var Point = require('./Point');
 var CollisionManager = require('./CollisionManager');
+var GameEvent = require('../../engine/GameEvent');
 var Debug = require('../../Debug');
 
 
@@ -46,8 +47,8 @@ function _wrapPosition(entity, display) {
     entity.position = newPosition;
 }
 
-EntitySubsystem.prototype.initialize = function (container) {
-
+EntitySubsystem.prototype.initialize = function (gameContainer) {
+    this._gameContainer = gameContainer;
 };
 
 var nextId = 1;
@@ -55,12 +56,14 @@ EntitySubsystem.prototype.addEntity = function (newEntity, collisionGroup) {
     newEntity.id = nextId++;
     this._entities.push(newEntity);
     this._collisionManager.add(newEntity, collisionGroup);
+    this._gameContainer.events.emit(new GameEvent('entity-added', {type: newEntity.type}));
 };
 
 EntitySubsystem.prototype.removeEntity = function (entityToRemove) {
     this._collisionManager.remove(entityToRemove);
     var position = this._entities.indexOf(entityToRemove);
     this._entities.splice(position, 1);
+    this._gameContainer.events.emit(new GameEvent('entity-removed', {type: entityToRemove.type}));
 }
 
 module.exports = EntitySubsystem;
