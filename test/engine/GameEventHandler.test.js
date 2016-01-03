@@ -9,7 +9,9 @@ var GameEventHandler = require('../../src/engine/GameEventHandler');
 var GameEvent = require('../../src/engine/GameEvent');
 
 describe('GameEventHandler', function () {
+    var gameEventHandler;
     beforeEach(function () {
+        gameEventHandler = new GameEventHandler();
     });
 
     it('should send events to subscribers ', function () {
@@ -17,7 +19,6 @@ describe('GameEventHandler', function () {
         var gameEvent = new GameEvent(eventType, 'no data');
         var subscriberSpy = spies.create('subscriber');
 
-        var gameEventHandler = new GameEventHandler();
         gameEventHandler.addEvent(gameEvent);
 
         gameEventHandler.subscribe(eventType, subscriberSpy);
@@ -32,7 +33,6 @@ describe('GameEventHandler', function () {
         var gameEvent = new GameEvent(eventType, 'no data');
         var subscriberSpy = spies.create('subscriber');
 
-        var gameEventHandler = new GameEventHandler();
         invokeOutOfContext(gameEventHandler.addEvent, [gameEvent]);
 
         invokeOutOfContext(gameEventHandler.subscribe, [eventType, subscriberSpy]);
@@ -47,7 +47,6 @@ describe('GameEventHandler', function () {
         var gameEvent = new GameEvent(eventType, 'no data');
         var subscriberSpy = spies.create('subscriber');
 
-        var gameEventHandler = new GameEventHandler();
         gameEventHandler.addEvent(gameEvent);
         gameEventHandler.subscribe(eventType, subscriberSpy);
 
@@ -64,7 +63,6 @@ describe('GameEventHandler', function () {
         var rightSubscriberSpy = spies.create('right-subscriber');
         var wrongSubscriberSpy = spies.create('wrong-subscriber');
 
-        var gameEventHandler = new GameEventHandler();
         gameEventHandler.addEvent(gameEvent);
         gameEventHandler.subscribe(rightType, rightSubscriberSpy);
         gameEventHandler.subscribe(wrongType, wrongSubscriberSpy);
@@ -78,7 +76,6 @@ describe('GameEventHandler', function () {
         var gameEvent1 = new GameEvent('type1', 'no data');
         var gameEvent2 = new GameEvent('type2', 'no data');
 
-        var gameEventHandler = new GameEventHandler();
 
         var subscriber1 = function () {
             gameEventHandler.addEvent(gameEvent2);
@@ -93,6 +90,22 @@ describe('GameEventHandler', function () {
         verify(subscriber2).wasNotCalled();
         gameEventHandler.process();
         verify(subscriber2).wasCalledOnce();
+    });
+
+    it('should unsubscribe handlers', function () {
+        var subscriber1 = spies.create('subscriber1');
+        var subscriber2 = spies.create('subscriber2');
+        var expectedType = 'type1';
+
+        invokeOutOfContext(gameEventHandler.subscribe, [expectedType, subscriber1]);
+        invokeOutOfContext(gameEventHandler.subscribe, [expectedType, subscriber2]);
+        invokeOutOfContext(gameEventHandler.unsubscribe, [expectedType, subscriber1]);
+
+        gameEventHandler.addEvent(new GameEvent(expectedType, 'no data'));
+        gameEventHandler.process();
+        verify(subscriber2).wasCalledOnce();
+        verify(subscriber1).wasNotCalled();
+
     });
 
     function invokeOutOfContext(method, params) {

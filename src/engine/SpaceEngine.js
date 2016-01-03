@@ -85,7 +85,8 @@ module.exports = (function () {
             },
             events: {
                 emit: this._eventHandler.addEvent,
-                subscribe: this._eventHandler.subscribe
+                subscribe: this._eventHandler.subscribe,
+                unsubscribe: this._eventHandler.unsubscribe
             }
         };
     }

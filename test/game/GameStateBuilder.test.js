@@ -16,7 +16,7 @@ var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var GameStateBuilder = require('../../src/game/GameStateBuilder');
 var StateManager = require('../../src/subsystems/state/StateManager');
 
-describe.only('GameStateBuilder', function () {
+describe('GameStateBuilder', function () {
     var stubStateManager;
     var mockGameContainer;
     beforeEach(function () {

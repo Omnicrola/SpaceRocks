@@ -25,6 +25,7 @@ describe('GameEngine', function () {
     var expectedContext;
     var getElementStub;
     var expectedSubscribe;
+    var expectedUnsubscribe;
     var expectedEmit;
     var expectedProcess;
     var expectedWidth;
@@ -56,6 +57,7 @@ describe('GameEngine', function () {
 
         var stubEventHandler = mockedModules.stubs.GameEventHandler;
         expectedSubscribe = stubEventHandler.subscribe = spies.create('subscribe');
+        expectedUnsubscribe = stubEventHandler.unsubscribe = spies.create('unsubscribe');
         expectedEmit = stubEventHandler.addEvent = spies.create('addEvent');
         expectedProcess = stubEventHandler.process = spies.create('process');
 
@@ -131,7 +133,8 @@ describe('GameEngine', function () {
                 },
                 events: {
                     emit: expectedEmit,
-                    subscribe: expectedSubscribe
+                    subscribe: expectedSubscribe,
+                    unsubscribe: expectedUnsubscribe
                 }
             };
         });

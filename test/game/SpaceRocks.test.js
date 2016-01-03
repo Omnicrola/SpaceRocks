@@ -10,8 +10,10 @@ var actualModules = {
     Time: require('../../src/engine/Time'),
     SpaceEngine: require('../../src/engine/SpaceEngine'),
     StateManager: require('../../src/subsystems/state/StateManager'),
+    GameStateBuilder: require('../../src/game/GameStateBuilder'),
     PlayerSubsystem: require('../../src/subsystems/PlayerSubsystem'),
     EffectsSubsystem: require('../../src/subsystems/fx/EffectsSubsystem'),
+    EntityFactory: require('../../src/subsystems/entities/EntityFactory'),
     EntitySubsystem: require('../../src/subsystems/entities/EntitySubsystem'),
     UserInterface: require('../../src/subsystems/UserInterface'),
 };
@@ -39,14 +41,21 @@ describe('SpaceRocks', function () {
         var effectsSubsystemModule = mockModule('EffectsSubsystem');
         var uiModule = mockModule('UserInterface');
 
+        var entityFactory = spies.createStubCopy(actualModules.EntityFactory);
+        var stateBuilderModule = spies.createStubCopy(actualModules.GameStateBuilder);
+        mockedModules.EntityFactory = entityFactory;
+        mockedModules.GameStateBuilder = stateBuilderModule;
+
         SpaceRocks = proxy('../../src/game/SpaceRocks', {
             '../engine/Time': timeModule,
             '../engine/SpaceEngine': spaceEngine,
             '../subsystems/state/StateManager': stateManager,
             '../subsystems/PlayerSubsystem': playerSubsystem,
             '../subsystems/entities/EntitySubsystem': entitySubsystem,
+            '../subsystems/entities/EntityFactory': entityFactory,
             '../subsystems/UserInterface': uiModule,
             '../subsystems/fx/EffectsSubsystem': effectsSubsystemModule,
+            './GameStateBuilder': stateBuilderModule,
         });
 
     });
@@ -86,8 +95,26 @@ describe('SpaceRocks', function () {
         verify(mockedModules.UserInterface).wasCalledWithNew();
 
         verify(mockedModules.PlayerSubsystem).wasCalledWithConfig(0, expectedPlayerSubsystemConfig);
-        verify(mockedModules.StateManager).wasCalledWith(mockedModules.stubs.EntitySubsystem);
         verify(mockedModules.EffectsSubsystem).wasCalledWith(mockedModules.stubs.EntitySubsystem);
+    });
+
+    it('will load statemanager with correct states', function () {
+        var stateBuilder = mockedModules.GameStateBuilder;
+        var expectedLoadState = spies.create('loadstate');
+        var expectedStartState = spies.create('startstate');
+        var expectedPlayState = spies.create('playstate');
+        var stubStateManager = mockedModules.stubs.StateManager;
+
+        stateBuilder.buildLoadingState.returns(expectedLoadState);
+        stateBuilder.buildStartScreen.returns(expectedStartState);
+        stateBuilder.buildPlayState.returns(expectedPlayState);
+
+        var spaceRocks = new SpaceRocks('mycanvas');
+        verify(mockedModules.StateManager).wasCalledWithNew();
+        verify(stubStateManager.addState).wasCalledExactly(3);
+        verify(stubStateManager.addState).wasCalledWith(expectedLoadState);
+        verify(stubStateManager.addState).wasCalledWith(expectedStartState);
+        verify(stubStateManager.addState).wasCalledWith(expectedPlayState);
     });
 
     it('will call start on  engine', function () {
