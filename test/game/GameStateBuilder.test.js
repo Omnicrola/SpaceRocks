@@ -162,6 +162,24 @@ describe('GameStateBuilder', function () {
                 verify(mockGameContainer.events.emit).wasCalledOnce();
                 verify.event(expectedEvent, mockGameContainer.events.emit.firstCall.args[0]);
             });
+
+            it('should not start a new level until new asteroids are added', function() {
+                var expectedEvent = new GameEvent(Types.events.NEW_LEVEL, {levelNumber: 2});
+                playState.load(mockGameContainer);
+                addEntity(Types.entities.ASTEROID_LARGE);
+                removeEntity(Types.entities.ASTEROID_LARGE);
+                addEntity(Types.entities.FX);
+
+                playState.update(mockGameContainer);
+                playState.update(mockGameContainer);
+                verify(mockGameContainer.events.emit).wasCalledOnce();
+
+                addEntity(Types.entities.ASTEROID_LARGE);
+                removeEntity(Types.entities.ASTEROID_LARGE);
+                playState.update(mockGameContainer);
+                verify(mockGameContainer.events.emit).wasCalledTwice();
+                verify.event(expectedEvent, mockGameContainer.events.emit.secondCall.args[0]);
+            });
         });
 
         describe('creating a new level', function () {

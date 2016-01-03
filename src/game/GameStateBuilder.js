@@ -38,15 +38,18 @@ function _startScreenState(stateManager) {
 }
 function _playState(stateManager, entityFactory, entitySubsystem) {
     var playState = new State('play');
-    playState._asteroidCount = 0;
+    var asteroidCount = 0;
+    var currentLevelNumber = 0;
+    var levelHasEnded = false;
     playState.addEventHandler('entity-added', function (event) {
         if (isAsteroid(event.data.type)) {
-            playState._asteroidCount++;
+            levelHasEnded = false;
+            asteroidCount++;
         }
     });
     playState.addEventHandler('entity-removed', function (event) {
         if (isAsteroid(event.data.type)) {
-            playState._asteroidCount--;
+            asteroidCount--;
         }
     });
     playState.addEventHandler('new-level', function (event) {
@@ -56,8 +59,10 @@ function _playState(stateManager, entityFactory, entitySubsystem) {
         }
     });
     playState.update = function (gameContainer) {
-        if (this._asteroidCount === 0) {
-            gameContainer.events.emit(new GameEvent('new-level', {levelNumber: 1}));
+        if (asteroidCount === 0 && !levelHasEnded) {
+            levelHasEnded = true;
+            currentLevelNumber ++;
+            gameContainer.events.emit(new GameEvent('new-level', {levelNumber: currentLevelNumber}));
         }
     };
     return playState;
