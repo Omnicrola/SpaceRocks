@@ -106,6 +106,23 @@ describe('EntitySubsystem', function () {
         verify(stubEntity.render).wasNotCalled();
     });
 
+    it('should not remove an entity that has already been removed', function(){
+        var stubEntity1 = createStubEntity();
+        var stubEntity2 = createStubEntity();
+
+        entitySubsystem.addEntity(stubEntity1);
+        entitySubsystem.addEntity(stubEntity2);
+        entitySubsystem.removeEntity(stubEntity1);
+        entitySubsystem.removeEntity(stubEntity1);
+
+        entitySubsystem.update(mockGameContainer);
+
+        verify(stubCollisionManager.remove).wasCalledOnce();
+        verify(stubCollisionManager.remove).wasCalledWith(stubEntity1);
+        verify(stubEntity1.update).wasNotCalled();
+        verify(stubEntity2.update).wasCalledWith(mockGameContainer);
+    });
+
     describe('wrapping entity positions', function () {
         var width;
         var height;

@@ -2,6 +2,7 @@
  * Created by omnic on 11/29/2015.
  */
 
+var DEBUG = require('../Debug');
 var Delta = require('./Delta');
 var Time = require('./Time');
 var SubsystemManager = require('./SubsystemManager');
@@ -36,7 +37,7 @@ module.exports = (function () {
     function _addSubsystems(subsystems) {
         var subsystemManager = this._subsystemManager;
         if (subsystems) {
-            var gameContainer = _createGameContainer.call(this, 1.0);
+            var gameContainer = _createGameContainer.call(this, {delta: 1.0, milliseconds: 0});
             subsystems.forEach(function (singleSystem) {
                 singleSystem.initialize(gameContainer);
                 subsystemManager.addSubsystem(singleSystem);
@@ -65,18 +66,28 @@ module.exports = (function () {
     function cycle() {
         var interval = this._delta.getInterval();
         var gameContainer = _createGameContainer.call(this, interval);
+        _toggleDebug(gameContainer);
         this._eventHandler.process();
         this._subsystemManager.update(gameContainer);
         this._renderer.clearCanvas('#000000');
         this._subsystemManager.render(this._renderer);
+        DEBUG.render(this._renderer);
+    }
 
+    function _toggleDebug(gameContainer) {
+        // key 200 is "\"
+        if (gameContainer.input.isPressed(220)) {
+            DEBUG.isDebugging = !DEBUG.isDebugging;
+
+        }
     }
 
     function _createGameContainer(interval) {
         var width = this._canvas.canvas.width;
         var height = this._canvas.canvas.height;
         return {
-            delta: interval,
+            delta: interval.delta,
+            timeSinceLastFrame: interval.milliseconds,
             input: this._input,
             audio: this._audio,
             display: {

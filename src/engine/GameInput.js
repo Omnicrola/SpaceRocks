@@ -1,6 +1,9 @@
 /**
  * Created by Eric on 12/12/2015.
  */
+
+var DEBUG = require('../Debug');
+
 module.exports = (function () {
     var GameInput = function () {
         this._keyStates = _initializeKeyStates();
@@ -22,6 +25,7 @@ module.exports = (function () {
     }
 
     function _keyDown(event) {
+        DEBUG.log('Key: ' + event.keyCode);
         this._keyStates[event.keyCode] = true;
         supressGameKeys(event);
     }

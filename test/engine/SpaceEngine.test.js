@@ -72,6 +72,7 @@ describe('GameEngine', function () {
             './GameEventHandler': mockEventHandler
         });
 
+        mockedModules.stubs.Delta.getInterval.returns({delta: 1.0, milliseconds: 0});
         setIntervalStub = spies.replace(window, 'setInterval');
     });
 
@@ -117,14 +118,17 @@ describe('GameEngine', function () {
     describe('Using the subsystem manager', function () {
         var expectedUpdateContainer;
         var expectedDelta;
+        var expectedTime;
         var stubSubsystemManager;
 
         beforeEach(function () {
             expectedDelta = Math.random();
-            mockedModules.stubs.Delta.getInterval.returns(expectedDelta);
+            expectedTime = Math.random();
+            mockedModules.stubs.Delta.getInterval.returns({delta: expectedDelta, milliseconds: expectedTime});
             stubSubsystemManager = mockedModules.stubs.SubsystemManager;
             expectedUpdateContainer = {
                 delta: expectedDelta,
+                timeSinceLastFrame: expectedTime,
                 input: mockedModules.stubs.GameInput,
                 audio: mockedModules.stubs.GameAudio,
                 display: {
@@ -147,6 +151,7 @@ describe('GameEngine', function () {
                 ]
             };
             expectedUpdateContainer.delta = 1.0;
+            expectedUpdateContainer.timeSinceLastFrame = 0;
 
             var spaceEngine = createSpaceEngineForTesting(options);
 
@@ -261,7 +266,7 @@ describe('GameEngine', function () {
             }
         };
 
-        var spaceEngine = createSpaceEngineForTesting({fps:expectedFps});
+        var spaceEngine = createSpaceEngineForTesting({fps: expectedFps});
 
         verify(mockedModules.Time).wasCalledWithNew();
         verify(mockedModules.Delta).wasCalledWithNew();

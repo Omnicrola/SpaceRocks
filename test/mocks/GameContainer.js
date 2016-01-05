@@ -10,6 +10,7 @@ module.exports = {
     create: function () {
         return {
             delta: 1.0,
+            timeSinceLastFrame: 10,
             input: spies.createStub(new GameInput(), 'GameInput'),
             audio: spies.createStubInstance(GameAudio, 'GameAudio'),
             display: {

@@ -104,6 +104,7 @@ describe('SpaceRocks', function () {
         var expectedStartState = spies.create('startstate');
         var expectedPlayState = spies.create('playstate');
         var stubStateManager = mockedModules.stubs.StateManager;
+        var stubPlayerSubsystem = mockedModules.stubs.PlayerSubsystem;
 
         stateBuilder.buildLoadingState.returns(expectedLoadState);
         stateBuilder.buildStartScreen.returns(expectedStartState);
@@ -115,6 +116,15 @@ describe('SpaceRocks', function () {
         verify(stubStateManager.addState).wasCalledWith(expectedLoadState);
         verify(stubStateManager.addState).wasCalledWith(expectedStartState);
         verify(stubStateManager.addState).wasCalledWith(expectedPlayState);
+
+        verify(stateBuilder.buildLoadingState).wasCalledWith(stubStateManager);
+        verify(stateBuilder.buildStartScreen).wasCalledWith(stubStateManager, stubPlayerSubsystem);
+        verify(stateBuilder.buildPlayState).wasCalledWithConfig(0, {
+            stateManager: stubStateManager,
+            entitySubsystem: mockedModules.stubs.EntitySubsystem,
+            entityFactory: mockedModules.EntityFactory,
+            playerSubsystem: stubPlayerSubsystem,
+        });
     });
 
     it('will call start on  engine', function () {

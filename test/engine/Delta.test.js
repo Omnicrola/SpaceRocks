@@ -1,6 +1,9 @@
 /**
  * Created by omnic on 11/29/2015.
  */
+
+var verify = require('../TestVerification');
+
 var Delta = require('../../src/engine/Delta');
 var Time = require('../../src/engine/Time');
 var Config = require('../../src/engine/Config');
@@ -25,10 +28,10 @@ describe('Delta', function () {
         stubConfig.fps = 10;
 
 
-        var deltaValue1 = delta.getInterval();
+        delta.getInterval();
         var deltaValue2 = delta.getInterval();
 
-        assert.equal(deltaValue2, 1.0);
+        verify.config({delta: 1.0, milliseconds: 100}, deltaValue2);
 
     });
 
@@ -42,7 +45,7 @@ describe('Delta', function () {
         var deltaValue1 = delta.getInterval();
         var deltaValue2 = delta.getInterval();
 
-        assert.equal(deltaValue2, 0.528);
+        verify.config({delta: 0.528, milliseconds: 22}, deltaValue2);
 
     });
 
@@ -51,9 +54,10 @@ describe('Delta', function () {
         stubTime.getCurrentTime.onSecondCall().returns(890);
         stubConfig.fps = 12;
 
-        var deltaValue1 = delta.getInterval();
+        delta.getInterval();
         var deltaValue2 = delta.getInterval();
-        assert.equal(deltaValue2, 10.0);
+
+        verify.config({delta: 10.0, milliseconds: 840}, deltaValue2);
 
     });
 });

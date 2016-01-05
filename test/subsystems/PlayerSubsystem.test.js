@@ -47,16 +47,13 @@ describe('PlayerSubsystem', function () {
             playerWeaponDelay: 250
         });
         mockContainer = containerGenerator.create();
-
-        playerSubsystem.initialize(mockContainer);
-        newLevelSubscriber = mockContainer.events.subscribe.firstCall.args[1];
     });
 
     it('should implement subsystem interface', function () {
         interface.assert.subsystems(playerSubsystem);
     });
 
-    describe.only('handling input', function () {
+    describe('handling input', function () {
         var playerEntity;
         var gameContainerForKeys;
 
@@ -64,7 +61,7 @@ describe('PlayerSubsystem', function () {
             gameContainerForKeys = containerGenerator.create();
             playerEntity = spies.createStub(new Entity({}, 'mock'));
             mockEntityFactory.buildPlayer.returns(playerEntity);
-            newLevelSubscriber(new GameEvent('new-level'));
+            playerSubsystem.respawnPlayer();
         });
 
         it('should ignore input if player is dead', function () {
@@ -205,22 +202,14 @@ describe('PlayerSubsystem', function () {
 
     });
 
-    it('should subscribe to "new-level" events', function () {
-        var subscribeSpy = mockContainer.events.subscribe;
-        verify(subscribeSpy).wasCalledOnce();
-        assert.equal('new-level', subscribeSpy.firstCall.args[0]);
-    });
-
-
     it('should respawn the player', function () {
         var expectedPosition = new Point(320, 240);
         var expectedEntity = spies.createStub(Entity, 'Entity');
         mockEntityFactory.buildPlayer.returns(expectedEntity);
 
         verify(mockEntitySubsystem.addEntity).wasNotCalled();
-        var event = new GameEvent('new-level', {});
 
-        newLevelSubscriber.call({}, event);
+        playerSubsystem.respawnPlayer();
         verify(mockEntitySubsystem.addEntity).wasCalledOnce();
         verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntity, CollisionManager.PLAYER);
 
@@ -230,17 +219,14 @@ describe('PlayerSubsystem', function () {
     });
 
     it('should remove previous player entity', function () {
-        console.log(mockEntityFactory.buildPlayer);
-        var event = new GameEvent('new-level', {});
-
         var firstPlayer = spies.createStubInstance(Entity);
         var secondPlayer = spies.createStubInstance(Entity);
         mockEntityFactory.buildPlayer
             .onFirstCall().returns(firstPlayer)
             .onSecondCall().returns(secondPlayer);
 
-        newLevelSubscriber.call({}, event);
-        newLevelSubscriber.call({}, event);
+        playerSubsystem.respawnPlayer();
+        playerSubsystem.respawnPlayer();
 
         verify(mockEntitySubsystem.addEntity).wasCalledTwice();
         var firstPlayer = mockEntitySubsystem.addEntity.firstCall.args[0];

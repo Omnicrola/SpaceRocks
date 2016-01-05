@@ -25,12 +25,12 @@ var SpaceRocks = function (canvasId) {
 
 function _createSubsystems() {
     var entitySubsystem = new EntitySubsystem();
-    var stateManager = createGameStates(entitySubsystem);
     var playerSubsystem = new PlayerSubsystem({
         entitySubsystem: entitySubsystem,
         time: new Time(),
         playerWeaponDelay: 250
     });
+    var stateManager = createGameStates(entitySubsystem, playerSubsystem);
     var effectsSubsystem = new EffectsSubsystem(entitySubsystem);
     var userInterface = new UserInterface();
     return [
@@ -42,11 +42,18 @@ function _createSubsystems() {
     ];
 }
 
-function createGameStates(entitySubsystem) {
+function createGameStates(entitySubsystem, playerSubsystem) {
     var stateManager = new StateManager();
     var loadingState = GameStateBuilder.buildLoadingState(stateManager);
-    var startScreen = GameStateBuilder.buildStartScreen(stateManager);
-    var playState = GameStateBuilder.buildPlayState(stateManager, EntityFactory, entitySubsystem);
+    var startScreen = GameStateBuilder.buildStartScreen(stateManager, playerSubsystem);
+    var playState = GameStateBuilder.buildPlayState(
+        {
+            stateManager: stateManager,
+            entityFactory: EntityFactory,
+            entitySubsystem: entitySubsystem,
+            playerSubsystem: playerSubsystem
+        });
+
     stateManager.addState(loadingState);
     stateManager.addState(startScreen);
     stateManager.addState(playState);

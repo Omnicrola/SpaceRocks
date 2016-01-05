@@ -10,11 +10,11 @@ module.exports = {
     buildLoadingState: function (stateManager) {
         return _loadingState(stateManager);
     },
-    buildStartScreen: function (stateManager) {
-        return _startScreenState(stateManager);
+    buildStartScreen: function (stateManager, playerSubsystem) {
+        return _startScreenState(stateManager, playerSubsystem);
     },
-    buildPlayState: function (stateManager, entityFactory, entitySubsystem) {
-        return _playState(stateManager, entityFactory, entitySubsystem);
+    buildPlayState: function (dependencies) {
+        return _playState(dependencies);
     }
 };
 
@@ -26,25 +26,28 @@ function _loadingState(stateManager) {
     return loadingState;
 }
 
-function _startScreenState(stateManager) {
+function _startScreenState(stateManager, playerSubsystem) {
     var startState = new State('start-screen');
     startState.update = function (gameContainer) {
         var spacebarPressed = gameContainer.input.isPressed(GameInput.SPACEBAR);
         if (spacebarPressed) {
             stateManager.changeState('play');
-            gameContainer.events.emit(new GameEvent('score-change', {score:0}));
-            gameContainer.events.emit(new GameEvent('player-life-change', {lives:3}));
+            gameContainer.events.emit(new GameEvent('score-change', {score: 0}));
+            gameContainer.events.emit(new GameEvent('player-life-change', {lives: 3}));
+            playerSubsystem.respawnPlayer();
         }
     };
     return startState;
 }
-function _playState(stateManager, entityFactory, entitySubsystem) {
+function _playState(dependencies) {
     var playState = new State('play');
     var asteroidCount = 0;
     var currentLevelNumber = 0;
     var levelHasEnded = false;
     var currentScore = 0;
     var playerLives = 3;
+    var playerIsAlive = true;
+    var playerRespawnTimer = 0;
     playState.addEventHandler('entity-added', function (event) {
         if (isAsteroid(event.data.type)) {
             levelHasEnded = false;
@@ -58,8 +61,8 @@ function _playState(stateManager, entityFactory, entitySubsystem) {
     });
     playState.addEventHandler('new-level', function (event) {
         for (var i = 0; i < 5; i++) {
-            var asteroid = entityFactory.buildLargeAsteroid(playState._gameContainer.display);
-            entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
+            var asteroid = dependencies.entityFactory.buildLargeAsteroid(playState._gameContainer.display);
+            dependencies.entitySubsystem.addEntity(asteroid, CollisionManager.ASTEROID);
         }
     });
     playState.addEventHandler('entity-death', function (event) {
@@ -76,16 +79,33 @@ function _playState(stateManager, entityFactory, entitySubsystem) {
         } else if (isPlayer(event.data.type)) {
             playerLives--;
             playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: playerLives}));
+            playerIsAlive = false;
+            playerRespawnTimer = 5000;
         }
 
     });
     playState.update = function (gameContainer) {
+        _updatePlayerState(gameContainer);
+        _checkForLevelEnd(gameContainer);
+    };
+    function _updatePlayerState(gameContainer) {
+        if (!playerIsAlive) {
+            playerRespawnTimer -= gameContainer.timeSinceLastFrame;
+            if (playerRespawnTimer <= 0) {
+                dependencies.playerSubsystem.respawnPlayer();
+                playerIsAlive = true;
+            }
+        }
+    }
+
+    function _checkForLevelEnd(gameContainer) {
         if (asteroidCount === 0 && !levelHasEnded) {
             levelHasEnded = true;
             currentLevelNumber++;
             gameContainer.events.emit(new GameEvent('new-level', {levelNumber: currentLevelNumber}));
         }
-    };
+    }
+
     return playState;
 }
 

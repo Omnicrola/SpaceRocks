@@ -14,7 +14,8 @@ module.exports = (function () {
         var elapsed = currentTime - this._lastFrame;
         var delta = elapsed / (1000 / this._config.fps);
         this._lastFrame = currentTime;
-        return Math.min(10, delta);
+        delta = Math.min(10, delta);
+        return {delta: delta, milliseconds: elapsed};
     };
 
     return delta;

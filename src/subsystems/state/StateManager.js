@@ -2,6 +2,8 @@
  * Created by Eric on 12/12/2015.
  */
 
+var DEBUG = require('../../Debug');
+
 var GameEvent = require('../../engine/GameEvent');
 var CollisionManager = require('../entities/CollisionManager');
 var EntityFactory = require('../entities/EntityFactory');
@@ -28,8 +30,10 @@ StateManager.prototype.changeState = function (desiredStateName) {
     this._currentState.unload(this._gameContainer);
     newState.load(this._gameContainer);
     this._currentState = newState;
+    DEBUG.display.state = desiredStateName;
     this._gameContainer.events.emit(new GameEvent('state-change', {state: desiredStateName}));
 };
+
 function _findState(desiredStateName) {
     var states = this._states.filter(function (state) {
         return state.name === desiredStateName;

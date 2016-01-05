@@ -11,6 +11,7 @@ var MockGameContainer = require('../mocks/GameContainer');
 var GameEvent = require('../../src/engine/GameEvent');
 var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
 var GameInput = require('../../src/engine/GameInput');
+var PlayerSubsystem = require('../../src/subsystems/PlayerSubsystem');
 var EntityFactory = require('../../src/subsystems/entities/EntityFactory');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var GameStateBuilder = require('../../src/game/GameStateBuilder');
@@ -19,9 +20,11 @@ var StateManager = require('../../src/subsystems/state/StateManager');
 describe('GameStateBuilder', function () {
     var stubStateManager;
     var mockGameContainer;
+    var stubPlayerSubsystem;
     beforeEach(function () {
         stubStateManager = spies.createStub(new StateManager());
         mockGameContainer = MockGameContainer.create();
+        stubPlayerSubsystem = spies.createStubInstance(PlayerSubsystem);
     });
 
     describe('Loading game state', function () {
@@ -54,7 +57,7 @@ describe('GameStateBuilder', function () {
     describe('Start game state', function () {
         var startScreenState;
         beforeEach(function () {
-            startScreenState = GameStateBuilder.buildStartScreen(stubStateManager);
+            startScreenState = GameStateBuilder.buildStartScreen(stubStateManager, stubPlayerSubsystem);
         });
 
         it('should implement State interface', function () {
@@ -73,11 +76,17 @@ describe('GameStateBuilder', function () {
                 .withArgs(GameInput.SPACEBAR)
                 .returns(true);
 
+
+            verify(mockGameContainer.events.emit).wasNotCalled();
+            verify(stubPlayerSubsystem.respawnPlayer).wasNotCalled();
+
             startScreenState.update(mockGameContainer);
+
             verify(mockGameContainer.events.emit).wasCalledTwice();
             verify.event(new GameEvent(Types.events.SCORE_CHANGE, {score: 0}), mockGameContainer.events.emit.firstCall.args[0]);
             verify.event(new GameEvent(Types.events.PLAYER_LIFE_CHANGE, {lives: 3}), mockGameContainer.events.emit.secondCall.args[0]);
             verify(stubStateManager.changeState).wasCalledWith(Types.state.PLAY);
+            verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
         });
 
         it('should not change if spacebar is not pressed', function () {
@@ -100,7 +109,12 @@ describe('GameStateBuilder', function () {
         beforeEach(function () {
             stubEntityFactory = spies.createStubCopy(EntityFactory);
             stubEntitySubsystem = spies.createStub(new EntitySubsystem());
-            playState = GameStateBuilder.buildPlayState(stubStateManager, stubEntityFactory, stubEntitySubsystem);
+            playState = GameStateBuilder.buildPlayState({
+                stateManager: stubStateManager,
+                entityFactory: stubEntityFactory,
+                entitySubsystem: stubEntitySubsystem,
+                playerSubsystem: stubPlayerSubsystem
+            });
         });
 
         it('should implement the State interface', function () {
@@ -110,6 +124,23 @@ describe('GameStateBuilder', function () {
 
         it('should unsubscribe all subscribers', function () {
             checkSubscribersAreRemoved(playState);
+        });
+
+        describe('respawning player', function () {
+            it('should wait 5 seconds to respawn', function () {
+                playState.load(mockGameContainer);
+                destroyEntity(Types.entities.PLAYER);
+
+                mockGameContainer.timeSinceLastFrame = 4998;
+                playState.update(mockGameContainer);
+                mockGameContainer.timeSinceLastFrame = 1;
+                playState.update(mockGameContainer);
+
+                verify(stubPlayerSubsystem.respawnPlayer).wasNotCalled();
+                playState.update(mockGameContainer);
+                verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
+
+            });
         });
 
         describe('tracking score', function () {
