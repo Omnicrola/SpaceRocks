@@ -66,8 +66,10 @@ function _playState(dependencies) {
         if (isAsteroid(event.data.type)) {
             if (event.data.type === 'asteroid-large') {
                 currentScore += 25;
+                _spawnTwoAsteroids(dependencies.entityFactory.buildMediumAsteroid, event.data.position);
             } else if (event.data.type === 'asteroid-medium') {
                 currentScore += 35;
+                _spawnTwoAsteroids(dependencies.entityFactory.buildSmallAsteroid, event.data.position);
             }
             else if (event.data.type === 'asteroid-small') {
                 currentScore += 50;
@@ -80,8 +82,15 @@ function _playState(dependencies) {
             playerIsAlive = false;
             playerRespawnTimer = 5000;
         }
-
     });
+
+    function _spawnTwoAsteroids(factory, position) {
+        var asteroid1 = factory(position);
+        var asteroid2 = factory(position);
+        dependencies.entitySubsystem.addEntity(asteroid1, CollisionManager.ASTEROID);
+        dependencies.entitySubsystem.addEntity(asteroid2, CollisionManager.ASTEROID);
+    }
+
     playState.update = function (gameContainer) {
         DEBUG.display.asteroids = asteroidCount;
         _updatePlayerState(gameContainer);

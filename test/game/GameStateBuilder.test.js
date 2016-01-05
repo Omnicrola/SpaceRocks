@@ -12,6 +12,7 @@ var GameEvent = require('../../src/engine/GameEvent');
 var CollisionManager = require('../../src/subsystems/entities/CollisionManager');
 var GameInput = require('../../src/engine/GameInput');
 var PlayerSubsystem = require('../../src/subsystems/PlayerSubsystem');
+var Point = require('../../src/subsystems/entities/Point');
 var EntityFactory = require('../../src/subsystems/entities/EntityFactory');
 var EntitySubsystem = require('../../src/subsystems/entities/EntitySubsystem');
 var GameStateBuilder = require('../../src/game/GameStateBuilder');
@@ -194,6 +195,41 @@ describe('GameStateBuilder', function () {
             }
         });
 
+        describe('asteroids spawning other asteroids', function () {
+            it('should spawn two medium asteroids when a large one dies', function () {
+                var stubEntity1 = spies.create('entity1');
+                var stubEntity2 = spies.create('entity2');
+                stubEntityFactory.buildMediumAsteroid.onCall(0).returns(stubEntity1);
+                stubEntityFactory.buildMediumAsteroid.onCall(1).returns(stubEntity2);
+
+                var expectedPosition = new Point(Math.random(), Math.random());
+                playState.load(mockGameContainer);
+                destroyEntity(Types.entities.ASTEROID_LARGE, expectedPosition);
+
+                verify(stubEntitySubsystem.addEntity).wasCalledTwice();
+                verify(stubEntitySubsystem.addEntity).wasCalledWith(stubEntity1, CollisionManager.ASTEROID);
+                verify(stubEntitySubsystem.addEntity).wasCalledWith(stubEntity2, CollisionManager.ASTEROID);
+                verify(stubEntityFactory.buildMediumAsteroid).wasCalledWith(expectedPosition);
+
+            });
+            it('should spawn two small asteroids when a medium one dies', function () {
+                var stubEntity1 = spies.create('entity1');
+                var stubEntity2 = spies.create('entity2');
+                stubEntityFactory.buildSmallAsteroid.onCall(0).returns(stubEntity1);
+                stubEntityFactory.buildSmallAsteroid.onCall(1).returns(stubEntity2);
+
+                var expectedPosition = new Point(Math.random(), Math.random());
+                playState.load(mockGameContainer);
+                destroyEntity(Types.entities.ASTEROID_MEDIUM, expectedPosition);
+
+                verify(stubEntitySubsystem.addEntity).wasCalledTwice();
+                verify(stubEntitySubsystem.addEntity).wasCalledWith(stubEntity1, CollisionManager.ASTEROID);
+                verify(stubEntitySubsystem.addEntity).wasCalledWith(stubEntity2, CollisionManager.ASTEROID);
+                verify(stubEntityFactory.buildSmallAsteroid).wasCalledWith(expectedPosition);
+
+            });
+        });
+
         describe('asteroids triggering a new level', function () {
 
             it('should start new level when asteroids reach zero - case 1', function () {
@@ -302,8 +338,9 @@ describe('GameStateBuilder', function () {
             mockGameContainer.$emitMockEvent(Types.events.ENTITY_REMOVED, {type: type});
         }
 
-        function destroyEntity(type) {
-            mockGameContainer.$emitMockEvent(Types.events.ENTITY_DEATH, {type: type});
+        function destroyEntity(type, position) {
+            position = position || new Point(0, 0);
+            mockGameContainer.$emitMockEvent(Types.events.ENTITY_DEATH, {type: type, position: position});
         }
     });
 
