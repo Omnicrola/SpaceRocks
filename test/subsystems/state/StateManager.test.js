@@ -59,6 +59,18 @@ describe('StateManager', function () {
         verify(mockState2.update).wasCalledWith(mockGameContainer);
     });
 
+    it('should emit event when state changes', function () {
+        var expectedState = 'state2';
+        stateManager.initialize(mockGameContainer);
+
+        verify(mockGameContainer.events.emit).wasNotCalled();
+        stateManager.changeState(expectedState);
+        verify(mockGameContainer.events.emit).wasCalledOnce();
+        var actualEvent = mockGameContainer.events.emit.firstCall.args[0];
+        verify.event(new GameEvent(Types.events.STATE_CHANGE, {state: expectedState}), actualEvent);
+
+    });
+
     it('should throw an error when an invalid state is requested', function () {
         stateManager.initialize(mockGameContainer);
         var badState = 'i dont exist';

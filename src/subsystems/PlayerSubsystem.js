@@ -40,8 +40,10 @@ module.exports = (function () {
     };
 
     playersubsystem.prototype.update = function (gameContainer) {
-        _handleMovement.call(this, gameContainer);
-        _handleWeapons.call(this, gameContainer);
+        if (this._player && this._player.isAlive) {
+            _handleMovement.call(this, gameContainer);
+            _handleWeapons.call(this, gameContainer);
+        }
     };
 
     function _handleMovement(gameContainer) {

@@ -12,16 +12,17 @@ module.exports = {
     },
     events: {
         ENGINE_START: 'engine-start',
-        NEW_GAME: 'new-game',
-        NEW_LEVEL: 'new-level',
-        GAME_RESET: 'game-reset',
         ENTITY_DEATH: 'entity-death',
         ENTITY_ADDED: 'entity-added',
         ENTITY_REMOVED: 'entity-removed',
-        SCORE_CHANGE: 'score-change',
+        GAME_RESET: 'game-reset',
+        NEW_LEVEL: 'new-level',
+        NEW_GAME: 'new-game',
         PLAYER_LIFE_CHANGE: 'player-life-change',
         PLAYER_FIRE: 'player-fire',
-        PLAYER_THRUST: 'player-thrust'
+        PLAYER_THRUST: 'player-thrust',
+        STATE_CHANGE: 'state-change',
+        SCORE_CHANGE: 'score-change',
     },
     state: {
         LOADING: 'loading',

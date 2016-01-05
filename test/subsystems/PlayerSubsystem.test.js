@@ -56,7 +56,7 @@ describe('PlayerSubsystem', function () {
         interface.assert.subsystems(playerSubsystem);
     });
 
-    describe('handling input', function () {
+    describe.only('handling input', function () {
         var playerEntity;
         var gameContainerForKeys;
 
@@ -67,13 +67,29 @@ describe('PlayerSubsystem', function () {
             newLevelSubscriber(new GameEvent('new-level'));
         });
 
+        it('should ignore input if player is dead', function () {
+            playerEntity._isAlive = false;
+
+            setKeyPressed(GameInput.LEFT);
+            setKeyPressed(GameInput.RIGHT);
+            setKeyPressed(GameInput.UP);
+            setKeyPressed(GameInput.DOWN);
+            setKeyPressed(GameInput.SPACEBAR);
+
+            verify(mockEntitySubsystem.addEntity).wasCalledOnce();
+            playerSubsystem.update(gameContainerForKeys);
+
+            assert.equal(0, playerEntity.rotation);
+            assert.equal(0, playerEntity.velocity.x);
+            assert.equal(0, playerEntity.velocity.y);
+            verify(gameContainerForKeys.events.emit).wasNotCalled();
+            verify(mockEntitySubsystem.addEntity).wasCalledOnce();
+        });
+
         it('should rotate left', function () {
             assert.equal(0, playerEntity.rotation);
 
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.LEFT)
-                .returns(true);
+            setKeyPressed(GameInput.LEFT);
 
             playerSubsystem.update(gameContainerForKeys);
 
@@ -86,10 +102,7 @@ describe('PlayerSubsystem', function () {
         it('should rotate right', function () {
             assert.equal(0, playerEntity.rotation);
 
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.RIGHT)
-                .returns(true);
+            setKeyPressed(GameInput.RIGHT);
 
             playerSubsystem.update(gameContainerForKeys);
 
@@ -105,10 +118,7 @@ describe('PlayerSubsystem', function () {
             var expectedRotation = 22.35;
             playerEntity.rotation = expectedRotation;
             playerEntity.position = new Point(Math.random(), Math.random());
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.UP)
-                .returns(true);
+            setKeyPressed(GameInput.UP);
 
             playerSubsystem.update(gameContainerForKeys);
 
@@ -129,10 +139,7 @@ describe('PlayerSubsystem', function () {
             var expectedRotation = 48.32;
             playerEntity.rotation = expectedRotation;
             playerEntity.position = new Point(Math.random(), Math.random());
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.DOWN)
-                .returns(true);
+            setKeyPressed(GameInput.DOWN);
 
             playerSubsystem.update(gameContainerForKeys);
 
@@ -154,10 +161,7 @@ describe('PlayerSubsystem', function () {
             var expectedEntity = {entity: 'foobar'};
             mockEntityFactory.buildBullet.returns(expectedEntity);
 
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.SPACEBAR)
-                .returns(true);
+            setKeyPressed(GameInput.SPACEBAR);
 
             playerEntity.rotation = playerRotation;
             playerEntity.position = expectedPosition;
@@ -179,10 +183,8 @@ describe('PlayerSubsystem', function () {
         it('should not fire a bullet too frequently', function () {
 
             mockEntityFactory.buildBullet.returns({});
-            gameContainerForKeys.input
-                .isPressed
-                .withArgs(GameInput.SPACEBAR)
-                .returns(true);
+            setKeyPressed(GameInput.SPACEBAR);
+
             verify(mockEntitySubsystem.addEntity).wasCalledOnce();
             stubTime.getCurrentTime.returns(350);
 
@@ -193,6 +195,13 @@ describe('PlayerSubsystem', function () {
             playerSubsystem.update(gameContainerForKeys);
             verify(mockEntitySubsystem.addEntity).wasCalledTwice();
         });
+
+        function setKeyPressed(keyCode) {
+            gameContainerForKeys.input
+                .isPressed
+                .withArgs(keyCode)
+                .returns(true);
+        }
 
     });
 

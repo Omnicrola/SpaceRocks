@@ -27,12 +27,12 @@ var clean = require('gulp-clean');
 gulp.task('build', ['clean', 'make-js', 'copy-index', 'copy-resources']);
 
 gulp.task('clean', function () {
-     gulp.src('./bin', {read: false})
+    return gulp.src('./bin', {read: false})
         .pipe(clean());
 })
 
 gulp.task('make-js', function () {
-     gulp.src('src/exports.js')
+    return gulp.src('src/exports.js')
         .pipe(browserify({
             insertGlobals: true,
             debug: true
@@ -41,11 +41,11 @@ gulp.task('make-js', function () {
 });
 
 gulp.task('copy-index', function () {
-     gulp.src('./src/index.html')
+    return gulp.src('./src/index.html')
         .pipe(gulp.dest('./bin'));
 });
 
 gulp.task('copy-resources', function () {
-     gulp.src('./resources/**/*')
+    return gulp.src('./resources/**/*')
         .pipe(gulp.dest('./bin'));
 });

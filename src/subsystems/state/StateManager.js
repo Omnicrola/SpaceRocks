@@ -28,6 +28,7 @@ StateManager.prototype.changeState = function (desiredStateName) {
     this._currentState.unload(this._gameContainer);
     newState.load(this._gameContainer);
     this._currentState = newState;
+    this._gameContainer.events.emit(new GameEvent('state-change', {state: desiredStateName}));
 };
 function _findState(desiredStateName) {
     var states = this._states.filter(function (state) {
