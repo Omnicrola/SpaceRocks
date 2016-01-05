@@ -201,9 +201,9 @@ describe('GameStateBuilder', function () {
 
                 playState.load(mockGameContainer);
                 addEntity(Types.entities.ASTEROID_LARGE);
-                removeEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
 
-                verify(mockGameContainer.events.emit).wasNotCalled();
+                mockGameContainer = MockGameContainer.create();
                 playState.update(mockGameContainer);
                 verify(mockGameContainer.events.emit).wasCalledOnce();
                 verify.event(expectedEvent, mockGameContainer.events.emit.firstCall.args[0]);
@@ -217,16 +217,15 @@ describe('GameStateBuilder', function () {
                 addEntity(Types.entities.ASTEROID_MEDIUM);
                 addEntity(Types.entities.ASTEROID_SMALL);
 
-                removeEntity(Types.entities.ASTEROID_SMALL);
+                destroyEntity(Types.entities.ASTEROID_SMALL);
 
                 playState.update(mockGameContainer);
-                verify(mockGameContainer.events.emit).wasNotCalled();
-                removeEntity(Types.entities.ASTEROID_MEDIUM);
-                removeEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_MEDIUM);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
 
                 playState.update(mockGameContainer);
-                verify(mockGameContainer.events.emit).wasCalledOnce();
-                verify.event(expectedEvent, mockGameContainer.events.emit.firstCall.args[0]);
+                verify(mockGameContainer.events.emit).wasCalledExactly(4);
+                verify.event(expectedEvent, mockGameContainer.events.emit.getCall(3).args[0]);
             });
 
             it('should start new level when asteroids reach zero - case 3', function () {
@@ -236,34 +235,33 @@ describe('GameStateBuilder', function () {
                 addEntity(Types.entities.FX);
                 addEntity(Types.entities.FX);
                 addEntity(Types.entities.ASTEROID_LARGE);
-                removeEntity(Types.entities.FX);
+                destroyEntity(Types.entities.FX);
 
                 playState.update(mockGameContainer);
-                verify(mockGameContainer.events.emit).wasNotCalled();
 
-                removeEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
                 playState.update(mockGameContainer);
 
-                verify(mockGameContainer.events.emit).wasCalledOnce();
-                verify.event(expectedEvent, mockGameContainer.events.emit.firstCall.args[0]);
+                verify(mockGameContainer.events.emit).wasCalledTwice();
+                verify.event(expectedEvent, mockGameContainer.events.emit.secondCall.args[0]);
             });
 
             it('should not start a new level until new asteroids are added', function () {
                 var expectedEvent = new GameEvent(Types.events.NEW_LEVEL, {levelNumber: 2});
                 playState.load(mockGameContainer);
                 addEntity(Types.entities.ASTEROID_LARGE);
-                removeEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
                 addEntity(Types.entities.FX);
 
                 playState.update(mockGameContainer);
                 playState.update(mockGameContainer);
-                verify(mockGameContainer.events.emit).wasCalledOnce();
+                verify(mockGameContainer.events.emit).wasCalledTwice();
 
                 addEntity(Types.entities.ASTEROID_LARGE);
-                removeEntity(Types.entities.ASTEROID_LARGE);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
                 playState.update(mockGameContainer);
-                verify(mockGameContainer.events.emit).wasCalledTwice();
-                verify.event(expectedEvent, mockGameContainer.events.emit.secondCall.args[0]);
+                verify(mockGameContainer.events.emit).wasCalledExactly(4);
+                verify.event(expectedEvent, mockGameContainer.events.emit.getCall(3).args[0]);
             });
         });
 

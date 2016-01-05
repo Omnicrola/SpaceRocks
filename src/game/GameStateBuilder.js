@@ -2,6 +2,8 @@
  * Created by omnic on 1/3/2016.
  */
 
+var DEBUG = require('../Debug');
+
 var GameInput = require('../engine/GameInput');
 var GameEvent = require('../engine/GameEvent');
 var CollisionManager = require('../subsystems/entities/CollisionManager');
@@ -54,11 +56,6 @@ function _playState(dependencies) {
             asteroidCount++;
         }
     });
-    playState.addEventHandler('entity-removed', function (event) {
-        if (isAsteroid(event.data.type)) {
-            asteroidCount--;
-        }
-    });
     playState.addEventHandler('new-level', function (event) {
         for (var i = 0; i < 5; i++) {
             var asteroid = dependencies.entityFactory.buildLargeAsteroid(playState._gameContainer.display);
@@ -75,6 +72,7 @@ function _playState(dependencies) {
             else if (event.data.type === 'asteroid-small') {
                 currentScore += 50;
             }
+            asteroidCount--;
             playState._gameContainer.events.emit(new GameEvent('score-change', {score: currentScore}));
         } else if (isPlayer(event.data.type)) {
             playerLives--;
@@ -85,6 +83,7 @@ function _playState(dependencies) {
 
     });
     playState.update = function (gameContainer) {
+        DEBUG.display.asteroids = asteroidCount;
         _updatePlayerState(gameContainer);
         _checkForLevelEnd(gameContainer);
     };
