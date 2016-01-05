@@ -51,7 +51,7 @@ function _buildMediumAsteroid(config) {
         new Point(-4, -4)
     ]), 'asteroid-medium');
     asteroid.position = new Point(config.x, config.y);
-    _addRandomVelocity(asteroid);
+    _addRandomVelocity(asteroid, 1.5);
     _rotateAsteroid(asteroid);
     return asteroid;
 }
@@ -72,7 +72,7 @@ function _buildSmallAsteroid(config) {
         new Point(4, 0)
     ]), 'asteroid-small');
     asteroid.position = new Point(config.x, config.y);
-    _addRandomVelocity(asteroid);
+    _addRandomVelocity(asteroid, 2);
     _rotateAsteroid(asteroid);
     return asteroid;
 }
@@ -94,14 +94,14 @@ function _buildLargeAsteroid(config) {
     var x = Math.random() * config.width;
     var y = Math.random() * config.height;
     asteroid.position = new Point(0, 0);
-    _addRandomVelocity(asteroid);
+    _addRandomVelocity(asteroid, 1);
     _rotateAsteroid(asteroid);
     return asteroid;
 }
 
-function _addRandomVelocity(asteroid) {
-    var vX = (Math.random() * 2) - 1;
-    var vY = (Math.random() * 2) - 1;
+function _addRandomVelocity(asteroid, range) {
+    var vX = (Math.random() * range * 2) - range;
+    var vY = (Math.random() * range * 2) - range;
     asteroid.velocity = new Point(vX, vY);
 }
 function _rotateAsteroid(asteroid) {

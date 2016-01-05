@@ -74,7 +74,7 @@ describe('EffectsSubsystem', function () {
             mockEntityFactory.buildParticles.returns(expectedEntities);
 
             playerThrustSubscriber.call({}, gameEvent);
-            verify(mockEntityFactory.buildParticles).wasCalledWithConfig(0,expectedConfig);
+            verify(mockEntityFactory.buildParticles).wasCalledWithConfig(0, expectedConfig);
 
         });
 
@@ -124,16 +124,30 @@ describe('EffectsSubsystem', function () {
             verify(mockEntitySubsystem.addEntity).wasCalledWith(expectedEntities[1], CollisionManager.FX);
         });
 
-        it('should play a sound when an asteroid dies', function () {
-            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
-                type: Types.entities.ASTEROID_LARGE,
-                position: new Point(0, 0)
+        describe('audio on asteroid death', function () {
+            it('should play on large asteroid', function () {
+                destroyEntity(Types.entities.ASTEROID_LARGE);
+                verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
             });
-            verify(mockGameContainer.audio.play).wasNotCalled();
-
-            entityDeathSubscriber.call({}, gameEvent);
-            verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
+            it('should play on medium asteroid', function () {
+                destroyEntity(Types.entities.ASTEROID_MEDIUM);
+                verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
+            });
+            it('should play on small asteroid', function () {
+                destroyEntity(Types.entities.ASTEROID_SMALL);
+                verify(mockGameContainer.audio.play).wasCalledWith(AudioFx.EXPLOSION);
+            });
         });
+
+        function destroyEntity(type, position) {
+            position = position || new Point(0, 0);
+            var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
+                type: type,
+                position: position
+            });
+            entityDeathSubscriber.call({}, gameEvent);
+        }
+
 
         it('should not play a sound when a bullet dies', function () {
             var gameEvent = new GameEvent(Types.events.ENTITY_DEATH, {
