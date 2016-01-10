@@ -1,7 +1,5 @@
 Space Rocks TODO
 ----------------
-- Add game-over state
-- Reset to new game
 - Add extra life after certain point scores
 - Add some music
 - Optimize collision detection
