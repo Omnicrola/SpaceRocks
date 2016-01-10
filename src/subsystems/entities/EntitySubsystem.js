@@ -62,7 +62,6 @@ EntitySubsystem.prototype.addEntity = function (newEntity, collisionGroup) {
     this._entities.push(newEntity);
     this._collisionManager.add(newEntity, collisionGroup);
     this._gameContainer.events.emit(new GameEvent('entity-added', {type: newEntity.type}));
-    DEBUG.log('Add entity: ' + newEntity.id);
 };
 
 EntitySubsystem.prototype.removeEntity = function (entityToRemove) {
@@ -71,7 +70,6 @@ EntitySubsystem.prototype.removeEntity = function (entityToRemove) {
         this._collisionManager.remove(entityToRemove);
         this._entities.splice(position, 1);
         this._gameContainer.events.emit(new GameEvent('entity-removed', {type: entityToRemove.type}));
-        DEBUG.log('Removed entity' + entityToRemove.id);
     }
 }
 

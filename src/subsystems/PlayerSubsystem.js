@@ -33,7 +33,6 @@ PlayerSubsystem.prototype.respawnPlayer = function () {
         this._entitySubsystem.removeEntity(oldPlayer);
     }
     this._player = newPlayer;
-    DEBUG.log('respawned player');
 };
 
 PlayerSubsystem.prototype.render = function () {
@@ -89,7 +88,6 @@ function _handleWeapons(gameContainer) {
                 position: position,
                 velocity: velocity
             }));
-            DEBUG.log('player fired');
         }
     }
 }
