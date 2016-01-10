@@ -66,8 +66,8 @@ module.exports = (function () {
                 throw new Error('createComplex spy requires an array of method names');
             }
         },
-        replace: function (object, property) {
-            var newStub = sinon.stub(object, property);
+        replace: function (object, property, newProperty) {
+            var newStub = newProperty || sinon.stub(object, property);
             newStub.methodName = property;
             allStubs.push(newStub);
             return newStub;

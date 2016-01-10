@@ -88,9 +88,13 @@ function _collideGroups(gameContainer, firstGroup, secondGroup) {
     firstGroup.members.forEach(function (entity1) {
         secondGroup.members.forEach(function (entity2) {
             if (entity1.isAlive && entity2.isAlive) {
-                if (entity1.shape.intersects(entity2.shape)) {
-                    entity1.destroy(gameContainer);
-                    entity2.destroy(gameContainer);
+                var shape1 = entity1.shape;
+                var shape2 = entity2.shape;
+                if (shape1.boundingBox.intersects(shape2.boundingBox)) {
+                    if (shape1.intersects(shape2)) {
+                        entity1.destroy(gameContainer);
+                        entity2.destroy(gameContainer);
+                    }
                 }
             }
         });

@@ -3,6 +3,7 @@
  */
 
 var Shape = require('../../../src/subsystems/entities/Shape');
+var BoundingBox = require('../../../src/subsystems/entities/BoundingBox');
 var Point = require('../../../src/subsystems/entities/Point');
 var Renderer = require('../../../src/engine/Renderer');
 var verify = require('../../TestVerification');
@@ -107,8 +108,34 @@ describe('Shape', function () {
             verify.point(new Point(-15.178472293709394, 23.597093146221706), points[3]);
         });
     });
+    describe('boundingBox', function () {
+        var rectanglePoly;
+        beforeEach(function () {
+            rectanglePoly = new Shape([
+                new Point(-2, -1),
+                new Point(-1, 2),
+                new Point(2, 1),
+                new Point(1, -2)
+            ]);
+        });
 
+        it('should build a boundingbox', function () {
+            var boundingBox = rectanglePoly.boundingBox;
+            expect(boundingBox).to.exist;
+            expect(boundingBox).to.be.instanceOf(BoundingBox);
+            verify.point(new Point(-2, -2), boundingBox.min);
+            verify.point(new Point(2, 2), boundingBox.max);
+        });
+        it('should adjust boundingbox when rotated', function () {
+            rectanglePoly.rotation = 21.33;
+            var boundingBox = rectanglePoly.boundingBox;
+            expect(boundingBox).to.exist;
+            expect(boundingBox).to.be.instanceOf(BoundingBox);
+            verify.point(new Point(-1.6589789280665022, -1.6589789280665022), boundingBox.min);
+            verify.point(new Point(1.6589789280665022, 1.6589789280665022), boundingBox.max);
+        });
 
+    });
     describe('intersects another Shape', function () {
         var rectanglePoly;
         beforeEach(function () {
@@ -132,13 +159,14 @@ describe('Shape', function () {
             }));
         });
 
+
         it('should intersect another Shape that has a point contained in it', function () {
             var points = [
                 new Point(0.5, 0.5),
                 new Point(10, 0),
                 new Point(0, 10)
             ];
-            var otherShape = spies.createStub(new Shape());
+            var otherShape = spies.createStub(new Shape([]));
             otherShape.getPoints.returns(points);
 
             assert.isTrue(rectanglePoly.intersects(otherShape));
@@ -152,7 +180,7 @@ describe('Shape', function () {
                 new Point(0, 10)
             ];
 
-            var otherShape = spies.createStub(new Shape());
+            var otherShape = spies.createStub(new Shape([]));
             otherShape.getPoints.returns(points);
 
             assert.isFalse(rectanglePoly.intersects(otherShape));

@@ -71,6 +71,7 @@ module.exports = (function () {
         this._subsystemManager.update(gameContainer);
         this._renderer.clearCanvas('#000000');
         this._subsystemManager.render(this._renderer);
+        DEBUG.display.frametime = interval.milliseconds;
         DEBUG.render(this._renderer);
     }
 

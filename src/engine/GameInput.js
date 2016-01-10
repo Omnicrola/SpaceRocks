@@ -25,7 +25,6 @@ module.exports = (function () {
     }
 
     function _keyDown(event) {
-        DEBUG.log('Key: ' + event.keyCode);
         this._keyStates[event.keyCode] = true;
         supressGameKeys(event);
     }

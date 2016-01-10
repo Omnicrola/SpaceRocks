@@ -6,6 +6,7 @@ var verify = require('../../TestVerification');
 var spies = require('../../TestSpies');
 var GameContainerMock = require('../../mocks/GameContainer');
 
+var BoundingBox = require('../../../src/subsystems/entities/BoundingBox');
 var Shape = require('../../../src/subsystems/entities/Shape');
 var Point = require('../../../src/subsystems/entities/Point');
 var Entity = require('../../../src/subsystems/entities/Entity');
@@ -20,16 +21,21 @@ describe('CollisionManager', function () {
     });
 
 
-
     describe('entities colliding', function () {
         var stubShape1;
+        var stubBB1;
         var stubEntity1;
         var stubShape2;
+        var stubBB2;
         var stubEntity2;
 
         beforeEach(function () {
-            stubShape1 = spies.createStub(new Shape());
-            stubShape2 = spies.createStub(new Shape());
+            stubShape1 = spies.createStubInstance(Shape);
+            stubShape2 = spies.createStubInstance(Shape);
+            stubShape1.boundingBox = stubBB1;
+            stubShape2.boundingBox = stubBB2;
+            stubBB1 = spies.createStubInstance(BoundingBox);
+            stubBB2 = spies.createStubInstance(BoundingBox);
             stubEntity1 = spies.createStubInstance(Entity);
             stubEntity2 = spies.createStubInstance(Entity);
             stubEntity1.shape = stubShape1;
@@ -40,7 +46,7 @@ describe('CollisionManager', function () {
             collisionManager.add(stubEntity2, CollisionManager.PLAYER);
 
         });
-        it('should remove an entity', function() {
+        it('should remove an entity', function () {
             collisionManager.remove(stubEntity1);
             collisionManager.update(mockGameContainer);
 
@@ -48,7 +54,20 @@ describe('CollisionManager', function () {
             verify(stubShape2.intersects).wasNotCalled();
 
         });
-        it('should not destroy entities if they do not intersect', function () {
+        it('should not test shape intersetions if boundingboxes do not intersect', function () {
+            stubShape1.boundingBox.intersects.returns(false);
+            stubShape2.boundingBox.intersects.returns(false);
+
+            collisionManager.update(mockGameContainer);
+            verify(stubShape1.intersects).wasNotCalled();
+            verify(stubShape2.intersects).wasNotCalled();
+            verify(stubEntity1.destroy).wasNotCalled();
+            verify(stubEntity2.destroy).wasNotCalled();
+        });
+
+        it('should not destroy entities if the shapes do not intersect but bounding boxes do', function () {
+            stubShape1.boundingBox.intersects.returns(true);
+            stubShape2.boundingBox.intersects.returns(true);
             stubShape1.intersects.returns(false);
             stubShape2.intersects.returns(false);
 
@@ -57,14 +76,21 @@ describe('CollisionManager', function () {
             verify(stubEntity2.destroy).wasNotCalled();
         });
 
+        it('should call intersect on boundingbox with other boundingbox', function () {
+            collisionManager.update(mockGameContainer);
+
+            verify(stubShape1.boundingBox.intersects).wasCalledWith(stubShape2.boundingBox);
+            verify(stubShape2.boundingBox.intersects).wasCalledWith(stubShape1.boundingBox);
+        });
+
         it('should not test entities in the same group against each other', function () {
             collisionManager = new CollisionManager();
             collisionManager.add(stubEntity1, CollisionManager.ASTEROID);
             collisionManager.add(stubEntity2, CollisionManager.ASTEROID);
 
             collisionManager.update(mockGameContainer);
-            verify(stubShape1.intersects).wasNotCalled();
-            verify(stubShape2.intersects).wasNotCalled();
+            verify(stubShape1.boundingBox.intersects).wasNotCalled();
+            verify(stubShape2.boundingBox.intersects).wasNotCalled();
         });
 
         it('should not collide an entity with itself', function () {
@@ -73,11 +99,12 @@ describe('CollisionManager', function () {
             stubShape1.intersects.returns(true);
 
             collisionManager.update(mockGameContainer);
-            verify(stubShape1.intersects).wasNotCalled();
+            verify(stubShape1.boundingBox.intersects).wasNotCalled();
             verify(stubEntity1.destroy).wasNotCalled();
         });
 
         it('should destroy both entities if they intersect', function () {
+            stubShape1.boundingBox.intersects.returns(true);
             stubShape1.intersects.returns(true);
 
             collisionManager.update(mockGameContainer);
@@ -86,6 +113,8 @@ describe('CollisionManager', function () {
         });
 
         it('will not destroy entities if one is already destroyed', function () {
+            stubBB1.intersects.returns(true);
+            stubBB2.intersects.returns(true);
             stubShape1.intersects.returns(true);
             stubShape2.intersects.returns(true);
             stubEntity1.isAlive = false;

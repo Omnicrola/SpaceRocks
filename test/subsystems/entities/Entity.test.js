@@ -18,7 +18,7 @@ describe('Entity', function () {
     var pointStub;
     var mockGameContainer;
     beforeEach(function () {
-        stubShape = spies.createStub(new Shape());
+        stubShape = spies.createStubInstance(Shape);
         entity = new Entity(stubShape, 'generictype');
         mockGameContainer = containerGenerator.create();
     });
