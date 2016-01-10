@@ -51,6 +51,9 @@ function _wrapPosition(entity, display) {
 
 EntitySubsystem.prototype.initialize = function (gameContainer) {
     this._gameContainer = gameContainer;
+    gameContainer.events.subscribe('new-game', function () {
+        this._entities = [];
+    }.bind(this));
 };
 
 var nextId = 1;

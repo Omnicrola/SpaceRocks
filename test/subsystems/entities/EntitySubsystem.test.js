@@ -106,6 +106,26 @@ describe('EntitySubsystem', function () {
         verify(stubEntity.render).wasNotCalled();
     });
 
+    it('should remove all entities when game resets', function(){
+        var stubEntity1 = createStubEntity();
+        var stubEntity2 = createStubEntity();
+        var stubEntity3 = createStubEntity();
+
+        entitySubsystem.addEntity(stubEntity1);
+        entitySubsystem.addEntity(stubEntity2);
+        entitySubsystem.addEntity(stubEntity3);
+        mockGameContainer.$emitMockEvent(Types.events.NEW_GAME, {});
+
+        entitySubsystem.update(mockGameContainer);
+        verify(stubEntity1.update).wasNotCalled();
+        verify(stubEntity2.update).wasNotCalled();
+        verify(stubEntity3.update).wasNotCalled();
+        verify(stubEntity1.destroy).wasNotCalled();
+        verify(stubEntity2.destroy).wasNotCalled();
+        verify(stubEntity3.destroy).wasNotCalled();
+
+    });
+
     it('should not remove an entity that has already been removed', function(){
         var stubEntity1 = createStubEntity();
         var stubEntity2 = createStubEntity();

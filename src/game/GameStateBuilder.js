@@ -19,7 +19,7 @@ module.exports = {
         return _playState(dependencies);
     },
     buildGameOverState: function (stateManager) {
-    return _gameOverState(stateManager);
+        return _gameOverState(stateManager);
     }
 };
 
@@ -39,6 +39,7 @@ function _startScreenState(stateManager, playerSubsystem) {
             stateManager.changeState('play');
             gameContainer.events.emit(new GameEvent('score-change', {score: 0}));
             gameContainer.events.emit(new GameEvent('player-life-change', {lives: 3}));
+            gameContainer.events.emit(new GameEvent('new-game', {}));
             playerSubsystem.respawnPlayer();
         }
     };
@@ -46,18 +47,18 @@ function _startScreenState(stateManager, playerSubsystem) {
 }
 function _playState(dependencies) {
     var playState = new State('play');
-    var asteroidCount = 0;
-    var currentLevelNumber = 0;
-    var levelHasEnded = false;
-    var currentScore = 0;
-    var playerLives = 3;
-    var playerIsAlive = true;
-    var playerRespawnTimer = 0;
+    var _state = {};
+    _resetPlayState();
     playState.addEventHandler('entity-added', function (event) {
         if (isAsteroid(event.data.type)) {
-            levelHasEnded = false;
-            asteroidCount++;
+            _state.levelHasEnded = false;
+            _state.asteroidCount++;
         }
+    });
+    playState.addEventHandler('new-game', function (event) {
+        _resetPlayState();
+        playState._gameContainer.events.emit(new GameEvent('score-change', {score: _state.currentScore}));
+        playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: _state.playerLives}));
     });
     playState.addEventHandler('new-level', function (event) {
         for (var i = 0; i < 5; i++) {
@@ -68,27 +69,36 @@ function _playState(dependencies) {
     playState.addEventHandler('entity-death', function (event) {
         if (isAsteroid(event.data.type)) {
             if (event.data.type === 'asteroid-large') {
-                currentScore += 25;
+                _state.currentScore += 25;
                 _spawnTwoAsteroids(dependencies.entityFactory.buildMediumAsteroid, event.data.position);
             } else if (event.data.type === 'asteroid-medium') {
-                currentScore += 35;
+                _state.currentScore += 35;
                 _spawnTwoAsteroids(dependencies.entityFactory.buildSmallAsteroid, event.data.position);
             }
             else if (event.data.type === 'asteroid-small') {
-                currentScore += 50;
+                _state.currentScore += 50;
             }
-            asteroidCount--;
-            playState._gameContainer.events.emit(new GameEvent('score-change', {score: currentScore}));
+            _state.asteroidCount--;
+            playState._gameContainer.events.emit(new GameEvent('score-change', {score: _state.currentScore}));
         } else if (isPlayer(event.data.type)) {
-            playerLives--;
-            playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: playerLives}));
-            playerIsAlive = false;
-            playerRespawnTimer = 5000;
-            if(playerLives <= 0){
+            _state.playerLives--;
+            playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: _state.playerLives}));
+            _state.playerIsAlive = false;
+            _state.playerRespawnTimer = 5000;
+            if (_state.playerLives <= 0) {
                 dependencies.stateManager.changeState('game-over');
             }
         }
     });
+    function _resetPlayState() {
+        _state.asteroidCount = 0;
+        _state.currentLevelNumber = 0;
+        _state.levelHasEnded = false;
+        _state.currentScore = 0;
+        _state.playerLives = 3;
+        _state.playerIsAlive = true;
+        _state.playerRespawnTimer = 0;
+    }
 
     function _spawnTwoAsteroids(factory, position) {
         var asteroid1 = factory(position);
@@ -97,26 +107,27 @@ function _playState(dependencies) {
         dependencies.entitySubsystem.addEntity(asteroid2, CollisionManager.ASTEROID);
     }
 
-    playState.update = function (gameContainer) {
-        DEBUG.display.asteroids = asteroidCount;
-        _updatePlayerState(gameContainer);
-        _checkForLevelEnd(gameContainer);
-    };
+    playState.addUpdate(_updatePlayerState);
+    playState.addUpdate(_checkForLevelEnd);
+    playState.addUpdate(function () {
+        DEBUG.display.asteroids = _state.asteroidCount;
+    });
+
     function _updatePlayerState(gameContainer) {
-        if (!playerIsAlive) {
-            playerRespawnTimer -= gameContainer.timeSinceLastFrame;
-            if (playerRespawnTimer <= 0) {
+        if (!_state.playerIsAlive) {
+            _state.playerRespawnTimer -= gameContainer.timeSinceLastFrame;
+            if (_state.playerRespawnTimer <= 0) {
                 dependencies.playerSubsystem.respawnPlayer();
-                playerIsAlive = true;
+                _state.playerIsAlive = true;
             }
         }
     }
 
     function _checkForLevelEnd(gameContainer) {
-        if (asteroidCount === 0 && !levelHasEnded) {
-            levelHasEnded = true;
-            currentLevelNumber++;
-            gameContainer.events.emit(new GameEvent('new-level', {levelNumber: currentLevelNumber}));
+        if (_state.asteroidCount === 0 && !_state.levelHasEnded) {
+            _state.levelHasEnded = true;
+            _state.currentLevelNumber++;
+            gameContainer.events.emit(new GameEvent('new-level', {levelNumber: _state.currentLevelNumber}));
         }
     }
 
@@ -133,8 +144,14 @@ function isPlayer(type) {
     return type === 'player';
 }
 
-function _gameOverState(stateManager){
+function _gameOverState(stateManager) {
     var gameOverState = new State('game-over');
+    gameOverState.addUpdate(function (gameContainer) {
+        var spacebarPressed = gameContainer.input.isPressed(GameInput.SPACEBAR);
+        if (spacebarPressed) {
+            stateManager.changeState('start-screen');
+        }
+    });
     return gameOverState;
 }
 /*
@@ -143,6 +160,7 @@ function _gameOverState(stateManager){
 
 var State = function (name) {
     this._subscribers = [];
+    this._updateHandlers = [];
     Object.defineProperties(this,
         {
             name: {
@@ -160,10 +178,16 @@ State.prototype.load = function (gameContainer) {
         gameContainer.events.subscribe(subscriber.type, subscriber.handler);
     });
 };
+State.prototype.addUpdate = function (updateHandler) {
+    this._updateHandlers.push(updateHandler);
+}
 State.prototype.unload = function (gameContainer) {
     this._subscribers.forEach(function (subscriber) {
         gameContainer.events.unsubscribe(subscriber.type, subscriber.handler);
     });
 };
 State.prototype.update = function (gameContainer) {
+    this._updateHandlers.forEach(function (handler) {
+        handler(gameContainer);
+    });
 };

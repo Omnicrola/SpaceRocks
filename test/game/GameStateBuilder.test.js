@@ -83,9 +83,10 @@ describe('GameStateBuilder', function () {
 
             startScreenState.update(mockGameContainer);
 
-            verify(mockGameContainer.events.emit).wasCalledTwice();
+            verify(mockGameContainer.events.emit).wasCalledExactly(3);
             verify.event(new GameEvent(Types.events.SCORE_CHANGE, {score: 0}), mockGameContainer.events.emit.firstCall.args[0]);
             verify.event(new GameEvent(Types.events.PLAYER_LIFE_CHANGE, {lives: 3}), mockGameContainer.events.emit.secondCall.args[0]);
+            verify.event(new GameEvent(Types.events.NEW_GAME, {}), mockGameContainer.events.emit.thirdCall.args[0]);
             verify(stubStateManager.changeState).wasCalledWith(Types.state.PLAY);
             verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
         });
@@ -158,6 +159,13 @@ describe('GameStateBuilder', function () {
                 checkScoreEvent(2, 110);
                 checkScoreEvent(3, 145);
             });
+            it('should reset score when game restarts', function () {
+                playState.load(mockGameContainer);
+                destroyEntity(Types.entities.ASTEROID_LARGE);
+                mockGameContainer.$emitMockEvent(Types.events.NEW_GAME, null);
+                checkScoreEvent(0, 25);
+                checkScoreEvent(1, 0);
+            });
 
             function checkScoreEvent(callIndex, expectedScore) {
                 var call = mockGameContainer.events.emit.getCall(callIndex);
@@ -192,6 +200,16 @@ describe('GameStateBuilder', function () {
                 destroyEntity(Types.entities.PLAYER);
                 verify(stubStateManager.changeState).wasCalledOnce();
                 verify(stubStateManager.changeState).wasCalledWith(Types.state.GAME_OVER);
+            });
+
+            it('should reset to 3 when game restarts', function () {
+                playState.load(mockGameContainer);
+
+                destroyEntity(Types.entities.PLAYER);
+                mockGameContainer.$emitMockEvent(Types.events.NEW_GAME, {});
+
+                checkPlayerLifeEvent(0,2);
+                checkPlayerLifeEvent(2,3);
             });
 
             function checkPlayerLifeEvent(callIndex, expectedLives) {
@@ -363,6 +381,29 @@ describe('GameStateBuilder', function () {
         it('should implement state interface', function () {
             interfaces.assert.state(gameOverState);
             verify.readOnlyProperty(gameOverState, 'name', Types.state.GAME_OVER);
+        });
+
+        it('should change to game start when spacebar is pressed', function () {
+            mockGameContainer.input
+                .isPressed
+                .withArgs(GameInput.SPACEBAR)
+                .returns(true);
+
+            gameOverState.update(mockGameContainer);
+
+            verify(mockGameContainer.events.emit).wasNotCalled();
+            verify(stubStateManager.changeState).wasCalledWith(Types.state.START);
+        });
+
+        it('should not change if spacebar is not pressed', function () {
+            mockGameContainer.input
+                .isPressed
+                .withArgs(GameInput.SPACEBAR)
+                .returns(false);
+
+            gameOverState.update(mockGameContainer);
+            verify(stubStateManager.changeState).wasNotCalled();
+
         });
     });
 
