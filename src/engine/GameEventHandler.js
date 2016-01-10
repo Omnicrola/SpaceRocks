@@ -26,7 +26,6 @@ function _subscribe(eventType, subscriber) {
 function _unsubscribe(eventType, subscriberToRemove) {
     var subscribers = this._subscribers[eventType];
     var indexOf = subscribers.indexOf(subscriberToRemove);
-    console.log(indexOf);
     if (indexOf !== -1) {
         subscribers.splice(indexOf, 1);
     }

@@ -103,19 +103,22 @@ describe('SpaceRocks', function () {
         var expectedLoadState = spies.create('loadstate');
         var expectedStartState = spies.create('startstate');
         var expectedPlayState = spies.create('playstate');
+        var expectedGameOverState = spies.create('gameoverstate');
         var stubStateManager = mockedModules.stubs.StateManager;
         var stubPlayerSubsystem = mockedModules.stubs.PlayerSubsystem;
 
         stateBuilder.buildLoadingState.returns(expectedLoadState);
         stateBuilder.buildStartScreen.returns(expectedStartState);
         stateBuilder.buildPlayState.returns(expectedPlayState);
+        stateBuilder.buildGameOverState.returns(expectedGameOverState);
 
         var spaceRocks = new SpaceRocks('mycanvas');
         verify(mockedModules.StateManager).wasCalledWithNew();
-        verify(stubStateManager.addState).wasCalledExactly(3);
+        verify(stubStateManager.addState).wasCalledExactly(4);
         verify(stubStateManager.addState).wasCalledWith(expectedLoadState);
         verify(stubStateManager.addState).wasCalledWith(expectedStartState);
         verify(stubStateManager.addState).wasCalledWith(expectedPlayState);
+        verify(stubStateManager.addState).wasCalledWith(expectedGameOverState);
 
         verify(stateBuilder.buildLoadingState).wasCalledWith(stubStateManager);
         verify(stateBuilder.buildStartScreen).wasCalledWith(stubStateManager, stubPlayerSubsystem);
@@ -125,6 +128,7 @@ describe('SpaceRocks', function () {
             entityFactory: mockedModules.EntityFactory,
             playerSubsystem: stubPlayerSubsystem,
         });
+        verify(stateBuilder.buildGameOverState).wasCalledWith(stubStateManager);
     });
 
     it('will call start on  engine', function () {

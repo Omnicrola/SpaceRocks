@@ -27,6 +27,7 @@ module.exports = {
     state: {
         LOADING: 'loading',
         START: 'start-screen',
-        PLAY: 'play'
+        PLAY: 'play',
+        GAME_OVER: 'game-over'
     }
 };

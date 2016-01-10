@@ -46,6 +46,7 @@ function createGameStates(entitySubsystem, playerSubsystem) {
     var stateManager = new StateManager();
     var loadingState = GameStateBuilder.buildLoadingState(stateManager);
     var startScreen = GameStateBuilder.buildStartScreen(stateManager, playerSubsystem);
+    var gameOverState = GameStateBuilder.buildGameOverState(stateManager);
     var playState = GameStateBuilder.buildPlayState(
         {
             stateManager: stateManager,
@@ -57,6 +58,7 @@ function createGameStates(entitySubsystem, playerSubsystem) {
     stateManager.addState(loadingState);
     stateManager.addState(startScreen);
     stateManager.addState(playState);
+    stateManager.addState(gameOverState);
     return stateManager;
 }
 

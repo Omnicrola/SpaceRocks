@@ -17,6 +17,9 @@ module.exports = {
     },
     buildPlayState: function (dependencies) {
         return _playState(dependencies);
+    },
+    buildGameOverState: function (stateManager) {
+    return _gameOverState(stateManager);
     }
 };
 
@@ -81,6 +84,9 @@ function _playState(dependencies) {
             playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: playerLives}));
             playerIsAlive = false;
             playerRespawnTimer = 5000;
+            if(playerLives <= 0){
+                dependencies.stateManager.changeState('game-over');
+            }
         }
     });
 
@@ -125,6 +131,11 @@ function isAsteroid(type) {
 
 function isPlayer(type) {
     return type === 'player';
+}
+
+function _gameOverState(stateManager){
+    var gameOverState = new State('game-over');
+    return gameOverState;
 }
 /*
  State Class

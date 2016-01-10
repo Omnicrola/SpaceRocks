@@ -176,12 +176,22 @@ describe('GameStateBuilder', function () {
 
                 destroyEntity(Types.entities.PLAYER);
                 destroyEntity(Types.entities.PLAYER);
-                destroyEntity(Types.entities.PLAYER);
 
-                verify(mockGameContainer.events.emit).wasCalledExactly(3);
+                verify(mockGameContainer.events.emit).wasCalledExactly(2);
                 checkPlayerLifeEvent(0, 2);
                 checkPlayerLifeEvent(1, 1);
-                checkPlayerLifeEvent(2, 0);
+            });
+
+            it('changes state to game over when lives are zero', function () {
+                playState.load(mockGameContainer);
+
+                destroyEntity(Types.entities.PLAYER);
+                destroyEntity(Types.entities.PLAYER);
+
+                verify(stubStateManager.changeState).wasNotCalled();
+                destroyEntity(Types.entities.PLAYER);
+                verify(stubStateManager.changeState).wasCalledOnce();
+                verify(stubStateManager.changeState).wasCalledWith(Types.state.GAME_OVER);
             });
 
             function checkPlayerLifeEvent(callIndex, expectedLives) {
@@ -342,6 +352,18 @@ describe('GameStateBuilder', function () {
             position = position || new Point(0, 0);
             mockGameContainer.$emitMockEvent(Types.events.ENTITY_DEATH, {type: type, position: position});
         }
+    });
+
+    describe('Game Over state', function () {
+        var gameOverState;
+        beforeEach(function () {
+            gameOverState = GameStateBuilder.buildGameOverState(stubStateManager);
+        });
+
+        it('should implement state interface', function () {
+            interfaces.assert.state(gameOverState);
+            verify.readOnlyProperty(gameOverState, 'name', Types.state.GAME_OVER);
+        });
     });
 
     function checkSubscribersAreRemoved(gameState) {
