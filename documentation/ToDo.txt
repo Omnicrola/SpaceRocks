@@ -1,0 +1,16 @@
+Space Rocks TODO
+----------------
+- Add game-over state
+- Reset to new game
+- Add extra life after certain point scores
+- Add some music
+- Optimize collision detection
+    - Quadtree?
+    - Cache points?
+- Add alien saucer
+- Add high-score tracking
+    - local
+    - remote leaderboard
+- Add mobile version
+    - Adjust CSS
+    - Add touch controls (arcade buttons)
