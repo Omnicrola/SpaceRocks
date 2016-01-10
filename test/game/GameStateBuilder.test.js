@@ -88,7 +88,6 @@ describe('GameStateBuilder', function () {
             verify.event(new GameEvent(Types.events.PLAYER_LIFE_CHANGE, {lives: 3}), mockGameContainer.events.emit.secondCall.args[0]);
             verify.event(new GameEvent(Types.events.NEW_GAME, {}), mockGameContainer.events.emit.thirdCall.args[0]);
             verify(stubStateManager.changeState).wasCalledWith(Types.state.PLAY);
-            verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
         });
 
         it('should not change if spacebar is not pressed', function () {
@@ -140,6 +139,14 @@ describe('GameStateBuilder', function () {
 
                 verify(stubPlayerSubsystem.respawnPlayer).wasNotCalled();
                 playState.update(mockGameContainer);
+                verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
+            });
+
+            it('should spawn a player when game restarts', function(){
+                playState.load(mockGameContainer);
+
+                verify(stubPlayerSubsystem.respawnPlayer).wasNotCalled();
+                mockGameContainer.$emitMockEvent(Types.events.NEW_GAME, null);
                 verify(stubPlayerSubsystem.respawnPlayer).wasCalledOnce();
 
             });

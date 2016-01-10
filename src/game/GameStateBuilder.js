@@ -40,7 +40,6 @@ function _startScreenState(stateManager, playerSubsystem) {
             gameContainer.events.emit(new GameEvent('score-change', {score: 0}));
             gameContainer.events.emit(new GameEvent('player-life-change', {lives: 3}));
             gameContainer.events.emit(new GameEvent('new-game', {}));
-            playerSubsystem.respawnPlayer();
         }
     };
     return startState;
@@ -57,6 +56,7 @@ function _playState(dependencies) {
     });
     playState.addEventHandler('new-game', function (event) {
         _resetPlayState();
+        dependencies.playerSubsystem.respawnPlayer();
         playState._gameContainer.events.emit(new GameEvent('score-change', {score: _state.currentScore}));
         playState._gameContainer.events.emit(new GameEvent('player-life-change', {lives: _state.playerLives}));
     });
