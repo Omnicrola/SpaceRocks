@@ -4,6 +4,7 @@
 var UserInterface = function () {
     this._score = 0;
     this._lives = 0;
+    this._level = 0;
     this._displayStartMessage = true;
     this._displayGameOver = false;
 };
@@ -43,8 +44,9 @@ function _newGame(gameContainer){
 }
 
 function _newLevel(gameContainer) {
-    return function () {
+    return function (event) {
         this._displayStartMessage = false;
+        this._level = event.data.levelNumber;
     }.bind(this);
 }
 
@@ -64,6 +66,7 @@ UserInterface.prototype.update = function (gameContainer) {
 UserInterface.prototype.render = function (renderer) {
     renderer.setFont('12px atari');
     renderer.drawText(10, 20, 'SCORE: ' + this._score);
+    renderer.drawText(250, 20, 'LEVEL: ' + this._level);
     renderer.drawText(500, 20, 'LIVES: ' + this._lives);
     if (this._displayStartMessage) {
         renderer.setFont('16px atari');
