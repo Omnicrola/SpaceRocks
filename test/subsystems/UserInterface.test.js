@@ -37,7 +37,7 @@ describe('UserInterface', function () {
         it('should draw last score emitted', function () {
             userInterface.render(mockRenderer);
             verify(mockRenderer.setFont).wasCalledWith(EXPECTED_FONT);
-            verify(mockRenderer.drawText).wasCalledWith(10, 20, 'SCORE: 0');
+            verifyScore(0);
 
             var expectedScore = Math.random();
             mockGameContainer.$emitMockEvent(Types.events.SCORE_CHANGE, {score: expectedScore});
@@ -65,15 +65,14 @@ describe('UserInterface', function () {
             mockGameContainer.$emitMockEvent(Types.events.NEW_LEVEL, {levelNumber: 1});
             userInterface.render(mockRenderer);
             verify(mockRenderer.drawText).wasCalledExactly(2);
-            verify('LIVES: 3', mockRenderer.drawText.firstCall.args[2]);
-            verify('SCORE: 0', mockRenderer.drawText.secondCall.args[2]);
+            verifyLives(0);
+            verifyScore(0);
         });
 
         it('will display start message after game resets', function () {
             mockGameContainer.$emitMockEvent(Types.events.NEW_LEVEL, {levelNumber: 1});
             mockGameContainer.$emitMockEvent(Types.events.GAME_RESET, null);
             userInterface.render(mockRenderer);
-            verify(mockRenderer.drawText).wasCalledWith(300, 300, 'PRESS SPACE TO START');
         });
 
         it('should draw game over when game over state is active', function () {
@@ -83,7 +82,29 @@ describe('UserInterface', function () {
             verify(mockRenderer.drawText).wasCalledWith(250, 250, 'GAME OVER');
 
         });
+
+        it('should not draw game over when new game has started', function () {
+            mockGameContainer.$emitMockEvent(Types.events.NEW_LEVEL, {levelNumber: 1});
+            mockGameContainer.$emitMockEvent(Types.events.STATE_CHANGE, {state: Types.state.GAME_OVER});
+            mockGameContainer.$emitMockEvent(Types.events.NEW_GAME, {});
+            userInterface.render(mockRenderer);
+            verify(mockRenderer.drawText).wasCalledExactly(2);
+            verifyScore(0);
+            verifyLives(0);
+        });
     });
+
+    function verifyStartMessage() {
+        verify(mockRenderer.drawText).wasCalledWith(300, 300, 'PRESS SPACE TO START');
+    }
+
+    function verifyLives(expectedLives) {
+        verify(mockRenderer.drawText).wasCalledWith(500, 20, 'LIVES: '+expectedLives);
+    }
+
+    function verifyScore(expectedScore) {
+        verify(mockRenderer.drawText).wasCalledWith(10, 20, 'SCORE: '+expectedScore);
+    }
 
 
 });

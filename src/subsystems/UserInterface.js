@@ -14,6 +14,7 @@ UserInterface.prototype.initialize = function (gameContainer) {
     subscribe('player-life-change', _playerLifeChange.call(this, gameContainer));
     subscribe('game-reset', _gameReset.call(this, gameContainer));
     subscribe('new-level', _newLevel.call(this, gameContainer));
+    subscribe('new-game', _newGame.call(this, gameContainer));
     subscribe('state-change', _stateChange.call(this, gameContainer));
 };
 
@@ -34,6 +35,13 @@ function _gameReset(gameContainer) {
         this._displayStartMessage = true;
     }.bind(this);
 }
+
+function _newGame(gameContainer){
+    return function(event){
+        this._displayGameOver = false;
+    }.bind(this);
+}
+
 function _newLevel(gameContainer) {
     return function () {
         this._displayStartMessage = false;
