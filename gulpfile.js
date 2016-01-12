@@ -3,6 +3,9 @@
  */
 var gulp = require('gulp');
 var Server = require('karma').Server;
+var browserify = require('gulp-browserify');
+var clean = require('gulp-clean');
+var uglify = require('gulp-uglify');
 
 gulp.task('default', ['tdd']);
 
@@ -20,11 +23,8 @@ gulp.task('tdd', function (done) {
     }, done).start();
 });
 
-var browserify = require('gulp-browserify');
-var sourceStream = require('vinyl-source-stream');
-var clean = require('gulp-clean');
-
-gulp.task('build', ['clean', 'make-js', 'copy-index', 'copy-resources']);
+gulp.task('build', ['make-js', 'copy-index', 'copy-resources']);
+gulp.task('build-dist', ['make-js-dist', 'copy-index', 'copy-resources']);
 
 gulp.task('clean', function () {
     return gulp.src('./bin', {read: false})
@@ -37,6 +37,16 @@ gulp.task('make-js', function () {
             insertGlobals: true,
             debug: true
         }))
+        .pipe(gulp.dest('bin'));
+});
+
+gulp.task('make-js-dist', function(){
+    return gulp.src('src/exports.js')
+        .pipe(browserify({
+            insertGlobals: true,
+            debug: true
+        }))
+        .pipe(uglify())
         .pipe(gulp.dest('bin'));
 });
 
