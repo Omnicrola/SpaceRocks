@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Space Rocks! v1.0</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="An Asteroids clone in javascript, css, and canvas">
+	<meta name="keywords" content="games,Asteroids,canvas,HTML,CSS,JavaScript">
+	<meta name="author" content="Eric Schreffler">
+	<meta property="og:url" content="http://omnicrola.com/projects/spacerocks/v1.0/">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Space Rocks! v1.0">
+	<meta property="og:description" content="An Asteroids clone in javascript, css, and canvas">
+	<meta property="og:image" content="http://omnicrola.com/projects/spacerocks/v1.0/images/spacerocks-v1.0.png">
+	
+    <script type="application/javascript" src="exports.js"></script>
+    <style>
+        @font-face {
+            font-family: 'atari';
+            src: url('fonts/Vectorb.ttf');
+        }
+
+        body {
+            background: black;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        a {
+            color: #00AA00;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #00FF00;
+            text-decoration: underline;
+        }
+
+        .atari {
+            font-family: sans-serif;
+            font-family: atari;
+        }
+
+        #content {
+            margin: auto;
+            width: 800px;
+            perspective: 1000px;
+        }
+
+        .screen {
+            border: 20px solid #222222;
+            border-radius: 50px;
+            padding: 25px;
+            transform: rotateX(12deg);
+            text-align: center;
+        }
+
+        .inner-screen {
+            margin: auto;
+            width: 640px;
+            height: 480px;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50px;
+            /*** WEBKIT ***/
+            background: -webkit-repeating-linear-gradient(top, transparent 0px, transparent 1px, rgba(0, 0, 0, .75) 1px, rgba(0, 0, 0, 0.25) 2px);
+            -webkit-background-size: 100% 2px;
+            /** MOZILLA **/
+            background: -moz-repeating-linear-gradient(top, transparent 0px, transparent 1px, rgba(0, 0, 0, 0.75) 1px, rgba(0, 0, 0, 0.25) 2px);
+            -moz-background-size: 100% 2px;
+        }
+
+        .footnote {
+            font-size: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <h1 class="atari">Space Rocks!</h1>
+
+    <div class="screen">
+        <canvas id="spacerocks" class="inner-screen" width="640" height="480">
+        </canvas>
+        <div class="scanline"></div>
+    </div>
+    <div class="footnote">Written in HTML5/Canvas with a custom event-driven game engine. Source code at : <a
+            href="https://github.com/Omnicrola/SpaceRocks">https://github.com/Omnicrola/SpaceRocks</a></div>
+</div>
+<script>
+    new SpaceRocks('spacerocks');
+</script>
+</body>
+</html>

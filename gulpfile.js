@@ -27,7 +27,7 @@ gulp.task('build', ['make-js', 'copy-index', 'copy-resources']);
 gulp.task('build-dist', ['make-js-dist', 'copy-index', 'copy-resources']);
 
 gulp.task('clean', function () {
-    return gulp.src('./bin', {read: false})
+    return gulp.src('./docs', {read: false})
         .pipe(clean());
 })
 
@@ -37,7 +37,7 @@ gulp.task('make-js', function () {
             insertGlobals: true,
             debug: true
         }))
-        .pipe(gulp.dest('bin'));
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('make-js-dist', function(){
@@ -47,15 +47,15 @@ gulp.task('make-js-dist', function(){
             debug: true
         }))
         .pipe(uglify())
-        .pipe(gulp.dest('bin'));
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('copy-index', function () {
     return gulp.src('./src/index.html')
-        .pipe(gulp.dest('./bin'));
+        .pipe(gulp.dest('./docs'));
 });
 
 gulp.task('copy-resources', function () {
     return gulp.src('./resources/**/*')
-        .pipe(gulp.dest('./bin'));
+        .pipe(gulp.dest('./docs'));
 });
